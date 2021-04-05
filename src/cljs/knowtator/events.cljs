@@ -30,22 +30,32 @@
                              (map-indexed (fn [i edge]
                                             (assoc edge :id (keyword (str "e" (inc i))))))))))
                      (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
-       :http-xhrio {:method          :get
-                    :uri             "/project/project/mike"
-                    :format          (ajax/transit-request-format)
-                    :response-format (ajax/transit-response-format)
-                    :on-success      [::set-project]
-                    :on-failure      [::report-failure]}})))
+       :http-xhrio [{:method          :get
+                     :uri             "/project/project/test_project_using_uris"
+                     :format          (ajax/transit-request-format)
+                     :response-format (ajax/transit-response-format)
+                     :on-success      [::set-project]
+                     :on-failure      [::report-failure]}
+                    {:method          :get
+                     :uri             "/project/ontology/test_project_using_uris"
+                     :format          (ajax/transit-request-format)
+                     :response-format (ajax/transit-response-format)
+                     :on-success      [::set-ontology]
+                     :on-failure      [::report-failure]}]})))
 
 (reg-event-db ::set-project
   (fn [db [_ result]]
-    db
     (-> db
       (assoc :text-annotation result)
       (assoc-in [:selection :docs] (->> result :docs (sort-by :id) first :id))
       (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))
       (assoc-in [:selection :concepts] (->> result :anns (sort-by :id) first :concept))
       (assoc-in [:selection :graphs] (->> result :graphs (sort-by :id) first :id)))))
+
+(reg-event-db ::set-ontology
+  (fn [db [_ result]]
+    (-> db
+      (assoc :ontology result))))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]]

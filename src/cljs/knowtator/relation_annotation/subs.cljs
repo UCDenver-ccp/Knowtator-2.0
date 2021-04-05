@@ -24,17 +24,31 @@
 (reg-sub ::db
   identity)
 
+(reg-sub ::ontology
+  :ontology)
+
+(reg-sub ::obj-prop-uri->label
+  :<- [::ontology]
+  (fn [ontology _]
+    (->> ontology
+      :obj-props
+      (map (fn [{:keys                        [annotation]
+                {:keys [namespace fragment]} :iri}]
+             [(str namespace fragment) fragment]))
+      (into {}))))
+
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
   :<- [::db]
   :<- [::subs/profile-map]
   :<- [::subs/doc-map]
   :<- [::subs/ann-map]
-  (fn [[graph db profile-map doc-map ann-map] _]
+  :<- [::obj-prop-uri->label]
+  (fn [[graph db profile-map doc-map ann-map property-map] _]
     (when graph
       (-> graph
         (model/realize-ann-nodes db profile-map doc-map ann-map)
-        model/realize-relation-anns))))
+        (model/realize-relation-anns property-map)))))
 
 (reg-sub ::graph-physics
   :<- [::selected-graph-space]

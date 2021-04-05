@@ -14,7 +14,8 @@
       (testing "Ontology meta data"
         (is (= {:type   :ontology
                 :prefix "http://www.co-ode.org/ontologies/pizza/pizza.owl#"
-                :iri    "http://www.co-ode.org/ontologies/pizza"
+                :iri    {:fragment  "pizza",
+                         :namespace "http://www.co-ode.org/ontologies/"}
                 :viri   "http://www.co-ode.org/ontologies/pizza/2.0.0"
                 :annotation
                 [{:type :annotation
@@ -153,12 +154,14 @@
                  "http://www.w3.org/2002/07/owl#Thing"}}}}]))
 
       (testing "OWL classes"
-        (is (= [{:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping"
-                              {:type :some
-                               :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
-                                       "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}]
-                 :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#ParmaHamTopping"
+        (is (= [{:super ["http://www.co-ode.org/ontologies/pizza/pizza.owl#HamTopping"
+                         {:type :some
+                          :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
+                                  "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}]
+                 :type  :class
+
+                 :iri        {:fragment  "ParmaHamTopping",
+                              :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}
                  :annotation [{:type    :annotation
                                :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
                                :literal {:value "Parma Ham"
@@ -187,7 +190,8 @@
                                        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"]
                  :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"
+                 :iri        {:fragment  "LeekTopping",
+                              :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}
                  :annotation [{:type    :annotation
                                :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
                                :literal {:value "Leek"
@@ -216,7 +220,8 @@
                                :data #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Mild"
                                        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"}}]
                  :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#CaperTopping"
+                 :iri        {:fragment  "CaperTopping",
+                              :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}
                  :annotation [{:type    :annotation
                                :iri     "http://www.w3.org/2004/02/skos/core#prefLabel"
                                :literal {:value "Caper" :lang "en"}}
@@ -229,7 +234,8 @@
                 {:super      ["http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseTopping"
                               "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"]
                  :type       :class
-                 :iri        "http://www.co-ode.org/ontologies/pizza/pizza.owl#CheeseyVegetableTopping"
+                 :iri        {:fragment  "CheeseyVegetableTopping",
+                              :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}
                  :annotation [{:type    :comment
                                :literal {:value "This class will be unsatisfiable. This is because we have given it 2 disjoint parents, which means it could never have any instances (as nothing can be both a CheeseTopping and a VegetableTopping). NB Called ProbeInconsistentTopping in the ProtegeOWL Tutorial."
                                          :lang  "en"}}
@@ -244,51 +250,59 @@
                 (take 4)))))
 
       (testing "OWL annotation properties"
-        (is (= [{:type :aproperty
-                 :iri  "http://www.w3.org/2004/02/skos/core#prefLabel"}
-                {:type :aproperty
-                 :iri  "http://www.w3.org/2000/01/rdf-schema#comment"}
-                {:type :aproperty
-                 :iri  "http://www.w3.org/2004/02/skos/core#definition"}
-                {:type :aproperty
-                 :iri  "http://purl.org/dc/elements/1.1/title"}]
+        (is (= [{:type :aproperty,
+                 :iri  {:fragment  "prefLabel",
+                        :namespace "http://www.w3.org/2004/02/skos/core#"}}
+                {:type :aproperty,
+                 :iri  {:fragment  "comment",
+                        :namespace "http://www.w3.org/2000/01/rdf-schema#"}}
+                {:type :aproperty,
+                 :iri  {:fragment  "definition",
+                        :namespace "http://www.w3.org/2004/02/skos/core#"}}
+                {:type :aproperty,
+                 :iri  {:fragment  "title"
+                        :namespace "http://purl.org/dc/elements/1.1/"}}]
               (->> ontology
                 :ann-props
                 (take 4)))))
 
       (testing "OWL object properties"
-        (is (= [{:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#isToppingOf"
-                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"]
-                 :type           :oproperty
-                 :characteristic :inversefunctional
-                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasTopping"
-                 :domain         ["http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"]
-                 :annotation     [{:type :comment
-                                   :literal
-                                   {:value
-                                    "Note that hasTopping is inverse functional because isToppingOf is functional"
-                                    :lang "en"}}]
-                 :range          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"]}
-                {:type           :oproperty
-                 :characteristic :functional
-                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasSpiciness"
-                 :annotation     [{:type    :comment
+        (is (= [{:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#isToppingOf",
+                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"],
+                 :type           :oproperty,
+                 :characteristic :inversefunctional,
+                 :iri            {:fragment  "hasTopping",
+                                  :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"},
+                 :domain         ["http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"],
+                 :annotation     [{:type    :comment,
                                    :literal {:value
-                                             "A property created to be used with the ValuePartition - Spiciness."
-                                             :lang "en"}}]
+                                             "Note that hasTopping is inverse functional because isToppingOf is functional",
+                                             :lang "en"}}],
+                 :range          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"]}
+                {:type           :oproperty,
+                 :characteristic :functional,
+                 :iri            {:fragment  "hasSpiciness",
+                                  :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"},
+                 :annotation     [{:type    :comment,
+                                   :literal {:value
+                                             "A property created to be used with the ValuePartition - Spiciness.",
+                                             :lang "en"}}],
                  :range          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#Spiciness"]}
-                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
-                 :type           :oproperty
-                 :characteristic :transitive
-                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#isIngredientOf"
-                 :annotation     [{:type    :comment
-                                   :literal {:value "The inverse property tree to hasIngredient - all subproperties and attributes of the properties should reflect those under hasIngredient."
-                                             :lang  "en"}}]}
-                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
-                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#isIngredientOf"]
-                 :type           :oproperty
-                 :characteristic :functional
-                 :iri            "http://www.co-ode.org/ontologies/pizza/pizza.owl#isBaseOf"}]
+                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient",
+                 :type           :oproperty,
+                 :characteristic :transitive,
+                 :iri            {:fragment  "isIngredientOf",
+                                  :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"},
+                 :annotation     [{:type    :comment,
+                                   :literal {:value
+                                             "The inverse property tree to hasIngredient - all subproperties and attributes of the properties should reflect those under hasIngredient.",
+                                             :lang "en"}}]}
+                {:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase",
+                 :super          ["http://www.co-ode.org/ontologies/pizza/pizza.owl#isIngredientOf"],
+                 :type           :oproperty,
+                 :characteristic :functional,
+                 :iri            {:fragment  "isBaseOf",
+                                  :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}}]
               (->> ontology
                 :obj-props
                 (take 4))))))))

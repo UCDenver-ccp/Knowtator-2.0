@@ -35,7 +35,10 @@
     :else                                      [type vs]))
 
 (defn ->iri [e]
-  (-> e tp/as-iri str))
+  (-> e
+    tp/as-iri
+    bean
+    (select-keys [:fragment :namespace])))
 
 (defn into-map [c ks singles]
   (as-> c m

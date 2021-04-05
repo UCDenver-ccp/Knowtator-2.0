@@ -367,20 +367,22 @@
   (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map))))
 
 (defn realize-relation-ann
-  [{{:keys                [property polarity]
+  [property-map
+   {{:keys                [property polarity]
      {:keys [type value]} :quantifier} :predicate
     :as                                relation-ann}]
-  (-> relation-ann
-    (assoc :label (->> (or
-                         [type property]
-                         [value type property])
-                    (interpose " ")
-                    (apply str)))
-    (assoc :color (case polarity
-                    :positive :black
-                    :negative :red
-                    :yellow))))
+  (let [property (get property-map property)]
+    (-> relation-ann
+      (assoc :label (->> (or
+                           [type property]
+                           [value type property])
+                      (interpose " ")
+                      (apply str)))
+      (assoc :color (case polarity
+                      :positive :black
+                      :negative :red
+                      :yellow)))))
 
 (defn realize-relation-anns
-  [graph]
-  (update graph :edges (partial map realize-relation-ann)))
+  [graph property-map]
+  (update graph :edges (partial map (partial realize-relation-ann property-map))))
