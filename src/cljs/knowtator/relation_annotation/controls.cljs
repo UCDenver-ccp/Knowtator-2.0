@@ -31,25 +31,36 @@
                                        :label-fn :id
                                        :filter-box? true
                                        :model (<sub [::subs/selected-graph-space-id])
-                                       :on-change #(>evt [::evts/select-graph-space %])]]]]]
-              [re-com/h-box
+                                       :on-change #(>evt [::evts/select-graph-space %])]]]]]]])
+
+(defn owl-controls []
+  [re-com/h-box
+   :src (at)
+   :children [[re-com/label
+               :label "Annotation properties"]
+              [re-com/single-dropdown
                :src (at)
-               :children [[re-com/checkbox
-                           :model (<sub [::subs/display-ann-node-owl-class?])
-                           :label "Display OWL class"
-                           :on-change #(>evt [::evts/toggle-display-ann-node-owl-class])]
-                          [re-com/checkbox
-                           :model (<sub [::subs/graph-physics])
-                           :label "Physics"
-                           :on-change #(>evt [::evts/toggle-physics])]]]
-              [re-com/h-box
-               :src (at)
-               :children [[re-com/label
-                           :label "Annotation properties"]
-                          [re-com/single-dropdown
-                           :src (at)
-                           :choices (<sub [::subs/ann-props])
-                           :label-fn  (comp :fragment :iri)
-                           :id-fn (comp (partial apply str) (juxt :namespace :fragment) :iri)
-                           :model (<sub [::subs/selected-ann-prop])
-                           :on-change #(>evt [::evts/select-ann-prop %])]]]]])
+               :choices (<sub [::subs/ann-props])
+               :label-fn  (comp :fragment :iri)
+               :id-fn (comp (partial apply str) (juxt :namespace :fragment) :iri)
+               :model (<sub [::subs/selected-ann-prop])
+               :on-change #(>evt [::evts/select-ann-prop %])]]])
+
+(defn node-controls []
+  [re-com/h-box
+   :src (at)
+   :children [[re-com/checkbox
+               :model (<sub [::subs/display-ann-node-owl-class?])
+               :label "Display OWL class"
+               :on-change #(>evt [::evts/toggle-display-ann-node-owl-class])]
+              [re-com/checkbox
+               :model (<sub [::subs/graph-physics])
+               :label "Physics"
+               :on-change #(>evt [::evts/toggle-physics])]]])
+
+(defn edge-controls []
+  [re-com/slider
+   :model (<sub [::subs/edge-length])
+   :on-change #(>evt [::evts/set-edge-length %])
+   :min 1
+   :max 500])

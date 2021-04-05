@@ -39,7 +39,7 @@
               {:keys [namespace fragment]} :iri}]
            [(str namespace fragment)
             (or (->> annotation
-                  (filter (fn [{:keys [iri]}] (= iri annotation-iri)))
+                  (filter (fn [{:keys [iri]}] (and iri (= iri annotation-iri))))
                   first
                   :literal
                   :value)
@@ -50,7 +50,7 @@
   :<- [::obj-props]
   :<- [::selected-ann-prop]
   (fn [[obj-props ann-prop] _]
-    (make-uri->label-map obj-props nil)))
+    (make-uri->label-map obj-props ann-prop)))
 
 (reg-sub ::classes-uri->label
   :<- [::classes]
@@ -87,3 +87,7 @@
 (reg-sub ::selected-ann-prop
   (fn [db _]
     (get-in db [:selection :ann-props])))
+
+(reg-sub ::edge-length
+  (fn [db _]
+    (get-in db [:selection :edge-length] 95)))

@@ -30,18 +30,19 @@
                              (map-indexed (fn [i edge]
                                             (assoc edge :id (keyword (str "e" (inc i))))))))))
                      (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
-       :http-xhrio [{:method          :get
-                     :uri             "/project/project/mike"
-                     :format          (ajax/transit-request-format)
-                     :response-format (ajax/transit-response-format)
-                     :on-success      [::set-project]
-                     :on-failure      [::report-failure]}
-                    {:method          :get
-                     :uri             "/project/ontology/mike"
-                     :format          (ajax/transit-request-format)
-                     :response-format (ajax/transit-response-format)
-                     :on-success      [::set-ontology]
-                     :on-failure      [::report-failure]}]})))
+       :http-xhrio (let [project "test_project_using_uris"]
+                     [{:method          :get
+                       :uri             (str "/project/project/" project)
+                       :format          (ajax/transit-request-format)
+                       :response-format (ajax/transit-response-format)
+                       :on-success      [::set-project]
+                       :on-failure      [::report-failure]}
+                      {:method          :get
+                       :uri             (str "/project/ontology/" project)
+                       :format          (ajax/transit-request-format)
+                       :response-format (ajax/transit-response-format)
+                       :on-success      [::set-ontology]
+                       :on-failure      [::report-failure]}])})))
 
 (reg-event-db ::set-project
   (fn [db [_ result]]

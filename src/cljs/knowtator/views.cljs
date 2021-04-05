@@ -67,7 +67,10 @@
 (defn graph-panel []
   [:div
    [re-com/v-box
-    :children [[ra-controls/graph-space-controls]
+    :children [[ra-controls/owl-controls]
+               [ra-controls/graph-space-controls]
+               [ra-controls/node-controls]
+               [ra-controls/edge-controls]
                [ra/graph]]]])
 
 (defn page-title []

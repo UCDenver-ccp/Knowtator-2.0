@@ -32,7 +32,8 @@
   [vis :relation-annotation-graph [::subs/selected-realized-graph]
    :options {:layout       {:hierarchical false}
              :edges        {:color "#000000"}
-             :physics      (<sub [::subs/graph-physics])
+             :physics      {:enabled    (<sub [::subs/graph-physics])
+                            :barnes-hut {:spring-length (<sub [::subs/edge-length])}}
              :interaction  {:hover true}
              :manipulation {:add-node    (fn [node-data]
                                            (println node-data)

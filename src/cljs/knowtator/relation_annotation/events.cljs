@@ -101,3 +101,7 @@
 (reg-event-db ::select-ann-prop
   (fn [db [_ id]]
     (assoc-in db [:selection :ann-props] id)))
+
+(reg-event-db ::set-edge-length
+  (fn [db [_ v]]
+    (assoc-in db [:selection :edge-length] v)))
