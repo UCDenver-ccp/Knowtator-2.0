@@ -22,13 +22,16 @@
                           [re-com/md-circle-icon-button
                            :md-icon-name "zmdi-minus"
                            :on-click #(>evt [::evts/remove-graph-space])]
-                          [re-com/single-dropdown
-                           :src (at)
-                           :choices (<sub [::subs/graph-spaces])
-                           :label-fn :id
-                           :filter-box? true
-                           :model (<sub [::subs/selected-graph-space-id])
-                           :on-change #(>evt [::evts/select-graph-space %])]]]
+                          [re-com/h-box
+                           :children [[re-com/label
+                                       :label "Graph spaces"]
+                                      [re-com/single-dropdown
+                                       :src (at)
+                                       :choices (<sub [::subs/graph-spaces])
+                                       :label-fn :id
+                                       :filter-box? true
+                                       :model (<sub [::subs/selected-graph-space-id])
+                                       :on-change #(>evt [::evts/select-graph-space %])]]]]]
               [re-com/h-box
                :src (at)
                :children [[re-com/checkbox
@@ -39,10 +42,14 @@
                            :model (<sub [::subs/graph-physics])
                            :label "Physics"
                            :on-change #(>evt [::evts/toggle-physics])]]]
-              [re-com/single-dropdown
+              [re-com/h-box
                :src (at)
-               :choices (<sub [::subs/ann-props])
-               :label-fn  (comp :fragment :iri)
-               :id-fn (comp (partial apply str) (juxt :namespace :fragment) :iri)
-               :model (<sub [::subs/selected-ann-prop])
-               :on-change #(>evt [::evts/select-ann-prop %])]]])
+               :children [[re-com/label
+                           :label "Annotation properties"]
+                          [re-com/single-dropdown
+                           :src (at)
+                           :choices (<sub [::subs/ann-props])
+                           :label-fn  (comp :fragment :iri)
+                           :id-fn (comp (partial apply str) (juxt :namespace :fragment) :iri)
+                           :model (<sub [::subs/selected-ann-prop])
+                           :on-change #(>evt [::evts/select-ann-prop %])]]]]])
