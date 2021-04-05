@@ -31,13 +31,13 @@
                                             (assoc edge :id (keyword (str "e" (inc i))))))))))
                      (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
        :http-xhrio [{:method          :get
-                     :uri             "/project/project/test_project_using_uris"
+                     :uri             "/project/project/mike"
                      :format          (ajax/transit-request-format)
                      :response-format (ajax/transit-response-format)
                      :on-success      [::set-project]
                      :on-failure      [::report-failure]}
                     {:method          :get
-                     :uri             "/project/ontology/test_project_using_uris"
+                     :uri             "/project/ontology/mike"
                      :format          (ajax/transit-request-format)
                      :response-format (ajax/transit-response-format)
                      :on-success      [::set-ontology]

@@ -371,7 +371,8 @@
    {{:keys                [property polarity]
      {:keys [type value]} :quantifier} :predicate
     :as                                relation-ann}]
-  (let [property (get property-map property)]
+  (let [property (get property-map property)
+        type     (name type)]
     (-> relation-ann
       (assoc :label (->> (or
                            [type property]

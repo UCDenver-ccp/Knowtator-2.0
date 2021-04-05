@@ -20,6 +20,7 @@
     (#{:iri} type)                             (first vs)
     (#{:some :and :not :or :only :oneof} type) {:type type
                                                 :data (->> vs
+                                                        (filter coll?) ; This is here to account for :XSD_FLOAT in Mike's knowtator owl.
                                                         (map collapse-data)
                                                         set)}
     (#{:has-value} type)                       {:type type

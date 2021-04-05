@@ -1,5 +1,6 @@
 (ns knowtator.owl-parser-test
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [clojure.test :as t :refer [deftest is testing]]
             [knowtator.owl-parser :as sut]
             [tawny.owl :as to]))
@@ -305,4 +306,25 @@
                                   :namespace "http://www.co-ode.org/ontologies/pizza/pizza.owl#"}}]
               (->> ontology
                 :obj-props
-                (take 4))))))))
+                (take 4)))))))
+
+  (testing "Mike's annotations"
+    (let [ontology-file (->> "Ontologies"
+                          (io/file (io/resource "concepts+assertions 3_2 copy/"))
+                          file-seq
+                          (filter #(str/ends-with? (str %) ".owl"))
+                          first)
+          owl-ontology  (sut/load-ontology ontology-file)
+          ontology      (sut/parse-ontology owl-ontology)]
+      #_(doall (:classes ontology))
+      (is (= {:super      ["http://www.owl-ontologies.com/unnamed.owl#knowtator_slot_mention"
+                           {:type :only,
+                            :data #{"http://www.owl-ontologies.com/unnamed.owl#knowtator_mention_slot_value"
+                                    #_:XSD_FLOAT}}],
+              :type       :class,
+              :iri        {:fragment  "knowtator_float_slot_mention",
+                           :namespace "http://www.owl-ontologies.com/unnamed.owl#"},
+              :annotation [{:type    :label,
+                            :literal {:value "knowtator float slot mention"
+                                      :type  :XSD_STRING}}]}
+            (nth (:classes ontology) 373))))))

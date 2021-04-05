@@ -13,7 +13,8 @@
             [reitit.ring.coercion :as rrc]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [clojure.string :as str]))
 
 (declare init-app)
 (mount/defstate init-app
@@ -75,7 +76,15 @@
                                                                ontology      (oparser/parse-ontology owl-ontology)]
                                                            {:status 200
                                                             :body   ontology})
-                                                         nil))}}]])
+                                                         (let [ontology-file (->> "Ontologies"
+                                                                               (io/file (io/resource "concepts+assertions 3_2 copy/"))
+                                                                               file-seq
+                                                                               (filter #(str/ends-with? (str %) ".owl"))
+                                                                               first)
+                                                               owl-ontology  (oparser/load-ontology ontology-file)
+                                                               ontology      (oparser/parse-ontology owl-ontology)]
+                                                           {:status 200
+                                                            :body   ontology})))}}]])
 
 (defn app-router []
   (ring/router [(home-routes)
