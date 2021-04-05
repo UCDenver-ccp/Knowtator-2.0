@@ -71,7 +71,9 @@
                [ra-controls/graph-space-controls]
                [ra-controls/node-controls]
                [ra-controls/edge-controls]
-               [ra/graph]]]])
+               [re-com/h-box
+                :children [[ra/owl-hierarchy]
+                           [ra/graph]]]]]])
 
 (defn page-title []
   [re-com/h-box

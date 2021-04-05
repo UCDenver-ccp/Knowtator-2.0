@@ -3,7 +3,11 @@
             [knowtator.relation-annotation.events :as evts]
             [knowtator.relation-annotation.subs :as subs]
             [knowtator.util :as util :refer [<sub >evt]]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [re-com.core :as re-com]
+            [knowtator.hierarchy :as h]
+            [clojure.zip :as zip]
+            [clojure.walk :as walk]))
 
 (def visjs-graph (aget rgv "default"))
 
@@ -55,3 +59,24 @@
              :select-node (fn [{:keys [nodes] :as data}]
                             (println nodes data)
                             (>evt [::evts/select-ann-node (<sub [::subs/selected-graph-space-id]) (first nodes)]))}])
+
+(defn zipper-hierarchy
+  ([parent node]
+   (let [id (zip/node node)]
+     [:li
+      [re-com/button
+       :label (<sub [::subs/owl-class-label id])
+       :on-click #(>evt [::evts/toggle-collapse-owl-class id])]
+      (when-not (<sub [::subs/collapsed? id])
+        [:ul (for [c (h/child-nodes node)]
+               ^{:key (str (random-uuid))}
+               (zipper-hierarchy node c))])]))
+  ([node]
+   [:ul ^{:key (str (random-uuid))} (zipper-hierarchy nil node)]))
+
+(defn owl-hierarchy []
+  (re-com/h-box
+    :children [(let [hs (<sub [::subs/class-hierarchy-zippers])]
+                 (for [h hs]
+                   ^{:key (str (random-uuid))}
+                   (zipper-hierarchy h)))]))

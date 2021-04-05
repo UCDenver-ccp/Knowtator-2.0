@@ -105,3 +105,12 @@
 (reg-event-db ::set-edge-length
   (fn [db [_ v]]
     (assoc-in db [:selection :edge-length] v)))
+
+(reg-event-db ::toggle-collapse-owl-class
+  (fn [db [_ iri]]
+    (update-in db [:ontology :classes]
+      (fn [classes]
+        (-> classes
+          (->> (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment) :iri)))
+          (update-in [iri :collapsed?] not)
+          vals)))))

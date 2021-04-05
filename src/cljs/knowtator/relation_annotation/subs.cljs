@@ -3,7 +3,8 @@
    [re-frame.core :refer [reg-sub]]
    [knowtator.model :as model]
    [knowtator.util :as util]
-   [knowtator.subs :as subs]))
+   [knowtator.subs :as subs]
+   [knowtator.hierarchy :as h]))
 
 (reg-sub ::graph-spaces
   (comp #(or % []) (partial sort-by (comp name :id) util/compare-alpha-num) :graphs :text-annotation))
@@ -91,3 +92,22 @@
 (reg-sub ::edge-length
   (fn [db _]
     (get-in db [:selection :edge-length] 95)))
+
+(reg-sub ::class-hierarchy-zippers
+  (fn [db _]
+    (-> db
+      :ontology
+      :hierarchy
+      h/hierarchy-zippers)))
+
+(reg-sub ::collapsed?
+  :<- [::classes]
+  (fn [classes [_ iri]]
+    (-> classes
+      (->> (util/map-with-key (comp (partial apply str) (juxt :namespace :fragment):iri)))
+      (get-in [iri :collapsed?]))))
+
+(reg-sub ::owl-class-label
+  :<- [::classes-uri->label]
+  (fn [class-map [_ iri]]
+    (get class-map iri)))
