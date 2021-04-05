@@ -1,7 +1,8 @@
 (ns knowtator.owl-parser
   (:require [tawny.owl :as to]
             [tawny.query :as tq]
-            [tawny.protocol :as tp]))
+            [tawny.protocol :as tp]
+            [knowtator.util :as util]))
 
 (defn load-ontology [f]
   (.loadOntologyFromOntologyDocument (to/owl-ontology-manager) (to/iri f)))
@@ -53,14 +54,40 @@
         (cond-> m (contains? m k) (update k first)))
       m singles)))
 
+(defn un-keyword [k]
+  (subs (str k) 1))
+
+(defn make-owl-hierarchy [classes]
+  (->> classes
+    (map #(update % :iri (comp (partial apply str)
+                           (juxt :namespace :fragment))))
+    (map #(update % :super (partial remove coll?)))
+    (map (juxt :iri :super))
+    (reduce
+      (fn [h [iri supers]]
+        (reduce (fn [h super]
+                  (try
+                    (derive h (keyword iri) (keyword super))
+                    (catch Exception e
+                      ;; TODO add log warning
+                      (println (.getMessage e))
+                      h)))
+          h supers))
+      (make-hierarchy))
+    (util/map-vals (comp (partial into {})
+                     (partial map (fn [[k v]]
+                              [(un-keyword k)
+                               (set (map un-keyword v))]))))))
+
 (defn parse-ontology [ontology]
-  (let [owl-groups {:obj-props   [tq/obj-props [:inverse :super :annotation :domain :range] [:characteristic :type :inverse]]
-                    :classes     [tq/classes [:annotation :disjoint :super :equivalent] [:type]]
-                    :ann-props   [tq/ann-props [] [:type]]
-                    :data-props  [tq/data-props [] []]
-                    :individuals [tq/individuals [] []]}]
-    (->> owl-groups
-      (map (fn [[k [f ks singles]]] [k (->> ontology
-                                        f
-                                        (map #(into-map % ks singles)))]))
-      (into {:ontology (into-map ontology [:annotation] [:type])}))))
+  (let [owl-groups   {:obj-props   [tq/obj-props [:inverse :super :annotation :domain :range] [:characteristic :type :inverse]]
+                      :classes     [tq/classes [:annotation :disjoint :super :equivalent] [:type]]
+                      :ann-props   [tq/ann-props [] [:type]]
+                      :data-props  [tq/data-props [] []]
+                      :individuals [tq/individuals [] []]}
+        ontology-map (->> owl-groups
+                       (map (fn [[k [f ks singles]]] [k (->> ontology
+                                                         f
+                                                         (map #(into-map % ks singles)))]))
+                       (into {:ontology (into-map ontology [:annotation] [:type])}))]
+    (assoc ontology-map :hierarchy (make-owl-hierarchy (:classes ontology-map)))))

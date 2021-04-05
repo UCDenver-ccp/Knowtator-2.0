@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [clojure.test :as t :refer [deftest is testing]]
             [knowtator.owl-parser :as sut]
-            [tawny.owl :as to]))
+            [tawny.owl :as to]
+            [knowtator.util :as util]))
 
 (deftest parse-ontology-test
   (testing "Parse basic ontology"
@@ -266,6 +267,41 @@
               (->> ontology
                 :ann-props
                 (take 4)))))
+
+      (testing "Hierarchy"
+        (is (= {:parents     {"http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"     #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping" #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#OnionTopping"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot"     #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#NamedPizza"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"            #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept"}},
+                :ancestors   {"http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"     #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping" #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#PizzaTopping"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#OnionTopping"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot"     #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#NamedPizza"
+                                                                                                   "http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"            #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#DomainConcept"}},
+                :descendants {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Food"               #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#GreenPepperTopping" #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#HotGreenPepperTopping"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza"              #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#AmericanHot"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#QuattroFormaggi"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#Capricciosa"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#Veneziana"},
+                              "http://www.co-ode.org/ontologies/pizza/pizza.owl#VegetableTopping"   #{"http://www.co-ode.org/ontologies/pizza/pizza.owl#LeekTopping"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#RedOnionTopping"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#GreenPepperTopping"
+                                                                                                      "http://www.co-ode.org/ontologies/pizza/pizza.owl#SpinachTopping"}}}
+              (->> ontology
+                :hierarchy
+                (util/map-vals (comp (partial util/map-vals (comp set (partial take 4))) (partial into {}) (partial take 4)))))))
 
       (testing "OWL object properties"
         (is (= [{:inverse        "http://www.co-ode.org/ontologies/pizza/pizza.owl#isToppingOf",
