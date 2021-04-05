@@ -1,27 +1,49 @@
 (ns knowtator.owl-parser
   (:require [tawny.owl :as to]
             [tawny.query :as tq]
-            [clojure.java.io :as io]))
+            [tawny.protocol :as tp]))
 
 (defn load-ontology [f]
   (.loadOntologyFromOntologyDocument (to/owl-ontology-manager) (to/iri f)))
 
-(defn into-map [c]
-  (-> c
-    tq/into-map
-    (update :annotation
-      (fn [annotations]
-        (->> annotations
-          (mapv (fn [[type & vs]]
-                  (->> [:type type]
-                    (conj vs)
-                    (reduce
-                      (fn [m [id & vs]]
-                        (let [vs (cond (= id :literal)    (apply hash-map (conj vs :value))
-                                       (empty? (rest vs)) (first vs)
-                                       :else              vs)]
-                          (assoc m id vs)))
-                      {})))))))))
+(defn collapse-data [[type & vs]]
+  (cond
+    (#{:annotation :label :comment} type)      (->> [:type type]
+                                                  (conj vs)
+                                                  (reduce
+                                                    (fn [m [id & vs]]
+                                                      (let [vs (cond (= :literal id)    (apply hash-map (conj vs :value))
+                                                                     (empty? (rest vs)) (first vs)
+                                                                     :else              vs)]
+                                                        (assoc m id vs)))
+                                                    {}))
+    (#{:iri} type)                             (first vs)
+    (#{:some :and :not :or :only :oneof} type) {:type type
+                                                :data (->> vs
+                                                        (map collapse-data)
+                                                        set)}
+    (#{:has-value} type)                       {:type type
+                                                :data (->> vs
+                                                        (map collapse-data)
+                                                        vec)}
+    (#{:at-least} type)                        {:type  type
+                                                :value (first vs)
+                                                :data  (->> vs
+                                                         rest
+                                                         (map collapse-data)
+                                                         set)}
+    :else                                      [type vs]))
+
+(defn into-map [c ks]
+  (reduce (fn [m k]
+            (update m k (partial mapv collapse-data)))
+    (-> c
+      tq/into-map
+      (assoc :iri (-> c
+                    tp/as-iri
+                    str))
+      (update :type first))
+    ks))
 
 (defn parse-ontology [ontology]
   (let [owl-groups {:obj-props   tq/obj-props
@@ -32,5 +54,5 @@
     (->> owl-groups
       (map (fn [[k f]] [k (->> ontology
                            f
-                           (map into-map))]))
-      (into {:ontology (into-map ontology)}))))
+                           (map #(into-map % [:annotation :disjoint :super :equivalent])))]))
+      (into {:ontology (into-map ontology [:annotation])}))))
