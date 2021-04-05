@@ -389,7 +389,8 @@
       (assoc :color (case polarity
                       :positive :black
                       :negative :red
-                      :yellow)))))
+                      :yellow))
+      (assoc-in [:font :align] :top))))
 
 (defn realize-relation-anns
   [graph property-map]
