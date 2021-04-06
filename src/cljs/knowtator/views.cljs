@@ -153,7 +153,7 @@
               [re-com/h-split
                :src (at)
                :initial-split 25
-               :panel-1 [owl/owl-class-hierarchy]
+               :panel-1 [owl/owl-hierarchies]
                :panel-2 [doc-display]]
               [re-com/h-box
                :children [[tac/span-controls]

@@ -66,3 +66,7 @@
 (reg-event-db ::toggle-collapse-owl-obj-prop
   (fn [db [_ iri]]
     (toggle-collapse db :obj-props iri)))
+
+(reg-event-db ::select-owl-hierarchy
+  (fn [db [_ id]]
+    (assoc-in db [:selection :owl-hierarchy] id)))

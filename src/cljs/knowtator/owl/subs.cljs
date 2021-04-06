@@ -104,3 +104,16 @@
 (reg-sub ::selected-ann-prop
   (fn [db _]
     (get-in db [:selection :ann-props])))
+
+
+(reg-sub ::selected-owl-hierarchy
+  (fn [db _]
+    (get-in db [:selection :owl-hierarchy] :owl-class-hierarchy)))
+
+(reg-sub ::available-owl-hierarchies
+  (fn [db _]
+    ;; TODO make dynamic
+    [{:id    :owl-class-hierarchy
+      :label "Classes"}
+     {:id    :owl-obj-prop-hierarchy
+      :label "Object Properties"}]))

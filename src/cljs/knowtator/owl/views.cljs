@@ -72,6 +72,16 @@
     :collapse-fn     #(>evt [::evts/toggle-collapse-owl-obj-prop %])
     :select-node-fn  #(>evt [::evts/select-owl-obj-prop %])}])
 
+(defn owl-hierarchies []
+  [re-com/v-box
+   :children[[re-com/horizontal-tabs
+              :model (<sub [::subs/selected-owl-hierarchy])
+              :tabs (<sub [::subs/available-owl-hierarchies])
+              :on-change #(>evt [::evts/select-owl-hierarchy %])]
+             (case (<sub [::subs/selected-owl-hierarchy])
+               :owl-class-hierarchy    [owl-class-hierarchy]
+               :owl-obj-prop-hierarchy [owl-obj-prop-hierarchy])]])
+
 (defn owl-controls []
   [re-com/h-box
    :src (at)
