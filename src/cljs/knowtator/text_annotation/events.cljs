@@ -25,6 +25,22 @@
                                  :dispatch [::select-span new-item-id]}
             :else               {:db (assoc-in db [:selection coll-id] new-item-id)}))))
 
+(reg-event-fx ::select-span-by-loc
+  (fn-traced [{:keys [db] :as x} [_ loc doc-id]]
+    (let [span-id (->> db
+                    :text-annotation
+                    :spans
+                    (model/spans-containing-loc loc)
+                    (assoc-in db [:text-annotation :spans])
+                    model/realize-spans
+                    :text-annotation
+                    :spans
+                    (filter #(model/in-restriction? %  [{:filter-type   :doc
+                                                         :filter-values #{doc-id}}]))
+                    first
+                    :id)]
+      (cond-> {:db db} span-id (assoc :dispatch [::select-span span-id])))))
+
 (reg-event-fx ::select-span
   (fn-traced [{:keys [db]} [_ id]]
     (let [{:keys [ann]} (->> db

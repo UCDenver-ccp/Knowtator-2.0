@@ -3,7 +3,8 @@
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
             [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [knowtator.owl.subs :as owl]))
 
 (defn ->db-map [k]
   (comp (partial apply zipmap) (juxt (partial map :id) identity) k :text-annotation))
@@ -136,7 +137,7 @@
 
 (reg-sub ::selected-color
   :<- [::selected-profile]
-  :<- [::selected-concept]
+  :<- [::owl/selected-concept]
   :<- [::profile-map]
   :<- [::default-color]
   (fn [[profile-id concept-id profiles default-color]]

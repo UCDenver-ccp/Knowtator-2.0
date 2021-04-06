@@ -9,7 +9,8 @@
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]
             [knowtator.util :as util]
-            [knowtator.owl.events :as owl]))
+            [knowtator.owl.events :as owl]
+            [knowtator.text-annotation.events :as txt]))
 
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
@@ -92,33 +93,10 @@
                               :on-success      [:add-ontology]
                               :on-failure      [:handle-failure]})))
 
-;; TODO there are two of these
-(reg-event-db ::select-span
-  (fn-traced [db [_ loc doc-id]]
-    (let [{:keys [id ann]}  (->> db
-                              :text-annotation
-                              :spans
-                              (model/spans-containing-loc loc)
-                              (assoc-in db [:text-annotation :spans])
-                              model/realize-spans
-                              :text-annotation
-                              :spans
-                              (filter #(model/in-restriction? %  {:doc [doc-id]}))
-                              first)
-          {:keys [concept]} (->> db
-                              :text-annotation
-                              :anns
-                              (util/map-with-key :id)
-                              ann)]
-      (-> db
-        (assoc-in [:selection :spans] id)
-        (assoc-in [:selection :anns] ann)
-        (assoc-in [:selection :concepts] concept)))))
-
 (reg-event-fx ::record-selection
   (fn-traced [{:keys [db]} [_ {:keys [start end] :as text-range} doc-id]]
     (cond-> {:db (update db :selection merge text-range)}
-      (= start end) (assoc :dispatch [::select-span start doc-id]))))
+      (= start end) (assoc :dispatch [::txt/select-span-by-loc start doc-id]))))
 
 (reg-event-db ::find-in-selected-doc
   (fn [db]

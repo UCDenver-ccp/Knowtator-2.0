@@ -150,7 +150,11 @@
               [re-com/h-box
                :children [[color-controls]
                           [tac/ann-controls]]]
-              [doc-display]
+              [re-com/h-split
+               :src (at)
+               :initial-split 25
+               :panel-1 [owl/owl-class-hierarchy]
+               :panel-2 [doc-display]]
               [re-com/h-box
                :children [[tac/span-controls]
                           [search-controls]]]]])
