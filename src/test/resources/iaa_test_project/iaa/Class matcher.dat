@@ -6,11 +6,11 @@ option under the Edit menu that will allow you to paste the copied data as text.
 
 
 type	matches	non-matches
-All classes	350	106
+All classes	340	106
 CHEBI:1432	0	1
 CHEBI:1542	2	0
 CHEBI:1644	0	1
-CHEBI:1699	54	3
+CHEBI:1699	44	3
 CHEBI:1836	0	1
 CHEBI:2352	0	1
 CHEBI:2352	0	1
