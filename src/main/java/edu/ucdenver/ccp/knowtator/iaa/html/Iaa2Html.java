@@ -560,53 +560,28 @@ public class Iaa2Html {
     return sortedAnnotations;
   }
 
-  private static void writeAnnotationTextSourceHTML(
-      PrintStream out,
-      ConceptAnnotation conceptAnnotation) {
+  private static void writeAnnotationTextSourceHTML(PrintStream out, ConceptAnnotation conceptAnnotation) {
     StringBuilder html = new StringBuilder("<hr><p>");
-    String annotationText = conceptAnnotation.getTextSource().getContent();
+    String content = conceptAnnotation.getTextSource().getContent();
 
     html.append("Text source docID = ").append(conceptAnnotation.getTextSource().getId()).append("<p>");
 
-
     TreeSet<Span> spans = conceptAnnotation.getCollection();
-    List<Span> modifiedSpans = new ArrayList<>(spans);
 
-    annotationText = shortenText(annotationText, modifiedSpans);
-
-    int mark = 0;
-
-    for (Span span : modifiedSpans) {
-      try {
-        //noinspection RedundantStringOperation
-        html.append(annotationText.substring(mark, span.getStart())).append("<b>");
-        html.append(span.getSpannedText()).append("</b>");
-        mark = span.getEnd();
-      } catch (StringIndexOutOfBoundsException sioobe) {
-        sioobe.printStackTrace();
-      }
-    }
-    if (mark < annotationText.length()) html.append(annotationText.substring(mark));
-    out.println(html);
-  }
-
-  private static String shortenText(String text, List<Span> spans) {
     int frontBuffer = 150;
     int endBuffer = 150;
-    if (spans.size() > 0) {
-      Span span = spans.get(0);
-      int start = Math.max(0, span.getStart() - frontBuffer);
-      int end = Math.min(text.length(), span.getEnd() + endBuffer);
-      String substring = text.substring(start, end);
 
-      for (int i = 0; i < spans.size(); i++) {
-        span = spans.get(i);
-        Span offsetSpan = new Span(span.getTextSource(), span.getStart() - start, span.getEnd() - start);
-        spans.set(i, offsetSpan);
-      }
-      return substring;
+    int mark = Math.max(spans.first().getStart() - frontBuffer, 0);
+
+    for (Span span : spans) {
+      html.append(content, mark, span.getStart());
+      mark = span.getEnd();
+      html.append("<b>");
+      html.append(content, span.getStart(), mark);
+      html.append("</b>");
     }
-    return text;
+    html.append(content, mark, Math.min(mark + endBuffer, content.length()));
+    out.println(html);
   }
 
   private static void printAnnotationHTML(
