@@ -13,6 +13,7 @@
         luminus-undertow           {:mvn/version "0.1.7"}
         meander/epsilon            {:mvn/version "0.0.602"}
         uk.org.russet/tawny-owl    {:mvn/version "2.1.0"}
+        aleph/aleph                {:mvn/version "0.4.7-alpha7"}
 
 
         ;; ClojureScript client
