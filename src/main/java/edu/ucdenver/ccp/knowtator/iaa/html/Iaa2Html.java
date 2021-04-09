@@ -492,7 +492,8 @@ public class Iaa2Html {
       List<String> sortedTypes,
       Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
     for (String type : sortedTypes) {
-      out.printf("<h2>%s</h2>%n", type);
+
+      out.printf("<h2>%s</h2>%n", type.startsWith("<") && type.endsWith(">") ? type.substring(1, type.length()- 1) : type);
       Set<ConceptAnnotation> typeConceptAnnotations = sortedAnnotations.get(type);
       for (ConceptAnnotation conceptAnnotation : typeConceptAnnotations) {
         writeAnnotationTextSourceHTML(out, conceptAnnotation);
