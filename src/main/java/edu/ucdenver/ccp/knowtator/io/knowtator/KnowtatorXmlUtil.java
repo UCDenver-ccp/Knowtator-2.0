@@ -214,8 +214,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
         spanEnd = Integer.parseInt(spanElement.getAttribute(KnowtatorXmlAttributes.SPAN_END));
         spanId = spanElement.getAttribute(KnowtatorXmlAttributes.ID);
 
-        Span span = new Span(conceptAnnotation, spanId, spanStart, spanEnd);
-        conceptAnnotation.add(span);
+        try{
+          Span span = new Span(conceptAnnotation, spanId, spanStart, spanEnd);
+          conceptAnnotation.add(span);
+        } catch (IndexOutOfBoundsException e) {
+          log.warn(e.getMessage());
+        }
+
       }
     }
   }

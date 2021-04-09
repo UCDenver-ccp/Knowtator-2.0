@@ -48,7 +48,7 @@ class KnowtatorIaaTest {
   private static File outputDir;
   private static File goldStandardDir;
   private static KnowtatorModel model;
-  private static final TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(4, 456, 456, 4, 3, 0, 0, 0, 0);
+  private static final TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(4, 446, 446, 4, 3, 0, 0, 0, 0);
 
   @BeforeAll
   static void makeProjectTest() throws IaaException, IOException {

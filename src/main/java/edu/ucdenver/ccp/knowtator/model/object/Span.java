@@ -52,7 +52,7 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
    * @param start the start
    * @param end the end
    */
-  public Span(@Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) {
+  public Span(@Nonnull ConceptAnnotation conceptAnnotation, String id, int start, int end) throws IndexOutOfBoundsException {
     this.model = conceptAnnotation.getKnowtatorModel();
 
     this.start = start;
@@ -72,7 +72,15 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
       throw new IndexOutOfBoundsException(
           String.format(
               "Span is invalid because the start of the Span is less than zero: start=%d", start));
-    }
+    };
+    if (end >= conceptAnnotation.getTextSource().getContent().length()) {
+      throw new IndexOutOfBoundsException(
+          String.format(
+              "Span is invalid because the end of the Span is greater than the length of the text source: end=%d, text-source=%s, length=%d",
+              end,
+              conceptAnnotation.getTextSource().getId(),
+              conceptAnnotation.getTextSource().getContent().length()));
+    };
   }
 
   /**
