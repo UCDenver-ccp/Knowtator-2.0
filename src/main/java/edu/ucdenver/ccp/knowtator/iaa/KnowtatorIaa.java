@@ -147,9 +147,8 @@ public class KnowtatorIaa {
           classIaa,
           classMatcher,
           outputDirectory,
-          textSourceAnnotationsMap.size(),
-          annotationTexts,
-          annotationTextNames);
+          textSourceAnnotationsMap.size()
+      );
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n", classMatcher.getName(), classMatcher.getName());
     } catch (Exception e) {
@@ -183,9 +182,8 @@ public class KnowtatorIaa {
           spanIaa,
           spanMatcher,
           outputDirectory,
-          textSourceAnnotationsMap.size(),
-          annotationTexts,
-          annotationTextNames);
+          textSourceAnnotationsMap.size()
+      );
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -211,9 +209,8 @@ public class KnowtatorIaa {
           classAndSpanIaa,
           classAndSpanMatcher,
           outputDirectory,
-          textSourceAnnotationsMap.size(),
-          annotationTexts,
-          annotationTextNames);
+          textSourceAnnotationsMap.size()
+      );
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n",
           classAndSpanMatcher.getName(), classAndSpanMatcher.getName());

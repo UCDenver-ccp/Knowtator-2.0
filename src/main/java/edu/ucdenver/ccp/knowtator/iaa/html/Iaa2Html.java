@@ -54,17 +54,13 @@ public class Iaa2Html {
    * @param matcher the matcher
    * @param directory the directory
    * @param numberOfDocs the number of docs
-   * @param annotationTexts the annotation texts
-   * @param annotationTextNames the annotation text names
    * @throws Exception the exception
    */
   public static void printIaa(
       Iaa iaa,
       Matcher matcher,
       File directory,
-      int numberOfDocs,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames)
+      int numberOfDocs)
       throws Exception {
     NumberFormat percentageFormat = NumberFormat.getPercentInstance();
     percentageFormat.setMinimumFractionDigits(2);
@@ -255,8 +251,6 @@ public class Iaa2Html {
         allwayMatches,
         classes,
         sortedTypes,
-        annotationTexts,
-        annotationTextNames,
         matcher,
         trivialAllwayMatches,
         nontrivialAllwayMatches,
@@ -271,8 +265,6 @@ public class Iaa2Html {
         classes,
         spanIndex,
         sortedTypes,
-        annotationTexts,
-        annotationTextNames,
         matcher,
         trivialAllwayNonmatches,
         nontrivialAllwayNonmatches);
@@ -297,8 +289,6 @@ public class Iaa2Html {
       Map<String, Set<ConceptAnnotation>> allwayMatches,
       Set<String> classes,
       List<String> sortedTypes,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames,
       Matcher matcher,
       Map<String, Set<ConceptAnnotation>> trivialAllwayMatches,
       Map<String, Set<ConceptAnnotation>> nontrivialAllwayMatches,
@@ -326,8 +316,6 @@ public class Iaa2Html {
           matchesStream,
           sortedMatches,
           sortedTypes,
-          annotationTexts,
-          annotationTextNames,
           matchSets);
       matchesStream.flush();
       matchesStream.close();
@@ -351,8 +339,6 @@ public class Iaa2Html {
             trivialMatchesStream,
             sortedTrivialMatches,
             sortedTypes,
-            annotationTexts,
-            annotationTextNames,
             matchSets);
         trivialMatchesStream.flush();
         trivialMatchesStream.close();
@@ -377,8 +363,6 @@ public class Iaa2Html {
             nontrivialMatchesStream,
             sortedNontrivialMatches,
             sortedTypes,
-            annotationTexts,
-            annotationTextNames,
             matchSets);
         nontrivialMatchesStream.flush();
         nontrivialMatchesStream.close();
@@ -396,8 +380,6 @@ public class Iaa2Html {
       Set<String> classes,
       AnnotationSpanIndex spanIndex,
       List<String> sortedTypes,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames,
       Matcher matcher,
       Map<String, Set<ConceptAnnotation>> trivialAllwayNonmatches,
       Map<String, Set<ConceptAnnotation>> nontrivialAllwayNonmatches)
@@ -427,8 +409,6 @@ public class Iaa2Html {
           errors,
           sortedNonmatches,
           sortedTypes,
-          annotationTexts,
-          annotationTextNames,
           comparisonAnnotations);
       errors.flush();
       errors.close();
@@ -454,8 +434,6 @@ public class Iaa2Html {
             trivialErrors,
             sortedTrivialNonmatches,
             sortedTypes,
-            annotationTexts,
-            annotationTextNames,
             comparisonAnnotations);
         trivialErrors.flush();
         trivialErrors.close();
@@ -480,8 +458,6 @@ public class Iaa2Html {
             nontrivialErrors,
             sortedNontrivialNonmatches,
             sortedTypes,
-            annotationTexts,
-            annotationTextNames,
             comparisonAnnotations);
         nontrivialErrors.flush();
         nontrivialErrors.close();
@@ -514,30 +490,21 @@ public class Iaa2Html {
       PrintStream out,
       Map<String, Set<ConceptAnnotation>> sortedAnnotations,
       List<String> sortedTypes,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames,
       Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
     for (String type : sortedTypes) {
       out.printf("<h2>%s</h2>%n", type);
       Set<ConceptAnnotation> typeConceptAnnotations = sortedAnnotations.get(type);
       for (ConceptAnnotation conceptAnnotation : typeConceptAnnotations) {
-        writeAnnotationTextSourceHTML(
-            out,
-            conceptAnnotation,
-            annotationTexts.get(conceptAnnotation),
-            annotationTextNames.get(conceptAnnotation));
+        writeAnnotationTextSourceHTML(out, conceptAnnotation);
         out.println("<ul><li>");
-        printAnnotationHTML(out, conceptAnnotation, annotationTexts.get(conceptAnnotation));
+        printAnnotationHTML(out, conceptAnnotation);
 
         Set<ConceptAnnotation> comparisons = comparisonAnnotations.get(conceptAnnotation);
         if (comparisons != null) {
           for (ConceptAnnotation comparisonConceptAnnotation : comparisons) {
             if (!comparisonConceptAnnotation.equals(conceptAnnotation)) {
               out.println("<li>");
-              printAnnotationHTML(
-                  out,
-                  comparisonConceptAnnotation,
-                  annotationTexts.get(comparisonConceptAnnotation));
+              printAnnotationHTML(out, comparisonConceptAnnotation);
             }
           }
         }
@@ -594,37 +561,35 @@ public class Iaa2Html {
 
   private static void writeAnnotationTextSourceHTML(
       PrintStream out,
-      ConceptAnnotation conceptAnnotation,
-      String annotationText,
-      String annotationTextName) {
+      ConceptAnnotation conceptAnnotation) {
     StringBuilder html = new StringBuilder("<hr><p>");
-    if (annotationTextName != null)
-      html.append("Text source docID = ").append(annotationTextName).append("<p>");
+    String annotationText = conceptAnnotation.getTextSource().getContent();
 
-    if (annotationText != null) {
-      TreeSet<Span> spans = conceptAnnotation.getCollection();
-      List<Span> modifiedSpans = new ArrayList<>(spans);
+    html.append("Text source docID = ").append(conceptAnnotation.getTextSource().getId()).append("<p>");
 
-      annotationText = shortenText(annotationText, modifiedSpans);
 
-      int mark = 0;
+    TreeSet<Span> spans = conceptAnnotation.getCollection();
+    List<Span> modifiedSpans = new ArrayList<>(spans);
 
-      for (Span span : modifiedSpans) {
-        try {
-          //noinspection RedundantStringOperation
-          html.append(annotationText.substring(mark, span.getStart())).append("<b>");
-          html.append(Span.substring(annotationText, span)).append("</b>");
-          mark = span.getEnd();
-        } catch (StringIndexOutOfBoundsException sioobe) {
-          sioobe.printStackTrace();
-        }
+    annotationText = shortenText(annotationText, modifiedSpans);
+
+    int mark = 0;
+
+    for (Span span : modifiedSpans) {
+      try {
+        //noinspection RedundantStringOperation
+        html.append(annotationText.substring(mark, span.getStart())).append("<b>");
+        html.append(span.getSpannedText()).append("</b>");
+        mark = span.getEnd();
+      } catch (StringIndexOutOfBoundsException sioobe) {
+        sioobe.printStackTrace();
       }
-      if (mark < annotationText.length()) html.append(annotationText.substring(mark));
     }
-    out.println(html.toString());
+    if (mark < annotationText.length()) html.append(annotationText.substring(mark));
+    out.println(html);
   }
 
-  private static String shortenText(String text, java.util.List<Span> spans) {
+  private static String shortenText(String text, List<Span> spans) {
     int frontBuffer = 150;
     int endBuffer = 150;
     if (spans.size() > 0) {
@@ -635,7 +600,7 @@ public class Iaa2Html {
 
       for (int i = 0; i < spans.size(); i++) {
         span = spans.get(i);
-        Span offsetSpan = new Span(span.getStart() - start, span.getEnd() - start);
+        Span offsetSpan = new Span(span.getTextSource(), span.getStart() - start, span.getEnd() - start);
         spans.set(i, offsetSpan);
       }
       return substring;
@@ -644,15 +609,11 @@ public class Iaa2Html {
   }
 
   private static void printAnnotationHTML(
-      PrintStream out, ConceptAnnotation conceptAnnotation, String annotationText) {
-    StringBuilder html = new StringBuilder();
+      PrintStream out, ConceptAnnotation conceptAnnotation) {
 
-    if (annotationText != null) {
-      String coveredText = Iaa.getCoveredText(conceptAnnotation, annotationText, " ... ");
-      html.append(coveredText);
-    }
-    html.append("  ").append(conceptAnnotation.toHtml());
-    out.print(html.toString());
+    String html = conceptAnnotation.toString() +
+        "  " + conceptAnnotation.toHtml();
+    out.print(html);
   }
 
   private static void printIntro(
@@ -713,8 +674,6 @@ public class Iaa2Html {
    * @param fileName the file name
    * @param directory the directory
    * @param allwayMatches the allway matches
-   * @param annotationTexts the annotation texts
-   * @param annotationTextNames the annotation text names
    * @param classes the classes
    * @param iaa the iaa
    * @throws IOException the io exception
@@ -725,8 +684,6 @@ public class Iaa2Html {
       String fileName,
       File directory,
       Map<String, Set<ConceptAnnotation>> allwayMatches,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames,
       Set<String> classes,
       Iaa iaa)
       throws IOException {
@@ -753,8 +710,6 @@ public class Iaa2Html {
           matchesStream,
           sortedMatches,
           sortedTypes,
-          annotationTexts,
-          annotationTextNames,
           matchSets);
       matchesStream.flush();
       matchesStream.close();
@@ -771,8 +726,6 @@ public class Iaa2Html {
    * @param directory the directory
    * @param allwayNonmatches the allway nonmatches
    * @param spanIndex the span index
-   * @param annotationTexts the annotation texts
-   * @param annotationTextNames the annotation text names
    * @param classes the classes
    * @throws IOException the io exception
    */
@@ -783,8 +736,6 @@ public class Iaa2Html {
       File directory,
       Map<String, Set<ConceptAnnotation>> allwayNonmatches,
       AnnotationSpanIndex spanIndex,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames,
       Set<String> classes)
       throws IOException {
     html.println("<h2>non-match data</h2>");
@@ -814,8 +765,6 @@ public class Iaa2Html {
           errors,
           sortedNonmatches,
           sortedTypes,
-          annotationTexts,
-          annotationTextNames,
           comparisonAnnotations);
       errors.flush();
       errors.close();

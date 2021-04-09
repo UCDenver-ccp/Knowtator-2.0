@@ -35,7 +35,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /** The type Iaa. */
 public class Iaa {
@@ -154,33 +153,6 @@ public class Iaa {
   static boolean spansOverlap(
       ConceptAnnotation conceptAnnotation1, ConceptAnnotation conceptAnnotation2) {
     return Span.intersects(conceptAnnotation1.getCollection(), conceptAnnotation2.getCollection());
-  }
-
-  /**
-   * Returns the text covered by an concept.
-   *
-   * @param conceptAnnotation an concept that has spans corresponding to extents of annotationText
-   * @param annotationText the text from which an concept corresponds to.
-   * @param spanSeparator if more than one Span exists, then this String will be inserted between
-   *     each segment of text.
-   * @return the text covered by an concept.
-   */
-  public static String getCoveredText(
-      ConceptAnnotation conceptAnnotation, String annotationText, String spanSeparator) {
-    TreeSet<Span> spans = conceptAnnotation.getCollection();
-    if (spans == null || spans.size() == 0) {
-      return "";
-    } else if (spans.size() == 1) {
-      return Span.substring(annotationText, spans.first());
-    } else {
-      StringBuilder sb = new StringBuilder();
-      sb.append(Span.substring(annotationText, spans.first()));
-      for (int i = 1; i < spans.size(); i++) {
-        sb.append(spanSeparator);
-        sb.append(Span.substring(annotationText, spans.first()));
-      }
-      return sb.toString();
-    }
   }
 
   /**

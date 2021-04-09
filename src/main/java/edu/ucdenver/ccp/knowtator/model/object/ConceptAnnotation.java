@@ -52,6 +52,8 @@ public class ConceptAnnotation extends SpanCollection
   private String id;
   private final Set<String> layers;
 
+  private final String spanSeparator = " ... ";
+
   /**
    * Instantiates a new Concept annotation.
    *
@@ -198,7 +200,7 @@ public class ConceptAnnotation extends SpanCollection
     sb.append("<li>class = ").append(getOwlClass()).append("</li>");
     sb.append("<li>spanCollection = ");
     for (Span span : this) {
-      sb.append(span.toString()).append(" ");
+      sb.append(span.toString()).append(spanSeparator);
     }
     sb.append("</li>");
 
@@ -208,7 +210,7 @@ public class ConceptAnnotation extends SpanCollection
 
   @Override
   public String toString() {
-    return String.format("%s", stream().map(Span::getSpannedText).collect(Collectors.joining(" ")));
+    return String.format("%s", stream().map(Span::getSpannedText).collect(Collectors.joining(spanSeparator)));
   }
 
   /**

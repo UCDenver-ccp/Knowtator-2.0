@@ -49,16 +49,12 @@ public class SpanMatcherHtml {
    * @param matcher the matcher
    * @param directory the directory
    * @param numberOfDocs the number of docs
-   * @param annotationTexts the annotation texts
-   * @param annotationTextNames the annotation text names
    */
   public static void printIaa(
       Iaa iaa,
       Matcher matcher,
       File directory,
-      int numberOfDocs,
-      Map<ConceptAnnotation, String> annotationTexts,
-      Map<ConceptAnnotation, String> annotationTextNames) throws IOException {
+      int numberOfDocs) throws IOException {
     NumberFormat percentageFormat = NumberFormat.getPercentInstance();
     percentageFormat.setMinimumFractionDigits(2);
 
@@ -144,8 +140,6 @@ public class SpanMatcherHtml {
         fileName,
         directory,
         allwayMatches,
-        annotationTexts,
-        annotationTextNames,
         classes,
         iaa);
 
@@ -156,8 +150,6 @@ public class SpanMatcherHtml {
         directory,
         allwayNonmatches,
         spanIndex,
-        annotationTexts,
-        annotationTextNames,
         classes);
 
     Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();

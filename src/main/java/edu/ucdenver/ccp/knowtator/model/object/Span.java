@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 public class Span implements ConceptAnnotationBoundModelObject<Span> {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(KnowtatorModel.class);
+  private TextSource textSource;
 
   private int start;
   private int end;
@@ -80,7 +81,8 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
    * @param start the start
    * @param end the end
    */
-  public Span(int start, int end) {
+  public Span(TextSource textSource, int start, int end) {
+    this.textSource = textSource;
     this.start = start;
     this.end = end;
     if (start > end) {
@@ -98,7 +100,7 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
   }
 
   public TextSource getTextSource() {
-    return conceptAnnotation.getTextSource();
+    return conceptAnnotation == null ? textSource : conceptAnnotation.getTextSource();
   }
 
   /*
@@ -158,21 +160,6 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Substring string.
-   *
-   * @param string the string
-   * @param span the span
-   * @return the string
-   */
-  public static String substring(String string, Span span) {
-    int start = Math.max(0, span.getStart());
-    start = Math.min(start, string.length() - 1);
-    int end = Math.max(0, span.getEnd());
-    end = Math.min(end, string.length() - 1);
-    return string.substring(start, end);
   }
 
   @Override
