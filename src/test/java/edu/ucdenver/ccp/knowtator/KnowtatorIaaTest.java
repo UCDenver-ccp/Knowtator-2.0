@@ -136,7 +136,7 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Class and span matcher.dat"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.println(String.format("Gold: %s\nThis: %s\n",
+      System.out.println(String.format("Gold: file://%s\nThis: file://%s\n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
           new File(outputDir, "index.html").getAbsolutePath()));
       throw e;
