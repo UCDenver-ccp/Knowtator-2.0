@@ -73,7 +73,7 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
           String.format(
               "Span is invalid because the start of the Span is less than zero: start=%d", start));
     };
-    if (end >= conceptAnnotation.getTextSource().getContent().length()) {
+    if (end > conceptAnnotation.getTextSource().getContent().length()) {
       throw new IndexOutOfBoundsException(
           String.format(
               "Span is invalid because the end of the Span is greater than the length of the text source: end=%d, text-source=%s, length=%d",
