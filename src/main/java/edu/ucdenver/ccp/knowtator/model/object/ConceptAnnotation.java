@@ -198,10 +198,11 @@ public class ConceptAnnotation extends SpanCollection
     sb.append("<ul><li>").append(annotator.getId()).append("</li>");
 
     sb.append("<li>class = ").append(getOwlClass()).append("</li>");
-    sb.append("<li>spanCollection = ");
-    for (Span span : this) {
-      sb.append(span.toString()).append(spanSeparator);
-    }
+    sb.append("<li>spans = ");
+    sb.append(String.format("%s",
+        stream()
+        .map(span -> String.format("%d|%d", span.getStart(), span.getEnd()))
+        .collect(Collectors.joining(spanSeparator))));
     sb.append("</li>");
 
     sb.append("</ul>");
