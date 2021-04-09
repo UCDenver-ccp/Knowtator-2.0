@@ -111,8 +111,7 @@ class ProjectManagerTest {
             .getFile());
     projectFile = BaseModel.validateProjectLocation(projectFile);
     model.load(projectFile);
-
-    TestingHelpers.ProjectCounts counts = TestingHelpers.defaultCounts.copy(4, 456, 456, 4, 2, 0, 0, 0, 0);
+    TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(9, 452, 453, 7, 4, 3, 7, 4, 0);
     TestingHelpers.countCollections(model, counts);
 
   }
