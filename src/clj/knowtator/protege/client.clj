@@ -1,23 +1,15 @@
 (ns knowtator.protege.client
   (:require [aleph.http :as http]
-            [byte-streams :as bs]
-            [cognitect.transit :as t]
-            [manifold.stream :as s]))
+            [manifold.stream :as s]
+            [ring.middleware.transit :refer [decode]]))
 
 (def host "localhost")
 (def port 10003)
 (def url (format "ws://%s:%d" host port))
 
-(def protege-conn @(http/websocket-client (str url "/protege")))
+(comment
+  (let [protege-conn @(http/websocket-client (str url "/protege"))
+        decoded-conn (s/map decode protege-conn)]
+    @(s/take! decoded-conn)
 
-(+ 1 1)
-(defn read-message [m]
-  (-> m
-    bs/to-input-stream
-    (t/reader :json)
-    t/read))
-
-(read-message @(s/take! protege-conn))
-
-@(s/take! ( protege-conn))
-(s/consume #(println "message: " %) protege-conn)
+    (s/consume #(println "message: " %) protege-conn)))
