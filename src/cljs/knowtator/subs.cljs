@@ -152,3 +152,21 @@
 
 (reg-sub ::spans
   (comp :spans :text-annotation))
+
+(reg-sub ::available-projects
+  (fn [_ _]
+    ["concepts+assertions 3_2 copy"
+     "test_project_using_uris"
+     "default"]))
+
+(reg-sub ::selected-project
+  (fn [db _]
+    (get-in db [:selection :project])))
+
+(reg-sub ::loading?
+  (fn [db [_ place]]
+    (get-in db [:loading? place] false)))
+
+(reg-sub ::error?
+  (fn [db [_ place]]
+    (get-in db [:error? place] false)))

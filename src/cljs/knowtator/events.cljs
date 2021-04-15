@@ -15,40 +15,88 @@
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
     (let [db db/default-db]
-      {:db         (-> db
-                     (assoc-in [:graph :nodes]
-                       (->> db
-                         :anns
-                         (map-indexed (fn [i ann]
-                                        {:id  (keyword (str "n" (inc i)))
-                                         :ann (:id ann)}))))
-                     (update :graph
-                       (fn [{:keys [nodes] :as graph}]
-                         (assoc graph :edges
-                           (->> (for [source (take 2 #_(int (/ (count nodes) 2)) (shuffle nodes))
-                                      target (take 3 #_(int (/ (count nodes) 3)) (shuffle nodes))]
-                                  {:from (:id source)
-                                   :to   (:id target)})
-                             (map-indexed (fn [i edge]
-                                            (assoc edge :id (keyword (str "e" (inc i))))))))))
-                     (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
-       :http-xhrio (let [project "test_project_using_uris"]
-                     [{:method          :get
-                       :uri             (str "/project/project/" project)
-                       :format          (ajax/transit-request-format)
-                       :response-format (ajax/transit-response-format)
-                       :on-success      [::set-project]
-                       :on-failure      [::report-failure]}
-                      {:method          :get
-                       :uri             (str "/project/ontology/" project)
-                       :format          (ajax/transit-request-format)
-                       :response-format (ajax/transit-response-format)
-                       :on-success      [::owl/set-ontology]
-                       :on-failure      [::report-failure]}])})))
+      {:db             (-> db
+                         (assoc-in [:graph :nodes]
+                           (->> db
+                             :anns
+                             (map-indexed (fn [i ann]
+                                            {:id  (keyword (str "n" (inc i)))
+                                             :ann (:id ann)}))))
+                         (update :graph
+                           (fn [{:keys [nodes] :as graph}]
+                             (assoc graph :edges
+                               (->> (for [source (take 2 #_(int (/ (count nodes) 2)) (shuffle nodes))
+                                          target (take 3 #_(int (/ (count nodes) 3)) (shuffle nodes))]
+                                      {:from (:id source)
+                                       :to   (:id target)})
+                                 (map-indexed (fn [i edge]
+                                                (assoc edge :id (keyword (str "e" (inc i))))))))))
+                         (assoc-in [:selection :doc] (-> db :text-annotation :docs first :id)))
+       #_#_:http-xhrio (let [project "concepts+assertions 3_2 copy" #_ "test_project_using_uris"]
+                         [{:method          :get
+                           :uri             (str "/project/project/" project)
+                           :format          (ajax/transit-request-format)
+                           :response-format (ajax/transit-response-format)
+                           :on-success      [::set-project]
+                           :on-failure      [::report-failure]}
+                          {:method          :get
+                           :uri             (str "/project/ontology/" project)
+                           :format          (ajax/transit-request-format)
+                           :response-format (ajax/transit-response-format)
+                           :on-success      [::owl/set-ontology]
+                           :on-failure      [::report-failure]}])})))
+
+(reg-event-fx ::load-project
+  (fn [{:keys [db]} [_ project]]
+    (cond-> {:db db}
+      (not= project "default")
+      (assoc
+        :dispatch-n [[::set-spinny :project true]
+                     [::set-error :project false]
+                     [::set-spinny :ontology true]
+                     [::set-error :ontology false]]
+        :http-xhrio [{:method          :get
+                      :uri             (str "/project/project/" project)
+                      :format          (ajax/transit-request-format)
+                      :response-format (ajax/transit-response-format)
+                      :on-success      [::load-project-success :project ::set-project]
+                      :on-failure      [::load-project-failure :project]}
+                     {:method          :get
+                      :uri             (str "/project/ontology/" project)
+                      :format          (ajax/transit-request-format)
+                      :response-format (ajax/transit-response-format)
+                      :on-success      [::load-project-success :ontology ::owl/set-ontology]
+                      :on-failure      [::load-project-failure :ontology]}]))))
+
+(reg-event-fx ::load-project-success
+  (fn [{:keys [db]} [_ place evt project-data]]
+    {:db         db
+     :dispatch-n [[evt project-data]
+                  [::set-spinny place false]]}))
+
+(reg-event-fx ::load-project-failure
+  (fn [{:keys [db]} [_ place _]]
+    {:db         db
+     :dispatch-n [[::report-failure]
+                  [::set-error place true]
+                  [::set-spinny place false]]}))
+
+(reg-event-db ::set-spinny
+  (fn [db [_ place val]]
+    (assoc-in db [:loading? place] val)))
+
+(reg-event-db ::set-error
+  (fn [db [_ place val]]
+    (assoc-in db [:error? place] val)))
+
+(reg-event-db ::select-project
+  (fn [db [_ project]]
+    (assoc-in db [:selection :project] project)))
 
 (reg-event-db ::set-project
   (fn [db [_ result]]
     (-> db
+      (assoc :loading-project? false)
       (assoc :text-annotation result)
       (assoc-in [:selection :docs] (->> result :docs (sort-by :id) first :id))
       (assoc-in [:selection :profiles] (->> result :profiles (sort-by :id) first :id))

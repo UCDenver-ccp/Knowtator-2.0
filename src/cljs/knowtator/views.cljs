@@ -77,20 +77,47 @@
                            [ra/graph]]]]]])
 
 (defn page-title []
-  [re-com/h-box
-   :children [[:img (let [size "60px"]
-                      {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
-                       :style {:width  size
-                               :height size}})]
-              [re-com/title
-               :label "Knowtator"
-               :level :level1]]])
-
-(defn annotation-title []
-  [re-com/title
-   :label "Knowtator"
-   :level :level1])
-
+  [re-com/v-box
+   :children [[re-com/h-box
+               :children [[:img (let [size "60px"]
+                                  {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
+                                   :style {:width  size
+                                           :height size}})]
+                          [re-com/title
+                           :label "Knowtator"
+                           :level :level1]]]
+              [re-com/h-box
+               :children [[re-com/single-dropdown
+                           :src (at)
+                           :choices (<sub [::subs/available-projects])
+                           :label-fn identity
+                           :id-fn identity
+                           :model (<sub [::subs/selected-project])
+                           :on-change #(>evt [::evts/select-project %])]
+                          [re-com/button
+                           :src (at)
+                           :label "Open project"
+                           :on-click #(>evt [::evts/load-project (<sub [::subs/selected-project])])]
+                          [re-com/alert-list
+                           :on-close   #(println %)
+                           :alerts (->> [{:id         :project-loading
+                                          :alert-type :info
+                                          :heading    "Project Status"
+                                          :body       (if (<sub [::subs/loading? :project]) "spinny" "done")}
+                                         (when (<sub [::subs/error? :project])
+                                           {:id         :project-error
+                                            :alert-type :danger
+                                            :heading    "Project load error"})
+                                         {:id         :ontology-loading
+                                          :alert-type :info
+                                          :heading    "Ontology status"
+                                          :body       (if (<sub [::subs/loading? :ontology]) "spinny" "done")}
+                                         (when (<sub [::subs/error? :ontology])
+                                           {:id         :ontology-error
+                                            :alert-type :danger
+                                            :heading    "Ontology load error"})]
+                                     (keep identity)
+                                     vec)]]]]])
 (defn undo-controls
   []
   [re-com/h-box
