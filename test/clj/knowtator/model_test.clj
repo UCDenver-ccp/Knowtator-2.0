@@ -114,3 +114,152 @@
                     :end   36})
                sut/make-overlapping-spans
                count)))))
+
+(deftest remove-selected-item-test
+  (testing "No sub-items"
+    (is (= {:text-annotation {:docs           [{:id :d1}]
+                              :anns           nil
+                              :spans          nil
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :graphs         nil}
+            :selection       {:docs           nil
+                              :anns           nil
+                              :spans          nil
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :graphs         nil}}
+          (sut/remove-selected-item {:text-annotation {:docs [{:id :d1}
+                                                              {:id :d2}]}
+                                     :selection       {:docs :d2}}
+            :docs :doc)))
+
+    (is (= {:text-annotation {:docs  [{:id :d1}
+                                      {:id :d2}]
+                              :anns  [{:id  :a2
+                                       :doc :d2}]
+                              :spans nil}
+            :selection       {:docs  :d2
+                              :anns  nil
+                              :spans nil}}
+          (sut/remove-selected-item {:text-annotation {:docs [{:id :d1}
+                                                              {:id :d2}]
+
+                                                       :anns [{:id  :a1
+                                                               :doc :d1}
+                                                              {:id  :a2
+                                                               :doc :d2}]}
+                                     :selection {:docs :d2
+                                                 :anns :a1}}
+            :anns  :ann))))
+
+  (testing "With sub-items"
+    (is (= {:text-annotation {:docs           [{:id :d1}]
+                              :anns           []
+                              :spans          []
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :graphs         nil}
+            :selection       {:docs           nil
+                              :anns           nil
+                              :spans          nil
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :graphs         nil}}
+          (sut/remove-selected-item {:text-annotation {:docs  [{:id :d1}
+                                                               {:id :d2}]
+                                                       :anns  [{:id  :a2
+                                                                :doc :d2}]
+                                                       :spans [{:id  :s1
+                                                                :ann :a2}]}
+                                     :selection       {:docs :d2
+                                                       :anns :a2}}
+            :docs :doc)))
+
+    (is (= {:text-annotation {:docs  [{:id :d1}
+                                      {:id :d2}]
+                              :anns  [{:id  :a2
+                                       :doc :d2}]
+                              :spans [{:id  :s2
+                                       :ann :a2}]}
+            :selection       {:docs  :d2
+                              :anns  nil
+                              :spans nil}}
+          (sut/remove-selected-item {:text-annotation {:docs [{:id :d1}
+                                                              {:id :d2}]
+
+                                                       :anns  [{:id  :a1
+                                                                :doc :d1}
+                                                               {:id  :a2
+                                                                :doc :d2}]
+                                                       :spans [{:id  :s1
+                                                                :ann :a1}
+                                                               {:id  :s2
+                                                                :ann :a2}]}
+                                     :selection {:docs  :d2
+                                                 :anns  :a1
+                                                 :spans :s1}}
+            :anns  :ann)))
+
+    (is (= {:text-annotation {:spans          [{:id  :s6
+                                                :ann :a3}]
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :graphs         nil
+                              :anns           [{:id      :a3
+                                                :profile :p1
+                                                :concept :c1
+                                                :doc     :d2}]
+                              :profiles       nil
+                              :docs           [{:id      :d2
+                                                :content "hey"}]}
+            :selection       {:project        "default"
+                              :docs           nil
+                              :graphs         nil
+                              :ann-nodes      nil
+                              :assertion-anns nil
+                              :anns           nil
+                              :profiles       :p1
+                              :concepts       :c1
+                              :spans          nil
+                              :review-type    :anns
+                              :ann-props      "http://www.w3.org/2004/02/skos/core#prefLabel"}}
+          (sut/remove-selected-item
+            {:text-annotation {:spans    [{:id  :s1
+                                           :ann :a1}
+                                          {:id  :s2
+                                           :ann :a1}
+                                          {:id  :s3
+                                           :ann :a2}
+                                          {:id  :s4
+                                           :ann :a2}
+                                          {:id  :s5
+                                           :ann :a1}
+                                          {:id  :s6
+                                           :ann :a3}]
+                               :anns     [{:id      :a1
+                                           :profile :p1
+                                           :concept :c1
+                                           :doc     :d1}
+                                          {:id      :a2
+                                           :profile :p2
+                                           :concept :c2
+                                           :doc     :d1}
+                                          {:id      :a3
+                                           :profile :p1
+                                           :concept :c1
+                                           :doc     :d2}]
+                               :profiles nil
+                               :docs     [{:id      :d2
+                                           :content "hey"}
+                                          {:id      :d1
+                                           :content "there"}]}
+             :selection       {:project     "default"
+                               :docs        :d1
+                               :anns        nil
+                               :profiles    :p1
+                               :concepts    :c1
+                               :spans       nil
+                               :review-type :anns
+                               :ann-props   "http://www.w3.org/2004/02/skos/core#prefLabel"}}
+            :docs :doc)))))

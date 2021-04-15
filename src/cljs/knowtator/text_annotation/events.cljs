@@ -18,8 +18,9 @@
 
 (reg-event-fx ::cycle
   (fn-traced [{:keys [db]} [_ coll-id direction]]
-    (let [coll        (->> (cond-> db
-                             (#{:spans :anns} coll-id) (filter-in-doc coll-id))
+    (let [coll        (->> (cond
+                             (#{:spans :anns} coll-id) (filter-in-doc db coll-id)
+                             :else                     (-> db :text-annotation coll-id))
                         (sort-by (juxt :start :end :id)))
           new-item-id (model/cycle-selection db coll coll-id direction)]
       (cond (#{:spans} coll-id) {:db       db
@@ -42,15 +43,10 @@
                     :id)]
       (cond-> {:db db} span-id (assoc :dispatch [::select-span span-id])))))
 
-(defn TXT-OBJ [k id]
-  [(s/keypath :text-annotation k)
-   (s/filterer #(= (:id %) id))
-   s/FIRST])
-
 (reg-event-fx ::select-span
   (fn-traced [{:keys [db]} [_ id]]
     (let [ann (s/select-one (s/comp-paths
-                              (TXT-OBJ :spans id)
+                              (model/TXT-OBJ :spans :id id)
                               (s/keypath :ann))
                 db)]
       {:db       (assoc-in db [:selection :spans] id)
@@ -59,7 +55,7 @@
 (reg-event-fx ::select-annotation
   (fn-traced [{:keys [db]} [_ id]]
     (let [concept (s/select-one (s/comp-paths
-                                  (TXT-OBJ :anns id)
+                                  (model/TXT-OBJ :anns :id id)
                                   (s/keypath :concept))
                     db)]
       {:db       (assoc-in db [:selection :anns] id)
@@ -121,37 +117,18 @@
         (assoc-in [:selection :anns] ann-id)
         (assoc-in [:selection :spans] span-id)))))
 
-(defn remove-selected-item
-  [db k]
-  (let [selected-id (get-in db [:selection k])]
-    (->> db
-      (s/setval (TXT-OBJ k selected-id) s/NONE)
-      (s/setval [:selection k] nil))))
-
-(defn remove-selected-sub-items
-  [db parent-k child-k child-parent-k]
-  (let [selected-id (get-in db [:selection parent-k])]
-    (->> db
-      (s/setval [:text-annotation
-                 child-k
-                 (s/filterer #(= (get % child-parent-k) selected-id))
-                 s/ALL]
-        s/NONE))))
-
 (reg-event-db ::remove-selected-doc
   (undoable "Removing document")
   (fn [db [_]]
     (-> db
-      (remove-selected-item :docs)
+      (model/remove-selected-item :docs :doc)
       (assoc-in [:selection :docs] (-> db
+                                     :text-annotation
                                      :docs
-                                     keys
-                                     first)))))
+                                     first
+                                     :id)))))
 
 (reg-event-db ::remove-selected-ann
   (undoable "Removing annotation")
   (fn-traced [db [_]]
-    (-> db
-      (remove-selected-item :spans)
-      (remove-selected-sub-items :anns :spans :ann)
-      (remove-selected-item :anns))))
+    (model/remove-selected-item db :anns :ann)))

@@ -3,6 +3,7 @@
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.string :as str]
+            [com.rpl.specter :as specter]
             [knowtator.specs :as specs]
             [knowtator.util :as util]))
 
@@ -395,3 +396,59 @@
 (defn realize-relation-anns
   [graph property-map]
   (update graph :edges (partial map (partial realize-relation-ann property-map))))
+
+(def text-objs-hierarchy (-> (make-hierarchy)
+                           (derive :docs :project)
+                           (derive :profiles :project)
+                           (derive :colors :profiles)
+                           (derive #_:concept-anns :anns :docs)
+                           (derive :graphs :docs)
+                           (derive :spans :anns #_:concept-anns)
+                           (derive :ann-nodes :graphs)
+                           (derive :assertion-anns :graphs)))
+(def text-obj-hierarchy (-> (make-hierarchy)
+                          (derive :doc :project)
+                          (derive :profile :project)
+                          (derive :color :profile)
+                          (derive #_:concept-ann :ann :doc)
+                          (derive :graph :doc)
+                          (derive :span :ann #_:concept-ann)
+                          (derive :ann-node :graph)
+                          (derive :assertion-ann :graph)))
+
+(defn TXT-OBJS [k-type k id]
+  [(specter/keypath :text-annotation k-type)
+   (specter/filterer #((cond->> id ((complement set?) id) (conj #{})) (k %)))])
+
+(defn TXT-OBJ [k-type k id]
+  [(TXT-OBJS k-type k id)
+   specter/FIRST])
+
+(defn remove-matching-sub-items
+  [db child-objs-k parent-obj-k parent-id]
+  (as-> db db
+    (let [children    (specter/select [(TXT-OBJS child-objs-k parent-obj-k parent-id)
+                                       specter/ALL
+                                       :id]
+                        db)
+          child-obj-k (first (descendants text-obj-hierarchy parent-obj-k))]
+      (reduce (fn [db child-child-objs-k]
+                (reduce (fn [db id]
+                          (remove-matching-sub-items db child-child-objs-k child-obj-k id))
+                  db children))
+        db (descendants text-objs-hierarchy child-objs-k)))
+
+    (specter/setval [:selection child-objs-k] nil db)
+    (specter/setval [(TXT-OBJS child-objs-k parent-obj-k parent-id)
+                     specter/ALL]
+      specter/NONE db)))
+
+(defn remove-selected-item
+  [db objs-k obj-k]
+  (let [selected-id (get-in db [:selection objs-k])]
+    (as-> db db
+      (specter/setval (TXT-OBJ objs-k :id selected-id) specter/NONE db)
+      (specter/setval [:selection objs-k] nil db)
+      (reduce (fn [db child-objs-k]
+                (remove-matching-sub-items db child-objs-k obj-k selected-id))
+        db (descendants text-objs-hierarchy objs-k)))))
