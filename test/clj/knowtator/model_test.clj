@@ -41,10 +41,13 @@
             :concept :c1
             :profile :p1
             :color   "green"
-            :label   "The quick brown fox jumped over the lazy dog."
+            :label   "The quick brown fox jumped over the lazy dog.\nC1"
             :content "The quick brown fox jumped over the lazy dog."}
           (sut/realize-ann-node
             test-db
+            {:c1 "C1"
+             :c2 "C2"}
+            true
             {:id  :n1
              :ann :a1})))))
 
@@ -59,18 +62,18 @@
             :profile :p1
             :content "he q"}
           (sut/realize-span
-            {:d1 {:id      :d1
-                  :content "The quick brown fox jumped over the lazy dog."}
-             :d2 {:id :content
-                  :d2 "WRONG"}}
-            {:a1 {:id      :a1
-                  :doc     :d1
-                  :profile :p1
-                  :concept :c1}
-             :a2 {:id      :a2
-                  :doc     :d2
-                  :profile :p2
-                  :concept :c2}}
+            {:text-annotation {:docs [{:id      :d1
+                                       :content "The quick brown fox jumped over the lazy dog."}
+                                      {:id :content
+                                       :d2 "WRONG"}]
+                               :anns [{:id      :a1
+                                       :doc     :d1
+                                       :profile :p1
+                                       :concept :c1}
+                                      {:id      :a2
+                                       :doc     :d2
+                                       :profile :p2
+                                       :concept :c2}]}}
             {:id    :s1
              :ann   :a1
              :start 1
@@ -86,11 +89,6 @@
             :content "The quick brown fox jumped over the lazy dog."}
           (sut/realize-ann
             (sut/realize-spans test-db)
-            {:p1 {:id     :p1
-                  :colors {:c1 "green"
-                           :c2 "red"}}
-             :p2 {:id     :p1
-                  :colors {:c1 "blue"}}}
             {:id      :a1
              :profile :p1
              :concept :c1

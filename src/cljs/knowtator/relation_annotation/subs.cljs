@@ -27,17 +27,14 @@
 (reg-sub ::selected-realized-graph
   :<- [::selected-graph-space]
   :<- [::db]
-  :<- [::subs/profile-map]
-  :<- [::subs/doc-map]
-  :<- [::subs/ann-map]
   :<- [::owl/classes-uri->label]
   :<- [::display-ann-node-owl-class?]
 
   :<- [::owl/obj-prop-uri->label]
-  (fn [[graph db profile-map doc-map ann-map class-map display-owl-class? property-map] _]
+  (fn [[graph db class-map display-owl-class? property-map] _]
     (when graph
       (-> graph
-        (model/realize-ann-nodes db profile-map doc-map ann-map class-map display-owl-class?)
+        (model/realize-ann-nodes db class-map display-owl-class?)
         (model/realize-relation-anns property-map)))))
 
 (reg-sub ::graph-physics

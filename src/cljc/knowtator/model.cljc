@@ -7,6 +7,14 @@
             [knowtator.specs :as specs]
             [knowtator.util :as util]))
 
+(defn TXT-OBJS [k-type k id]
+  [(specter/keypath :text-annotation k-type)
+   (specter/filterer #((cond->> id ((complement set?) id) (conj #{})) (k %)))])
+
+(defn TXT-OBJ [k-type k id]
+  [(TXT-OBJS k-type k id)
+   specter/FIRST])
+
 (defn ann-color
   [{:keys [profile concept]} profiles]
   (get-in (util/map-with-key :id profiles) [profile :colors concept]))
@@ -313,53 +321,56 @@
     (assert (= overlaps true-overlaps) (clojure.data/diff overlaps true-overlaps)))
 
 (defn realize-span
-  [doc-map ann-map {:keys [start end ann] :as span}]
-  (let [{:keys [doc] :as ann} (get ann-map ann)
-        content               (-> doc-map
-                                (get-in [doc :content])
+  [db {:keys [start end ann] :as span}]
+  (let [{:keys [doc] :as ann} (->> db
+                                (specter/select-one
+                                  (TXT-OBJ :anns :id ann)))
+        content               (-> db
+                                (->> (specter/select-one
+                                       [(TXT-OBJ :docs :id doc)
+                                        :content]))
                                 (subs start end))]
     (-> span
       (->> (merge ann))
       (assoc :content content))))
 
 (defn realize-spans
-  [{{:keys [docs anns]} :text-annotation :as db}]
-  (let [ann-map (util/map-with-key :id anns)
-        doc-map (util/map-with-key :id docs)]
-    (-> db
-      (update-in [:text-annotation :spans] (partial map (partial realize-span doc-map ann-map))))))
+  [db]
+  (-> db
+    (update-in [:text-annotation :spans] (partial map (partial realize-span db)))))
 
 (defn realize-ann
   [{{:keys [spans]} :text-annotation
-    {:keys [color]} :defaults}
-   profile-map
-   doc-map
-   ann-map
+    {:keys [color]} :defaults
+    :as             db}
    {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
       :content (->> spans
                  (group-by :ann)
                  id
-                 (map (partial realize-span doc-map ann-map))
+                 (map (partial realize-span db))
                  (map :content)
                  (interpose " ")
                  (apply str))
-      :color (get-in profile-map [profile :colors concept] color))))
+      :color (or
+               (specter/select-one
+                 [(TXT-OBJ :profiles :id profile)
+                  :colors
+                  concept]
+                 db)
+               color))))
 
 (defn realize-anns
-  [{{:keys [profiles docs anns]} :text-annotation :as db}]
-  (let [profile-map (util/map-with-key :id profiles)
-        doc-map     (util/map-with-key :id docs)
-        ann-map     (util/map-with-key :id anns)]
-    (-> db
-      (update-in [:text-annotation :anns] (partial map (partial realize-ann db profile-map doc-map ann-map))))))
+  [db]
+  (update-in db [:text-annotation :anns] (partial map (partial realize-ann db))))
 
 (defn realize-ann-node
-  [db profile-map doc-map ann-map class-map owl-class? {:keys [ann] :as node}]
-  (let [realized-ann (->> ann-map
-                       ann
-                       (realize-ann db profile-map doc-map ann-map))
+  [db class-map owl-class? {:keys [ann] :as node}]
+  (let [realized-ann (->> db
+                       realize-anns
+                       (specter/select-one
+                         (TXT-OBJ :anns :id ann)))
         node         (merge realized-ann node)]
     (assoc node :label (if owl-class?
                          (->> [(:content node)
@@ -371,8 +382,8 @@
                          (:content node)))))
 
 (defn realize-ann-nodes
-  [graph db profile-map doc-map ann-map class-map owl-class?]
-  (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map class-map owl-class?))))
+  [graph db class-map owl-class?]
+  (update graph :nodes (partial map (partial realize-ann-node db class-map owl-class?))))
 
 (defn realize-relation-ann
   [property-map
@@ -414,14 +425,6 @@
                 :spans          :span
                 :assertion-anns :assertion-ann
                 :ann-nodes      :ann-node})
-
-(defn TXT-OBJS [k-type k id]
-  [(specter/keypath :text-annotation k-type)
-   (specter/filterer #((cond->> id ((complement set?) id) (conj #{})) (k %)))])
-
-(defn TXT-OBJ [k-type k id]
-  [(TXT-OBJS k-type k id)
-   specter/FIRST])
 
 (defn remove-matching-sub-items
   [db parent-obj-k child-objs-k parent-id]
