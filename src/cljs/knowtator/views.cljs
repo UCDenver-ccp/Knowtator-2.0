@@ -169,8 +169,7 @@
 (defn annotation-panel []
   [re-com/v-box
    :src (at)
-   :children [[annotation-title]
-              [undo-controls]
+   :children [[undo-controls]
               [re-com/h-box
                :children [[tac/profile-controls]
                           [tac/doc-controls]]]
