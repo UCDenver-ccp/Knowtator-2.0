@@ -8,8 +8,8 @@
 (def url (format "ws://%s:%d" host port))
 
 (comment
-  (let [protege-conn @(http/websocket-client (str url "/protege"))
-        decoded-conn (s/map decode protege-conn)]
-    @(s/take! decoded-conn)
+  (let [protege-conn (->> @(http/websocket-client (str url "/protege"))
+                       (s/map decode))]
+    (println "new: " @(s/take! protege-conn))
 
-    (s/consume #(println "message: " %) protege-conn)))
+    #_@(s/consume #(println "message: " %) protege-conn)))
