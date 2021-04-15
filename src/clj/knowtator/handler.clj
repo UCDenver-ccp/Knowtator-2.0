@@ -1,5 +1,6 @@
 (ns knowtator.handler
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [knowtator.env :refer [defaults]]
             [knowtator.knowtator-xml-parser :as kparser]
             [knowtator.layout :as layout :refer [error-page]]
@@ -8,13 +9,11 @@
             [mount.core :as mount]
             [muuntaja.middleware :as muun-m]
             [reitit.coercion.schema :as schema]
-            [reitit.core :as r]
             [reitit.ring :as ring]
             [reitit.ring.coercion :as rrc]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.webjars :refer [wrap-webjars]]
-            [schema.core :as s]
-            [clojure.string :as str]))
+            [schema.core :as s]))
 
 (declare init-app)
 (mount/defstate init-app
@@ -50,14 +49,10 @@
                                                            :body   (kparser/parse-project articles project-xml)})
                                                         (let [project-file (io/resource "concepts+assertions 3_2 copy/")
                                                               project-xml  (kparser/read-project-xmls project-file)
-                                                              articles     (kparser/read-articles project-file)]
+                                                              articles     (kparser/read-articles project-file)
+                                                              project      (kparser/parse-project articles project-xml)]
                                                           {:status 200
-                                                           :body   (as-> (kparser/parse-project articles project-xml) project
-                                                                     (update project :docs (comp vec (partial take 1) (partial sort-by :id)))
-                                                                     (update project :anns (comp vec #_(partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
-                                                                     (update project :graphs (comp vec (partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
-                                                                     (update project :spans (comp vec #_(partial take 100) reverse (partial sort-by (juxt :ann :start)) (partial filter (comp (->> project :anns (map :id) set) :ann))))
-                                                                     (update project :profiles vec))})))}}]
+                                                           :body   project})))}}]
    ["/doc/:id" {:name ::single-doc
                 :get  {:coercion   schema/coercion
                        :parameters {:path {:id s/Int}}
