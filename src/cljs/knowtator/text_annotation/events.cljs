@@ -4,6 +4,7 @@
             [knowtator.model :as model]
             [knowtator.owl.events :as owl-evts]
             [knowtator.util :as util]
+            [com.rpl.specter :as s]
             [re-frame.core :refer [reg-event-db reg-event-fx]]))
 
 (defn filter-in-doc
@@ -41,23 +42,26 @@
                     :id)]
       (cond-> {:db db} span-id (assoc :dispatch [::select-span span-id])))))
 
+(defn TXT-OBJ [k id]
+  [(s/keypath :text-annotation k)
+   (s/filterer #(= (:id %) id))
+   s/FIRST])
+
 (reg-event-fx ::select-span
   (fn-traced [{:keys [db]} [_ id]]
-    (let [{:keys [ann]} (->> db
-                          :text-annotation
-                          :spans
-                          (util/map-with-key :id)
-                          id)]
+    (let [ann (s/select-one (s/comp-paths
+                              (TXT-OBJ :spans id)
+                              (s/keypath :ann))
+                db)]
       {:db       (assoc-in db [:selection :spans] id)
        :dispatch [::select-annotation ann]})))
 
 (reg-event-fx ::select-annotation
   (fn-traced [{:keys [db]} [_ id]]
-    (let [{:keys [concept]} (->> db
-                              :text-annotation
-                              :anns
-                              (util/map-with-key :id)
-                              id)]
+    (let [concept (s/select-one (s/comp-paths
+                                  (TXT-OBJ :anns id)
+                                  (s/keypath :concept))
+                    db)]
       {:db       (assoc-in db [:selection :anns] id)
        :dispatch [::owl-evts/select-owl-class concept]})))
 
@@ -120,9 +124,19 @@
 (defn remove-selected-item
   [db k]
   (let [selected-id (get-in db [:selection k])]
-    (-> db
-      (update-in [:text-annotation k] (comp vals #(dissoc % selected-id) (partial util/map-with-key :id)))
-      (assoc-in [:selection k] nil))))
+    (->> db
+      (s/setval (TXT-OBJ k selected-id) s/NONE)
+      (s/setval [:selection k] nil))))
+
+(defn remove-selected-sub-items
+  [db parent-k child-k child-parent-k]
+  (let [selected-id (get-in db [:selection parent-k])]
+    (->> db
+      (s/setval [:text-annotation
+                 child-k
+                 (s/filterer #(= (get % child-parent-k) selected-id))
+                 s/ALL]
+        s/NONE))))
 
 (reg-event-db ::remove-selected-doc
   (undoable "Removing document")
@@ -136,7 +150,8 @@
 
 (reg-event-db ::remove-selected-ann
   (undoable "Removing annotation")
-  (fn [db [_]]
+  (fn-traced [db [_]]
     (-> db
-      (remove-selected-item :anns)
-      (remove-selected-item :spans))))
+      (remove-selected-item :spans)
+      (remove-selected-sub-items :anns :spans :ann)
+      (remove-selected-item :anns))))
