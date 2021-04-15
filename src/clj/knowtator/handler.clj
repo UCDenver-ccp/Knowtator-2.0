@@ -1,13 +1,14 @@
 (ns knowtator.handler
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [knowtator.env :refer [defaults]]
             [knowtator.knowtator-xml-parser :as kparser]
             [knowtator.layout :as layout :refer [error-page]]
             [knowtator.middleware :as middleware]
+            [knowtator.owl-parser :as oparser]
             [mount.core :as mount]
             [muuntaja.middleware :as muun-m]
             [reitit.coercion.schema :as schema]
-            [reitit.core :as r]
             [reitit.ring :as ring]
             [reitit.ring.coercion :as rrc]
             [ring.middleware.content-type :refer [wrap-content-type]]
@@ -29,7 +30,9 @@
    ["/"
     ["" {:get home-page}]
     ["annotation" {:get home-page}]
-    ["graph" {:get home-page}]]])
+    ["graph" {:get home-page}]
+    ["about" {:get home-page}]
+    ["review" {:get home-page}]]])
 
 (defn project-routes []
   ["/project"
@@ -46,14 +49,10 @@
                                                            :body   (kparser/parse-project articles project-xml)})
                                                         (let [project-file (io/resource "concepts+assertions 3_2 copy/")
                                                               project-xml  (kparser/read-project-xmls project-file)
-                                                              articles     (kparser/read-articles project-file)]
+                                                              articles     (kparser/read-articles project-file)
+                                                              project      (kparser/parse-project articles project-xml)]
                                                           {:status 200
-                                                           :body   (as-> (kparser/parse-project articles project-xml) project
-                                                                     (update project :docs (comp vec (partial take 1) (partial sort-by :id)))
-                                                                     (update project :anns (comp vec #_(partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
-                                                                     (update project :graphs (comp vec (partial take 100) reverse (partial sort-by :id) (partial filter (comp (->> project :docs (map :id) set) :doc))))
-                                                                     (update project :spans (comp vec #_(partial take 100) reverse (partial sort-by (juxt :ann :start)) (partial filter (comp (->> project :anns (map :id) set) :ann))))
-                                                                     (update project :profiles vec))})))}}]
+                                                           :body   project})))}}]
    ["/doc/:id" {:name ::single-doc
                 :get  {:coercion   schema/coercion
                        :parameters {:path {:id s/Int}}
@@ -62,7 +61,27 @@
                        :handler    (fn [{{{:keys [id]} :path} :parameters}]
                                      {:status 200
                                       :body   {:id      id
-                                               :content "hello" #_ (slurp "/home/harrison/Downloads/concepts+assertions 3_2 copy/concepts+assertions 3_2 copy/Articles/11319941.txt")}})}}]])
+                                               :content "hello" #_ (slurp "/home/harrison/Downloads/concepts+assertions 3_2 copy/concepts+assertions 3_2 copy/Articles/11319941.txt")}})}}]
+   ["/ontology/:file-name" {:name       ::ontology
+                            :middleware [muun-m/wrap-format]
+                            :get        {:coercion   schema/coercion
+                                         :parameters {:path {:file-name s/Str}}
+                                         :handler    (fn [{{{:keys [file-name]} :path} :parameters}]
+                                                       (if (= file-name "test_project_using_uris")
+                                                         (let [ontology-file (io/file (io/resource file-name) "Ontologies" "pizza.owl")
+                                                               owl-ontology  (oparser/load-ontology ontology-file)
+                                                               ontology      (oparser/parse-ontology owl-ontology)]
+                                                           {:status 200
+                                                            :body   ontology})
+                                                         (let [ontology-file (->> "Ontologies"
+                                                                               (io/file (io/resource "concepts+assertions 3_2 copy/"))
+                                                                               file-seq
+                                                                               (filter #(str/ends-with? (str %) ".owl"))
+                                                                               first)
+                                                               owl-ontology  (oparser/load-ontology ontology-file)
+                                                               ontology      (oparser/parse-ontology owl-ontology)]
+                                                           {:status 200
+                                                            :body   ontology})))}}]])
 
 (defn app-router []
   (ring/router [(home-routes)

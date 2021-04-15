@@ -2,11 +2,14 @@
   (:require [knowtator.handler :as sut]
             [clojure.test :refer [testing deftest is]]
             [reitit.core :as r]
-            [muuntaja.core :as m]))
+            [muuntaja.core :as m]
+            [knowtator.util :as util]))
 
 (deftest app-router-test
   (testing "Enumerated routes"
-    (is (= ["/" "/annotation" "/graph" "/project/project/:file-name" "/project/doc/:id"]
+    (is (= ["/" "/annotation" "/graph" "/about" "/review"
+            "/project/project/:file-name" "/project/doc/:id"
+            "/project/ontology/:file-name"]
           (map first (r/routes (sut/app-router))))))
 
   (testing "Project routes"
@@ -86,26 +89,26 @@
                                  :ann :mention_0}
                                 {:id  :node_1
                                  :ann :mention_1}]
-                        :edges [{:id    :edge_0
-                                 :from  :node_0
-                                 :to    :node_1
-                                 :value {:polarity   :positive
-                                         :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
-                                         :quantifier {:type  :some
-                                                      :value nil}}}]}
+                        :edges [{:id        :edge_0
+                                 :from      :node_0
+                                 :to        :node_1
+                                 :predicate {:polarity   :positive
+                                             :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                                             :quantifier {:type  :some
+                                                          :value nil}}}]}
                        {:id    :graph_2
                         :doc   :document2
                         :nodes [{:id  :node_0
                                  :ann :mention_3}
                                 {:id  :node_1
                                  :ann :mention_3}]
-                        :edges [{:id    :edge_0
-                                 :to    :node_1
-                                 :from  :node_0
-                                 :value {:polarity   nil
-                                         :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
-                                         :quantifier {:type  :some
-                                                      :value nil}}}]}
+                        :edges [{:id        :edge_0
+                                 :to        :node_1
+                                 :from      :node_0
+                                 :predicate {:polarity   nil
+                                             :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasBase"
+                                             :quantifier {:type  :some
+                                                          :value nil}}}]}
                        {:id    (keyword "Old Knowtator Relations")
                         :doc   :document3
                         :nodes [{:id  :document3-19
@@ -114,20 +117,20 @@
                                  :ann :mention_1}
                                 {:id  :document3-22
                                  :ann :mention_2}]
-                        :edges [{:id    :document3-21
-                                 :to    :document3-20
-                                 :from  :document3-19
-                                 :value {:polarity   :positive
-                                         :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
-                                         :quantifier {:type  :some
-                                                      :value nil}}}
-                                {:id    :document3-23
-                                 :from  :document3-19
-                                 :to    :document3-22
-                                 :value {:polarity   :positive
-                                         :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
-                                         :quantifier {:type  :some
-                                                      :value nil}}}]}]
+                        :edges [{:id        :document3-21
+                                 :to        :document3-20
+                                 :from      :document3-19
+                                 :predicate {:polarity   :positive
+                                             :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                                             :quantifier {:type  :some
+                                                          :value nil}}}
+                                {:id        :document3-23
+                                 :from      :document3-19
+                                 :to        :document3-22
+                                 :predicate {:polarity   :positive
+                                             :property   "http://www.co-ode.org/ontologies/pizza/pizza.owl#hasIngredient"
+                                             :quantifier {:type  :some
+                                                          :value nil}}}]}]
             :profiles [{:id :Default
                         :colors
                         {"http://www.co-ode.org/ontologies/pizza/pizza.owl#Pizza" "#ff0000"}}
@@ -144,4 +147,17 @@
             m/decode-response-body
             (update-in [:docs 4] dissoc :content)
             (update :spans (partial sort-by (juxt :id :ann)))
-            (update-in [:anns] (partial sort-by (juxt :doc :id :concept))))))))
+            (update-in [:anns] (partial sort-by (juxt :doc :id :concept))))))
+    (is (= {:ontology    5
+            :obj-props   8
+            :classes     100
+            :ann-props   12
+            :data-props  0
+            :individuals 5}
+          (->> {:request-method :get
+                :headers        {"content-type" "application/edn"
+                                 "accept"       "application/transit+json"}
+                :uri            "/project/ontology/test_project_using_uris"}
+            ((sut/start-app-routes))
+            m/decode-response-body
+            (util/map-vals count))))))

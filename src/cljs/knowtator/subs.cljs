@@ -3,7 +3,8 @@
             [knowtator.html-colors :as html-colors]
             [knowtator.model :as model]
             [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.util :as util]))
+            [knowtator.util :as util]
+            [knowtator.owl.subs :as owl]))
 
 (defn ->db-map [k]
   (comp (partial apply zipmap) (juxt (partial map :id) identity) k :text-annotation))
@@ -118,10 +119,6 @@
         ann-id
         (map (partial zipmap [:prop :val]))))))
 
-(reg-sub ::selected-concept
-  (fn [db _]
-    (get-in db [:selection :concepts])))
-
 (reg-sub ::default-color
   #(get-in % [:defaults :color]))
 
@@ -140,7 +137,7 @@
 
 (reg-sub ::selected-color
   :<- [::selected-profile]
-  :<- [::selected-concept]
+  :<- [::owl/selected-concept]
   :<- [::profile-map]
   :<- [::default-color]
   (fn [[profile-id concept-id profiles default-color]]
@@ -151,7 +148,25 @@
           default-color)))))
 
 (reg-sub ::docs
-  (comp (partial sort-by :id) :docs :text-annotation))
+  (comp (partial sort-by (comp name :id) util/compare-alpha-num) :docs :text-annotation))
 
 (reg-sub ::spans
   (comp :spans :text-annotation))
+
+(reg-sub ::available-projects
+  (fn [_ _]
+    ["concepts+assertions 3_2 copy"
+     "test_project_using_uris"
+     "default"]))
+
+(reg-sub ::selected-project
+  (fn [db _]
+    (get-in db [:selection :project])))
+
+(reg-sub ::loading?
+  (fn [db [_ place]]
+    (get-in db [:loading? place] false)))
+
+(reg-sub ::error?
+  (fn [db [_ place]]
+    (get-in db [:error? place] false)))

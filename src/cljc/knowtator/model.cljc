@@ -355,32 +355,43 @@
       (update-in [:text-annotation :anns] (partial map (partial realize-ann db profile-map doc-map ann-map))))))
 
 (defn realize-ann-node
-  [db profile-map doc-map ann-map {:keys [ann] :as node}]
+  [db profile-map doc-map ann-map class-map owl-class? {:keys [ann] :as node}]
   (let [realized-ann (->> ann-map
                        ann
                        (realize-ann db profile-map doc-map ann-map))
         node         (merge realized-ann node)]
-    (assoc node :label (:content node))))
+    (assoc node :label (if owl-class?
+                         (->> [(:content node)
+                               (->> node
+                                 :concept
+                                 (get class-map))]
+                           (interpose "\n")
+                           (apply str))
+                         (:content node)))))
 
 (defn realize-ann-nodes
-  [graph db profile-map doc-map ann-map]
-  (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map))))
+  [graph db profile-map doc-map ann-map class-map owl-class?]
+  (update graph :nodes (partial map (partial realize-ann-node db profile-map doc-map ann-map class-map owl-class?))))
 
 (defn realize-relation-ann
-  [{{:keys                [property polarity]
+  [property-map
+   {{:keys                [property polarity]
      {:keys [type value]} :quantifier} :predicate
     :as                                relation-ann}]
-  (-> relation-ann
-    (assoc :label (->> (or
-                         [type property]
-                         [value type property])
-                    (interpose " ")
-                    (apply str)))
-    (assoc :color (case polarity
-                    :positive :black
-                    :negative :red
-                    :yellow))))
+  (let [property (get property-map property)
+        type     (name type)]
+    (-> relation-ann
+      (assoc :label (->> (or
+                           [type property]
+                           [value type property])
+                      (interpose " ")
+                      (apply str)))
+      (assoc :color (case polarity
+                      :positive :black
+                      :negative :red
+                      :yellow))
+      (assoc-in [:font :align] :top))))
 
 (defn realize-relation-anns
-  [graph]
-  (update graph :edges (partial map realize-relation-ann)))
+  [graph property-map]
+  (update graph :edges (partial map (partial realize-relation-ann property-map))))

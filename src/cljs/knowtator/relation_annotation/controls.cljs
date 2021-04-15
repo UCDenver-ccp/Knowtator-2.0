@@ -22,14 +22,32 @@
                           [re-com/md-circle-icon-button
                            :md-icon-name "zmdi-minus"
                            :on-click #(>evt [::evts/remove-graph-space])]
-                          [re-com/single-dropdown
-                           :src (at)
-                           :choices (<sub [::subs/graph-spaces])
-                           :label-fn :id
-                           :filter-box? true
-                           :model (<sub [::subs/selected-graph-space-id])
-                           :on-change #(>evt [::evts/select-graph-space %])]]]
+                          [re-com/h-box
+                           :children [[re-com/label
+                                       :label "Graph spaces"]
+                                      [re-com/single-dropdown
+                                       :src (at)
+                                       :choices (<sub [::subs/graph-spaces])
+                                       :label-fn :id
+                                       :filter-box? true
+                                       :model (<sub [::subs/selected-graph-space-id])
+                                       :on-change #(>evt [::evts/select-graph-space %])]]]]]]])
+
+(defn node-controls []
+  [re-com/h-box
+   :src (at)
+   :children [[re-com/checkbox
+               :model (<sub [::subs/display-ann-node-owl-class?])
+               :label "Display OWL class"
+               :on-change #(>evt [::evts/toggle-display-ann-node-owl-class])]
               [re-com/checkbox
                :model (<sub [::subs/graph-physics])
                :label "Physics"
                :on-change #(>evt [::evts/toggle-physics])]]])
+
+(defn edge-controls []
+  [re-com/slider
+   :model (<sub [::subs/edge-length])
+   :on-change #(>evt [::evts/set-edge-length %])
+   :min 1
+   :max 500])
