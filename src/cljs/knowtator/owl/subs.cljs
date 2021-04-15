@@ -82,14 +82,15 @@
 (reg-sub ::class-collapsed?
   :<- [::class-map]
   (fn [class-map [_ iri]]
-    (-> class-map
-      (get-in [iri :collapsed?]))))
+    (not (-> class-map
+           (get-in [iri :visible?])))))
 
 (reg-sub ::obj-prop-collapsed?
   :<- [::obj-prop-map]
   (fn [obj-prop-map [_ iri]]
     (-> obj-prop-map
-      (get-in [iri :collapsed?]))))
+      (get-in [iri :visible?])
+      not)))
 
 (reg-sub ::owl-class-label
   :<- [::classes-uri->label]

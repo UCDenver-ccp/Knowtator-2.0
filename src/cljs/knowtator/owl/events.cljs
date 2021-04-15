@@ -27,11 +27,11 @@
             (util/map-with-key map->iri classes)
             (reduce
               (fn [m id]
-                (assoc-in m [id :collapsed?] false))
+                (assoc-in m [id :visible?] true))
               m to-show)
             (reduce
               (fn [m id]
-                (assoc-in m [id :collapsed?] true))
+                (assoc-in m [id :visible?] false))
               m to-hide)
             (vals m)))))))
 
@@ -56,7 +56,7 @@
     (fn [ms]
       (-> ms
         (->> (util/map-with-key map->iri))
-        (update-in [iri :collapsed?] not)
+        (update-in [iri :visible?] not)
         vals))))
 
 (reg-event-db ::toggle-collapse-owl-class
