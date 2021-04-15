@@ -121,7 +121,7 @@
   (undoable "Removing document")
   (fn [db [_]]
     (-> db
-      (model/remove-selected-item :docs :doc)
+      (model/remove-selected-item :docs)
       (assoc-in [:selection :docs] (-> db
                                      :text-annotation
                                      :docs
@@ -131,4 +131,4 @@
 (reg-event-db ::remove-selected-ann
   (undoable "Removing annotation")
   (fn-traced [db [_]]
-    (model/remove-selected-item db :anns :ann)))
+    (model/remove-selected-item db :anns)))

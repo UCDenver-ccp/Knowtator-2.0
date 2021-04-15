@@ -129,10 +129,14 @@
                               :ann-nodes      nil
                               :assertion-anns nil
                               :graphs         nil}}
-          (sut/remove-selected-item {:text-annotation {:docs [{:id :d1}
-                                                              {:id :d2}]}
-                                     :selection       {:docs :d2}}
-            :docs :doc)))
+          (sut/remove-matching-sub-items {:text-annotation {:docs [{:id :d1}
+                                                                   {:id :d2}]}
+                                          :selection       {:docs :d2}}
+            :id :docs :d2)
+          #_(sut/remove-selected-item {:text-annotation {:docs [{:id :d1}
+                                                                {:id :d2}]}
+                                       :selection       {:docs :d2}}
+              :doc :docs)))
 
     (is (= {:text-annotation {:docs  [{:id :d1}
                                       {:id :d2}]
@@ -151,7 +155,7 @@
                                                                :doc :d2}]}
                                      :selection {:docs :d2
                                                  :anns :a1}}
-            :anns  :ann))))
+            :anns))))
 
   (testing "With sub-items"
     (is (= {:text-annotation {:docs           [{:id :d1}]
@@ -174,7 +178,7 @@
                                                                 :ann :a2}]}
                                      :selection       {:docs :d2
                                                        :anns :a2}}
-            :docs :doc)))
+            :docs)))
 
     (is (= {:text-annotation {:docs  [{:id :d1}
                                       {:id :d2}]
@@ -199,7 +203,7 @@
                                      :selection {:docs  :d2
                                                  :anns  :a1
                                                  :spans :s1}}
-            :anns  :ann)))
+            :anns)))
 
     (is (= {:text-annotation {:spans          [{:id  :s6
                                                 :ann :a3}]
@@ -262,4 +266,4 @@
                                :spans       nil
                                :review-type :anns
                                :ann-props   "http://www.w3.org/2004/02/skos/core#prefLabel"}}
-            :docs :doc)))))
+            :docs)))))
