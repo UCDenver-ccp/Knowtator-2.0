@@ -31,7 +31,9 @@
    ["/"
     ["" {:get home-page}]
     ["annotation" {:get home-page}]
-    ["graph" {:get home-page}]]])
+    ["graph" {:get home-page}]
+    ["about" {:get home-page}]
+    ["review" {:get home-page}]]])
 
 (defn project-routes []
   ["/project"

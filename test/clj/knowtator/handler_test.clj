@@ -7,7 +7,7 @@
 
 (deftest app-router-test
   (testing "Enumerated routes"
-    (is (= ["/" "/annotation" "/graph"
+    (is (= ["/" "/annotation" "/graph" "/about" "/review"
             "/project/project/:file-name" "/project/doc/:id"
             "/project/ontology/:file-name"]
           (map first (r/routes (sut/app-router))))))
