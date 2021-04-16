@@ -7,6 +7,11 @@
             [com.rpl.specter :as sp]
             [knowtator.model :as model]))
 
+(def GRAPHS (sp/comp-paths
+              :text-annotation
+              :graphs
+              sp/NIL->VECTOR))
+
 (reg-event-db ::add-graph-space
   (fn-traced [db [_ graph-space-id]]
     (let [graph-space-id (model/unique-id (->> db
@@ -18,27 +23,18 @@
         (assoc-in [:selection :graphs] graph-space-id)
         (assoc-in [:selection :anns] (sp/select-one [:text-annotation :anns sp/FIRST :id] db))
         (->> (sp/transform
-               [:text-annotation
-                :graphs
-                sp/NIL->VECTOR]
+               GRAPHS
                #(conj % {:id    graph-space-id
                          :nodes []
                          :edges []})))))))
 
 (reg-event-db ::add-node
-  (fn-traced [db [_ graph-id node]]
-    (model/add-node db graph-id node)))
+  (fn-traced [db [_ graph-space-id node]]
+    (model/add-node db graph-space-id node)))
 
 (reg-event-db ::add-edge
-  (fn-traced [db [_ graph-id edge]]
-    (let [new-edge (merge edge
-                     {:id (model/verify-id db :edges "e")})]
-      (update-in db [:text-annotation :graphs]
-        (fn [graphs]
-          (-> graphs
-            (->> (util/map-with-key :id))
-            (update-in [graph-id :edges] conj new-edge)
-            vals))))))
+  (fn-traced [db [_ graph-space-id edge]]
+    (model/add-edge db graph-space-id edge)))
 
 (reg-event-fx ::select-ann-node
   (fn-traced [{:keys [db]} [_ graph-id node-id]]

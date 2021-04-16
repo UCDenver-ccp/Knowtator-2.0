@@ -277,8 +277,23 @@
           :selection       {:anns :a1}}
         (sut/add-node {:text-annotation {:graphs [{:id :g0}]}
                        :selection       {:anns :a1}}
-
           :g0
           {:id :disregarded
            :x  -122
            :y  -189}))))
+
+(deftest add-edge-test
+  (is (= {:text-annotation {:graphs [{:id    :g0
+                                      :nodes [{:id :n1}
+                                              {:id :n2}]
+                                      :edges [{:id   :e1
+                                               :from :n1
+                                               :to   :n2}]}]}
+          :selection       {:anns :a1}}
+        (sut/add-edge {:text-annotation {:graphs [{:id    :g0
+                                                   :nodes [{:id :n1}
+                                                           {:id :n2}]}]}
+                       :selection       {:anns :a1}}
+          :g0
+          {:from :n1
+           :to   :n2}))))

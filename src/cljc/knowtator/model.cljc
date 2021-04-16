@@ -453,8 +453,14 @@
     (str prefix)
     keyword))
 
+(defn GRAPH-OBJS [graph-space-id k]
+  [(TXT-OBJS :graphs :id graph-space-id)
+   sp/ALL
+   k
+   sp/NIL->VECTOR])
+
 (defn add-node
-  [db graph-id node]
+  [db graph-space-id node]
   (when-let [ann-id (get-in db [:selection :anns])]
     (let [new-node (merge node
                      {:id      (verify-id db :nodes "n")
@@ -462,9 +468,21 @@
                       :physics false
                       :ann     ann-id})]
       (sp/transform
-        [(TXT-OBJS :graphs :id graph-id)
-         sp/ALL
-         :nodes
-         sp/NIL->VECTOR]
+        (GRAPH-OBJS graph-space-id :nodes)
         #(conj % new-node)
+        db))))
+
+
+(defn add-edge
+  [db graph-space-id edge]
+  (when-let [obj-prop (get-in db [:selection :obj-props])]
+    (let [new-edge (merge edge
+                     {:id (verify-id db :edges "e")
+                      :predicate {:polarity   :positive
+                                  :property  obj-prop
+                                  :quantifier {:type  :some
+                                               :value nil}}})]
+      (sp/transform
+        (GRAPH-OBJS graph-space-id :edges)
+        #(conj % new-edge)
         db))))
