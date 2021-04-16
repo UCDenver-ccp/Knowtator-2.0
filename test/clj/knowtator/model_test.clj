@@ -265,3 +265,20 @@
                                :review-type :anns
                                :ann-props   "http://www.w3.org/2004/02/skos/core#prefLabel"}}
             :docs)))))
+
+(deftest add-node-test
+  (is (= {:text-annotation {:graphs [{:id    :g0
+                                      :nodes [{:id      :n1
+                                               :ann     :a1
+                                               :x       -122
+                                               :y       -189
+                                               :label   "test"
+                                               :physics false}]}]}
+          :selection       {:anns :a1}}
+        (sut/add-node {:text-annotation {:graphs [{:id :g0}]}
+                       :selection       {:anns :a1}}
+
+          :g0
+          {:id :disregarded
+           :x  -122
+           :y  -189}))))

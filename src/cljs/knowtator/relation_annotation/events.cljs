@@ -3,38 +3,36 @@
             [knowtator.owl.events :as owl]
             [knowtator.text-annotation.events :as txt-evts]
             [knowtator.util :as util]
-            [re-frame.core :refer [reg-event-db reg-event-fx]]))
+            [re-frame.core :refer [reg-event-db reg-event-fx]]
+            [com.rpl.specter :as sp]
+            [knowtator.model :as model]))
 
-(defn verify-id [db k prefix]
-  (->> db
-    :text-annotation
-    :graphs
-    (map (comp count k))
-    (reduce +)
-    inc
-    (str prefix)
-    keyword))
+(reg-event-db ::add-graph-space
+  (fn-traced [db [_ graph-space-id]]
+    (let [graph-space-id (model/unique-id (->> db
+                                            (sp/select [:text-annotation :graphs sp/ALL])
+                                            (map :id)
+                                            set)
+                           "g" 0)]
+      (-> db
+        (assoc-in [:selection :graphs] graph-space-id)
+        (assoc-in [:selection :anns] (sp/select-one [:text-annotation :anns sp/FIRST :id] db))
+        (->> (sp/transform
+               [:text-annotation
+                :graphs
+                sp/NIL->VECTOR]
+               #(conj % {:id    graph-space-id
+                         :nodes []
+                         :edges []})))))))
 
 (reg-event-db ::add-node
   (fn-traced [db [_ graph-id node]]
-    (when-let [ann-id (get-in db [:selection :anns])]
-      (let [new-node (merge node
-                       {:id      (verify-id db :nodes "n")
-                        :label "test"
-                        :physics false
-                        :ann     ann-id})]
-        (println graph-id node new-node)
-        (update-in db [:text-annotation :graphs]
-          (fn [graphs]
-            (-> graphs
-              (->> (util/map-with-key :id))
-              (update-in [graph-id :nodes] conj new-node)
-              vals)))))))
+    (model/add-node db graph-id node)))
 
 (reg-event-db ::add-edge
   (fn-traced [db [_ graph-id edge]]
     (let [new-edge (merge edge
-                     {:id (verify-id db :edges "e")})]
+                     {:id (model/verify-id db :edges "e")})]
       (update-in db [:text-annotation :graphs]
         (fn [graphs]
           (-> graphs

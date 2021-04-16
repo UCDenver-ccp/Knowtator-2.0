@@ -3,17 +3,17 @@
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
             [clojure.string :as str]
-            [com.rpl.specter :as specter]
+            [com.rpl.specter :as sp]
             [knowtator.specs :as specs]
             [knowtator.util :as util]))
 
 (defn TXT-OBJS [k-type k id]
-  [(specter/keypath :text-annotation k-type)
-   (specter/filterer #((cond->> id ((complement set?) id) (conj #{})) (k %)))])
+  [(sp/keypath :text-annotation k-type)
+   (sp/filterer #((cond->> id ((complement set?) id) (conj #{})) (k %)))])
 
 (defn TXT-OBJ [k-type k id]
   [(TXT-OBJS k-type k id)
-   specter/FIRST])
+   sp/FIRST])
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
@@ -323,10 +323,10 @@
 (defn realize-span
   [db {:keys [start end ann] :as span}]
   (let [{:keys [doc] :as ann} (->> db
-                                (specter/select-one
+                                (sp/select-one
                                   (TXT-OBJ :anns :id ann)))
         content               (-> db
-                                (->> (specter/select-one
+                                (->> (sp/select-one
                                        [(TXT-OBJ :docs :id doc)
                                         :content]))
                                 (subs start end))]
@@ -336,25 +336,25 @@
 
 (defn realize-spans
   [db]
-  (-> db
-    (update-in [:text-annotation :spans] (partial map (partial realize-span db)))))
+  ;; TODO Only realize spans that are visible
+  (sp/transform [:text-annotation :spans sp/ALL] (partial realize-span db) db))
 
 (defn realize-ann
-  [{{:keys [spans]} :text-annotation
-    {:keys [color]} :defaults
+  [{{:keys [color]} :defaults
     :as             db}
    {:keys [profile id concept] :as ann}]
   (-> ann
     (assoc
-      :content (->> spans
-                 (group-by :ann)
-                 id
+      :content (->> db
+                 (sp/select
+                   [(TXT-OBJS :spans :ann id)
+                    sp/ALL])
                  (map (partial realize-span db))
                  (map :content)
                  (interpose " ")
                  (apply str))
       :color (or
-               (specter/select-one
+               (sp/select-one
                  [(TXT-OBJ :profiles :id profile)
                   :colors
                   concept]
@@ -363,50 +363,45 @@
 
 (defn realize-anns
   [db]
-  (update-in db [:text-annotation :anns] (partial map (partial realize-ann db))))
+  (sp/transform [:text-annotation :anns sp/ALL] (partial realize-ann db) db))
 
 (defn realize-ann-node
   [db class-map owl-class? {:keys [ann] :as node}]
-  (let [realized-ann (->> db
-                       realize-anns
-                       (specter/select-one
-                         (TXT-OBJ :anns :id ann)))
-        node         (merge realized-ann node)]
-    (assoc node :label (if owl-class?
-                         (->> [(:content node)
-                               (->> node
-                                 :concept
-                                 (get class-map))]
-                           (interpose "\n")
-                           (apply str))
-                         (:content node)))))
+  (let [node (merge (->> db
+                      realize-anns
+                      (sp/select-one (TXT-OBJ :anns :id ann)))
+               node)]
+    (assoc node :label (->> node
+                         ((apply juxt :content
+                            (when owl-class? [(comp (partial get class-map) :concept)])))
+                         (interpose "\n")
+                         (apply str)))))
 
 (defn realize-ann-nodes
   [graph db class-map owl-class?]
-  (update graph :nodes (partial map (partial realize-ann-node db class-map owl-class?))))
+  (sp/transform [:nodes sp/ALL] (partial realize-ann-node db class-map owl-class?) graph))
 
 (defn realize-relation-ann
   [property-map
    {{:keys                [property polarity]
      {:keys [type value]} :quantifier} :predicate
     :as                                relation-ann}]
-  (let [property (get property-map property)
-        type     (name type)]
-    (-> relation-ann
-      (assoc :label (->> (or
-                           [type property]
-                           [value type property])
+  (-> relation-ann
+    (assoc :label (-> (list (name type)
+                        (get property-map property))
+                    (cond-> (#{:min} type) (conj value))
+                    (->>
                       (interpose " ")
-                      (apply str)))
-      (assoc :color (case polarity
-                      :positive :black
-                      :negative :red
-                      :yellow))
-      (assoc-in [:font :align] :top))))
+                      (apply str))))
+    (assoc :color (case polarity
+                    :positive :black
+                    :negative :red
+                    :yellow))
+    (assoc-in [:font :align] :top)))
 
 (defn realize-relation-anns
   [graph property-map]
-  (update graph :edges (partial map (partial realize-relation-ann property-map))))
+  (sp/transform [:edges sp/ALL] (partial realize-relation-ann property-map) graph))
 
 (def text-objs-hierarchy (-> (make-hierarchy)
                            (derive :docs :project)
@@ -428,22 +423,48 @@
 
 (defn remove-matching-sub-items
   [db parent-obj-k child-objs-k parent-id]
-  (let [child-objs-nav (specter/comp-paths
+  (let [child-objs-nav (sp/comp-paths
                          (TXT-OBJS child-objs-k parent-obj-k parent-id)
-                         specter/ALL)]
+                         sp/ALL)]
     (as-> db db
       (->>
-        (for [parent-id   (specter/select [child-objs-nav :id] db)
+        (for [parent-id   (sp/select [child-objs-nav :id] db)
               child-obj-k (descendants text-objs-hierarchy child-objs-k)]
           [(objs->obj child-objs-k) child-obj-k parent-id])
         (reduce (fn [db args]
                   (apply remove-matching-sub-items db args))
           db))
 
-      (specter/setval [:selection child-objs-k] nil db)
-      (specter/setval child-objs-nav specter/NONE db))))
+      (sp/setval [:selection child-objs-k] nil db)
+      (sp/setval child-objs-nav sp/NONE db))))
 
 (defn remove-selected-item
   [db objs-k]
   (let [selected-id (get-in db [:selection objs-k])]
     (remove-matching-sub-items db :id objs-k selected-id)))
+
+(defn verify-id [db k prefix]
+  (->> db
+    :text-annotation
+    :graphs
+    (map (comp count k))
+    (reduce +)
+    inc
+    (str prefix)
+    keyword))
+
+(defn add-node
+  [db graph-id node]
+  (when-let [ann-id (get-in db [:selection :anns])]
+    (let [new-node (merge node
+                     {:id      (verify-id db :nodes "n")
+                      :label   "test"
+                      :physics false
+                      :ann     ann-id})]
+      (sp/transform
+        [(TXT-OBJS :graphs :id graph-id)
+         sp/ALL
+         :nodes
+         sp/NIL->VECTOR]
+        #(conj % new-node)
+        db))))

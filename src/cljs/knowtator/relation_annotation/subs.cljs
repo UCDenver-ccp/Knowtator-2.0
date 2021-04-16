@@ -1,9 +1,9 @@
 (ns knowtator.relation-annotation.subs
   (:require [knowtator.model :as model]
             [knowtator.owl.subs :as owl]
-            [knowtator.subs :as subs]
             [knowtator.util :as util]
-            [re-frame.core :refer [reg-sub]]))
+            [re-frame.core :refer [reg-sub]]
+            [com.rpl.specter :as sp]))
 
 (reg-sub ::graph-spaces
   (comp #(or % []) (partial sort-by (comp name :id) util/compare-alpha-num) :graphs :text-annotation))
@@ -16,10 +16,10 @@
   :<- [::selected-graph-space-id]
   :<- [::graph-spaces]
   (fn [[graph-id graphs] _]
-    (when graph-id
-      (-> graphs
-        (->> (util/map-with-key :id))
-        graph-id))))
+    (sp/select-one
+      [(sp/filterer #(= (:id %) graph-id))
+       sp/FIRST]
+      graphs)))
 
 (reg-sub ::db
   identity)
