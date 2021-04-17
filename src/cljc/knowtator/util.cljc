@@ -4,33 +4,26 @@
 (def <sub (comp deref rf/subscribe))
 (def >evt rf/dispatch)
 
-(defn map-with-key [k ms]
-  (zipmap (map k ms)
-    ms))
+(defn map-with-key [k ms] (zipmap (map k ms) ms))
 
 (defn filter-vals
   [f m]
   (->> m
-    (filter #(f (second %)))
-    (into {})))
+       (filter #(f (second %)))
+       (into {})))
 
-(defn map-vals
-  [f m]
-  (zipmap (keys m)
-    (map f (vals m))))
+(defn map-vals [f m] (zipmap (keys m) (map f (vals m))))
 
 (defn toggle-contains-set
   [coll x]
-  (if (contains? coll x)
-    (disj coll x)
-    (conj (or coll #{}) x)))
+  (if (contains? coll x) (disj coll x) (conj (or coll #{}) x)))
 
 (defn toggle-contains-vector
   [coll x]
   (if (some #(= x %) coll)
     (->> coll
-      (remove #(= x %))
-      (vec))
+         (remove #(= x %))
+         (vec))
     (conj (or coll []) x)))
 
 (defn combine-as-set
@@ -44,23 +37,23 @@
   [coll pos]
   (vec (concat (subvec coll 0 pos) (subvec coll (inc pos)))))
 
-(defn compare-alpha-num [a b]
+(defn compare-alpha-num
+  [a b]
   (let [num-re #"\d+|\D+"
         apart  (re-seq num-re a)
         bpart  (re-seq num-re b)
         result (->> bpart
-                 (map vector apart)
-                 (filter (partial apply not=))
-                 first)
+                    (map vector apart)
+                    (filter (partial apply not=))
+                    first)
         nums   (when result
                  #?(:cljs (->> result
-                            (map #(js/parseInt %))
-                            (remove #(js/isNaN %)))
+                               (map #(js/parseInt %))
+                               (remove #(js/isNaN %)))
                     :clj (try (->> result
-                                (map #(Integer/parseInt %))
-                                doall)
-                              (catch Exception _
-                                nil))))]
+                                   (map #(Integer/parseInt %))
+                                   doall)
+                              (catch Exception _ nil))))]
     (cond (seq nums) (apply - nums)
           result     (apply compare result)
           :else      (apply < (map count [apart bpart])))))

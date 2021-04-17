@@ -5,9 +5,5 @@
 
 (declare env)
 (defstate env
-  :start
-  (load-config
-    :merge
-    [(args)
-     (source/from-system-props)
-     (source/from-env)]))
+  :start (load-config :merge
+                      [(args) (source/from-system-props) (source/from-env)]))

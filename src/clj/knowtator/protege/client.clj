@@ -7,9 +7,7 @@
 (def port 10003)
 (def url (format "ws://%s:%d" host port))
 
-(comment
-  (let [protege-conn (->> @(http/websocket-client (str url "/protege"))
-                       (s/map decode))]
-    (println "new: " @(s/take! protege-conn))
-
-    #_@(s/consume #(println "message: " %) protege-conn)))
+(comment (let [protege-conn (->> @(http/websocket-client (str url "/protege"))
+                                 (s/map decode))]
+           (println "new: " @(s/take! protege-conn))
+           #_@(s/consume #(println "message: " %) protege-conn)))
