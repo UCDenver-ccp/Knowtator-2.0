@@ -4,8 +4,7 @@
             [re-frame.core :refer [reg-event-db]]))
 
 (reg-event-db ::select-review-type
-  (fn [db [_ id]]
-    (assoc-in db [:selection :review-type] id)))
+  (fn [db [_ id]] (assoc-in db [:selection :review-type] id)))
 
 (reg-event-db ::select-review-filter-type
   (fn [db [_ filt-type]]
@@ -16,16 +15,25 @@
     (let [filt-type (get-in db [:selection :review-filter-type])
           filt      (reader/read-string filt-str)]
       (->> filt
-        keyword
-        (update-in db [:selection :review-filters filt-type] (fnil update {:filter-type filt-type}) :filter-values (fnil conj #{}))))))
+           keyword
+           (update-in db
+                      [:selection :review-filters filt-type]
+                      (fnil update {:filter-type filt-type})
+                      :filter-values
+                      (fnil conj #{}))))))
 
 (reg-event-db ::update-review-filter-item
   (fn [db [_ old-val new-val-str filt-type]]
     (let [new-val (reader/read-string new-val-str)]
       (if new-val
-        (update-in db [:selection :review-filters filt-type :filter-values] set/rename-keys {old-val (keyword new-val)})
-        (update-in db [:selection :review-filters filt-type :filter-values] disj old-val)))))
+        (update-in db
+                   [:selection :review-filters filt-type :filter-values]
+                   set/rename-keys
+                   {old-val (keyword new-val)})
+        (update-in db
+                   [:selection :review-filters filt-type :filter-values]
+                   disj
+                   old-val)))))
 
 (reg-event-db ::review-toggle-filters
-  (fn [db [_ val]]
-    (assoc-in db [:selection :show-filters] val)))
+  (fn [db [_ val]] (assoc-in db [:selection :show-filters] val)))

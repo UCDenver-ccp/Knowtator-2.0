@@ -8,38 +8,26 @@
 (defmethod panels :default [] [:div "No panel found for this route."])
 
 (def routes
-  (atom
-    ["/" {""           :annotation
+  (atom ["/"
+         {""           :annotation
           "about"      :about
           "graph"      :graph
           "annotation" :annotation
           "review"     :review}]))
 
-(defn parse
-  [url]
-  (bidi/match-route @routes url))
+(defn parse [url] (bidi/match-route @routes url))
 
-(defn url-for
-  [& args]
-  (apply bidi/path-for (into [@routes] args)))
+(defn url-for [& args] (apply bidi/path-for (into [@routes] args)))
 
 (defn dispatch
   [route]
   (let [panel (keyword (str (name (:handler route)) "-panel"))]
     (rf/dispatch [::events/set-active-panel panel])))
 
-(def history
-  (pushy/pushy dispatch parse))
+(def history (pushy/pushy dispatch parse))
 
-(defn navigate!
-  [handler]
-  (pushy/set-token! history (url-for handler)))
+(defn navigate! [handler] (pushy/set-token! history (url-for handler)))
 
-(defn start!
-  []
-  (pushy/start! history))
+(defn start! [] (pushy/start! history))
 
-(rf/reg-fx
-  :navigate
-  (fn [handler]
-    (navigate! handler)))
+(rf/reg-fx :navigate (fn [handler] (navigate! handler)))
