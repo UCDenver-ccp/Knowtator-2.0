@@ -1,16 +1,14 @@
 (ns knowtator.events
   (:require [ajax.core :as ajax]
             [clojure.string :as str]
+            [day8.re-frame.http-fx]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [day8.re-frame.undo :as undo :refer [undoable]]
-            [day8.re-frame.http-fx]
             [knowtator.db :as db]
-            [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
-            [re-pressed.core :as rp]
-            [knowtator.util :as util]
             [knowtator.owl.events :as owl]
-            [knowtator.text-annotation.events :as txt]))
+            [knowtator.text-annotation.events :as txt]
+            [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
+            [re-pressed.core :as rp]))
 
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
@@ -23,18 +21,19 @@
                                              {:id  (keyword (str "n" (inc i)))
                                               :ann (:id ann)}))))
                (update
-                 :graph
-                 (fn [{:keys [nodes]
-                       :as   graph}]
-                   (assoc graph
-                     :edges (->> (for [source (take 2 (shuffle nodes))
-                                       target (take 3 (shuffle nodes))]
-                                   {:from (:id source)
-                                    :to   (:id target)})
-                                 (map-indexed
-                                   (fn [i edge]
-                                     (assoc edge
-                                       :id (keyword (str "e" (inc i))))))))))
+                :graph
+                (fn [{:keys [nodes]
+                      :as   graph}]
+                  (assoc
+                   graph
+                   :edges
+                   (->> (for [source (take 2 (shuffle nodes))
+                              target (take 3 (shuffle nodes))]
+                          {:from (:id source)
+                           :to   (:id target)})
+                        (map-indexed
+                         (fn [i edge]
+                           (assoc edge :id (keyword (str "e" (inc i))))))))))
                (assoc-in [:selection :doc]
                          (-> db
                              :text-annotation
@@ -45,30 +44,29 @@
 (reg-event-fx ::load-project
   (fn [{:keys [db]} [_ project]]
     (cond-> {:db db}
-      (not= project "default") (assoc :dispatch-n
-                                 [[::set-spinny :project true]
-                                  [::set-error :project false]
-                                  [::set-spinny :ontology true]
-                                  [::set-error :ontology false]]
-                                   :http-xhrio
-                                 [{:method :get
-                                   :uri (str "/project/project/" project)
-                                   :format (ajax/transit-request-format)
-                                   :response-format
-                                     (ajax/transit-response-format)
-                                   :on-success [::load-project-success :project
-                                                ::set-project]
-                                   :on-failure [::load-project-failure
-                                                :project]}
-                                  {:method :get
-                                   :uri (str "/project/ontology/" project)
-                                   :format (ajax/transit-request-format)
-                                   :response-format
-                                     (ajax/transit-response-format)
-                                   :on-success [::load-project-success :ontology
-                                                ::owl/set-ontology]
-                                   :on-failure [::load-project-failure
-                                                :ontology]}]))))
+      (not= project "default") (assoc
+                                :dispatch-n [[::set-spinny :project true]
+                                             [::set-error :project false]
+                                             [::set-spinny :ontology true]
+                                             [::set-error :ontology false]]
+                                :http-xhrio
+                                [{:method :get
+                                  :uri (str "/project/project/" project)
+                                  :format (ajax/transit-request-format)
+                                  :response-format
+                                  (ajax/transit-response-format)
+                                  :on-success [::load-project-success :project
+                                               ::set-project]
+                                  :on-failure [::load-project-failure :project]}
+                                 {:method :get
+                                  :uri (str "/project/ontology/" project)
+                                  :format (ajax/transit-request-format)
+                                  :response-format
+                                  (ajax/transit-response-format)
+                                  :on-success [::load-project-success :ontology
+                                               ::owl/set-ontology]
+                                  :on-failure [::load-project-failure
+                                               :ontology]}]))))
 
 (reg-event-fx ::load-project-success
   (fn [{:keys [db]} [_ place evt project-data]]
@@ -145,12 +143,13 @@
 (reg-event-fx ::import-owl
   (fn [state _]
     (assoc state
-      :http-xhiro {:method          :get
-                   :uri             "/ontology"
-                   :timeout         3000
-                   :response-format (ajax/transit-response-format)
-                   :on-success      [:add-ontology]
-                   :on-failure      [:handle-failure]})))
+           :http-xhiro
+           {:method          :get
+            :uri             "/ontology"
+            :timeout         3000
+            :response-format (ajax/transit-response-format)
+            :on-success      [:add-ontology]
+            :on-failure      [:handle-failure]})))
 
 (reg-event-fx ::record-selection
   (fn-traced [{:keys [db]}
@@ -194,6 +193,6 @@
   (undoable "Setting color for concept")
   (fn [db [_ color]]
     (assoc-in db
-      [:text-annotation :profiles (get-in db [:selection :profiles]) :colors
-       (get-in db [:selection :concepts])]
-      color)))
+     [:text-annotation :profiles (get-in db [:selection :profiles]) :colors
+      (get-in db [:selection :concepts])]
+     color)))
