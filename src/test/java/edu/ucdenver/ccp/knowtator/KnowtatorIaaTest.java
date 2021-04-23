@@ -100,9 +100,9 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Class matcher.dat"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.println(String.format("Gold: file://%s\nThis: file://%s\n",
+      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
-          new File(outputDir, "index.html").getAbsolutePath()));
+          new File(outputDir, "index.html").getAbsolutePath());
       throw e;
     }
   }
@@ -118,9 +118,9 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Span matcher.html"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.println(String.format("Gold: file://%s\nThis: file://%s\n",
+      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
-          new File(outputDir, "index.html").getAbsolutePath()));
+          new File(outputDir, "index.html").getAbsolutePath());
       throw e;
     }
   }
@@ -136,9 +136,91 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Class and span matcher.dat"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.println(String.format("Gold: file://%s\nThis: file://%s\n",
+      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
-          new File(outputDir, "index.html").getAbsolutePath()));
+          new File(outputDir, "index.html").getAbsolutePath());
+      throw e;
+    }
+  }
+
+  @Test
+  void overlappingIDsTest() throws IaaException, IOException {
+    // Loading first project from Default
+    File projectDirectory = new File("/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
+    File tempProjectDir = Files.createTempDir();
+    FileUtils.copyDirectory(projectDirectory, tempProjectDir);
+
+    KnowtatorModel model1 = new KnowtatorModel(tempProjectDir, null);
+
+    model1.load(model1.getProjectLocation());
+
+
+    // Loading second project fom NV
+    File projectLocation2 = new File("/home/harrison/Downloads/Re _quick_question/NV annotations 15588329-15630473");
+    File tempProjectDir2 = Files.createTempDir();
+    FileUtils.copyDirectory(projectLocation2, tempProjectDir2);
+    KnowtatorModel model2 = new KnowtatorModel(tempProjectDir, null);
+    model2.load(projectLocation2);
+
+    TestingHelpers.ProjectCounts counts1 = new TestingHelpers.ProjectCounts(
+        97,
+        1996,
+        1998,
+        0,
+        2,
+        387,
+        0,
+        0,
+        0);
+    TestingHelpers.ProjectCounts counts2 = new TestingHelpers.ProjectCounts(
+        97,
+        1967,
+        1969,
+        0,
+        2,
+        387,
+        0,
+        0,
+        0);
+    TestingHelpers.countCollections(model1, counts1);
+    TestingHelpers.countCollections(model2, counts2);
+
+    // Merge
+    model1.load(projectLocation2);
+    TestingHelpers.countCollections(model1, counts2.add(counts1, new TestingHelpers.ProjectCounts(97,0,0,0,2,387,0,0,0)));
+
+    // IAA
+
+
+    outputDir = new File(model.getProjectLocation(), "test_results");
+    boolean created = outputDir.mkdir();
+    if (created) {
+      ProfileCollection profiles = new ProfileCollection(model);
+      profiles.remove(profiles.getDefaultProfile());
+
+      knowtatorIAA = new KnowtatorIaa(outputDir,
+          model,
+          model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
+          model.getProfiles().stream()
+              .map(Profile::getId)
+              .collect(Collectors.toSet()),
+          new ArrayList<>(new HashSet<>(model.getTextSources().stream()
+              .flatMap(textSource -> textSource.getConceptAnnotations().stream()
+                  .map(ConceptAnnotation::getOwlClass))
+              .collect(Collectors.toSet()))));
+    }
+
+    knowtatorIAA.runClassAndSpanIaa();
+
+    try {
+      assert FileUtils.contentEqualsIgnoreEOL(
+          new File(outputDir, "Class and span matcher.dat"),
+          new File(goldStandardDir, "Class and span matcher.dat"),
+          "utf-8");
+    } catch (AssertionError e) {
+      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
+          new File(goldStandardDir, "index.html").getAbsolutePath(),
+          new File(outputDir, "index.html").getAbsolutePath());
       throw e;
     }
   }

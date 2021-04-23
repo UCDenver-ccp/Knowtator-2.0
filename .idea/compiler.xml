@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Knowtator-2.0" />
+        <module name="knowtator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="knowtator" target="1.8" />
       <module name="Knowtator-2.0" target="1.8" />
     </bytecodeTargetLevel>
   </component>

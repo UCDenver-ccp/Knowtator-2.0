@@ -33,43 +33,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/Span.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/Span.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/KnowtatorToUIMAAnnotator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/UIMAXMIUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/AnnotationMetadata.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotationSet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPDocumentInformation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPSpan.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPTextAnnotation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/AnnotationCommentProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/AnnotationMetadataProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/AnnotationSetMembershipProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/EvaluationResultProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/FalseNegativeProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/FalsePositiveProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/GoldStandardSetProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/PartialMatchProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/TestSetProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/metadata/TruePositiveProperty.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/assertion/CCPGraphSpace.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/assertion/CCPTriple.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/assertion/CCPVertex.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPBooleanSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPClassMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPComplexSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPDoubleSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPFloatSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPIntegerSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPPrimitiveSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPStringSlotMention.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11319941.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11532192.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11597317.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/11604102.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11319941.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11532192.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11597317.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Annotations/kristin_11604102.txt.knowtator.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11319941.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11532192.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11597317.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Articles/11604102.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Ontologies/CRAFT_aggregate_OWL_ontology.owl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles/Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.matches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class and span matcher.nonmatches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.matches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Class matcher.nonmatches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.matches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Kristin Garcia.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/Span matcher.nonmatches.Mike Bada.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/iaa_test_project/iaa_test_project.knowtator" beforeDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +159,7 @@
       <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in Knowtator-2.0">
+  <component name="RunManager" selected="JUnit.KnowtatorIaaTest.currentProblemTest">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -207,9 +207,13 @@
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Protege" />
       </method>
     </configuration>
-    <configuration name="All in Knowtator-2.0" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
+    <configuration name="All in knowtator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="knowtator" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
       <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -222,6 +226,22 @@
       <uniqueIds>
         <uniqueId value="[engine:junit-jupiter]/[class:edu.ucdenver.ccp.knowtator.KnowtatorIaaTest]" />
       </uniqueIds>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="KnowtatorIaaTest.currentProblemTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="knowtator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIaaTest" />
+      <option name="METHOD_NAME" value="currentProblemTest" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -253,22 +273,6 @@
       <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
       <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
       <option name="METHOD_NAME" value="importProjectTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ProjectManagerTest.saveProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
-      <option name="METHOD_NAME" value="saveProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -320,20 +324,20 @@
       <item itemvalue="Application.Run Protege" />
       <item itemvalue="Application.GUI" />
       <item itemvalue="Application.Debug GUI" />
-      <item itemvalue="JUnit.All in Knowtator-2.0" />
-      <item itemvalue="Maven.knowtator [install]" />
       <item itemvalue="JUnit.KnowtatorIaaTest.runClassAndSpanIaaTest" />
-      <item itemvalue="JUnit.ProjectManagerTest.saveProjectTest" />
       <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
       <item itemvalue="JUnit.KnowtatorIaaTest" />
+      <item itemvalue="JUnit.All in knowtator" />
+      <item itemvalue="JUnit.KnowtatorIaaTest.currentProblemTest" />
+      <item itemvalue="Maven.knowtator [install]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.All in Knowtator-2.0" />
+        <item itemvalue="JUnit.KnowtatorIaaTest.currentProblemTest" />
+        <item itemvalue="JUnit.All in knowtator" />
         <item itemvalue="JUnit.KnowtatorIaaTest.runClassAndSpanIaaTest" />
         <item itemvalue="JUnit.KnowtatorIaaTest" />
         <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
-        <item itemvalue="JUnit.ProjectManagerTest.saveProjectTest" />
       </list>
     </recent_temporary>
   </component>
