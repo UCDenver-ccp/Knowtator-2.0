@@ -34,7 +34,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,10 +46,6 @@ import org.protege.editor.owl.model.OWLWorkspace;
 import org.protege.editor.owl.model.event.OWLModelManagerListener;
 import org.protege.editor.owl.model.selection.OWLSelectionModel;
 import org.protege.editor.owl.model.selection.OWLSelectionModelListener;
-import org.protege.editor.owl.ui.prefix.OWLEntityPrefixedNameRenderer;
-import org.protege.editor.owl.ui.renderer.OWLEntityRendererImpl;
-import org.protege.editor.owl.ui.renderer.OWLRendererPreferences;
-import org.protege.editor.owl.ui.renderer.plugin.RendererPlugin;
 import org.protege.editor.owl.ui.search.SearchDialogPanel;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.HasAnnotationPropertiesInSignature;
@@ -79,7 +74,6 @@ public abstract class OwlModel extends BaseModel implements Serializable {
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
   private final Optional<OWLWorkspace> owlWorkSpace;
-  private List<IRI> iris;
 
   /**
    * Instantiates a new Owl model.
@@ -452,35 +446,11 @@ public abstract class OwlModel extends BaseModel implements Serializable {
             .toArray(IRI[]::new));
   }
 
-  protected boolean isMyRendererPlugin(RendererPlugin plugin) {
-    return plugin.getRendererClassName().equals("org.protege.editor.owl.ui.prefix.OWLEntityPrefixedNameRenderer");
-  }
-
-  void setRendering() {
-
-    owlWorkSpace.ifPresent(owlWorkspace -> {
-      OWLRendererPreferences preferences = OWLRendererPreferences.getInstance();
-      preferences.setRendererPlugin(preferences.getRendererPluginByClassName(OWLEntityPrefixedNameRenderer.class.getName()));
-      for (RendererPlugin plugin : preferences.getRendererPlugins()) {
-        log.warn(plugin.getRendererClassName());
-        if (isMyRendererPlugin(plugin)) {
-          preferences.setRendererPlugin(plugin);
-          owlWorkspace.getOWLModelManager().refreshRenderer();
-          break;
-        }
-      }
-    });
-  }
-
-  void resetRendering() {
-    owlWorkSpace.ifPresent(owlWorkspace -> {
-      OWLRendererPreferences preferences = OWLRendererPreferences.getInstance();
-      preferences.setRendererPlugin(preferences.getRendererPluginByClassName(OWLEntityRendererImpl.class.getName()));
-      owlWorkspace.getOWLModelManager().refreshRenderer();
-    });
-  }
-
   public void removeOwlSelectionModelListener(OWLSelectionModelListener listener) {
     owlWorkSpace.ifPresent(owlWorkSpace -> owlWorkSpace.getOWLSelectionModel().removeListener(listener));
+  }
+
+  public OWLWorkspace getOWLWorkspace() {
+    return owlWorkSpace.get();
   }
 }
