@@ -33,12 +33,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/KnowtatorToUIMAAnnotator.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/UIMAXMIUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OwlModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/OwlModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/AnnotationMetadata.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotation.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotationSet.java" beforeDir="false" />
@@ -69,6 +67,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPPrimitiveSlotMention.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPSlotMention.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPStringSlotMention.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
@@ -159,7 +158,7 @@
       <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.KnowtatorIaaTest.currentProblemTest">
+  <component name="RunManager" selected="JUnit.KnowtatorIaaTest.overlappingIDsTest">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -246,6 +245,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KnowtatorIaaTest.overlappingIDsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="knowtator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
+      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIaaTest" />
+      <option name="METHOD_NAME" value="overlappingIDsTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="KnowtatorIaaTest.runClassAndSpanIaaTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Knowtator-2.0" />
       <extension name="coverage">
@@ -257,22 +272,6 @@
       <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
       <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.KnowtatorIaaTest" />
       <option name="METHOD_NAME" value="runClassAndSpanIaaTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ProjectManagerTest.importProjectTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Knowtator-2.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.ucdenver.ccp.knowtator.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.ucdenver.ccp.knowtator" />
-      <option name="MAIN_CLASS_NAME" value="edu.ucdenver.ccp.knowtator.ProjectManagerTest" />
-      <option name="METHOD_NAME" value="importProjectTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -325,19 +324,19 @@
       <item itemvalue="Application.GUI" />
       <item itemvalue="Application.Debug GUI" />
       <item itemvalue="JUnit.KnowtatorIaaTest.runClassAndSpanIaaTest" />
-      <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
       <item itemvalue="JUnit.KnowtatorIaaTest" />
       <item itemvalue="JUnit.All in knowtator" />
       <item itemvalue="JUnit.KnowtatorIaaTest.currentProblemTest" />
       <item itemvalue="Maven.knowtator [install]" />
+      <item itemvalue="JUnit.KnowtatorIaaTest.overlappingIDsTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.KnowtatorIaaTest.overlappingIDsTest" />
         <item itemvalue="JUnit.KnowtatorIaaTest.currentProblemTest" />
         <item itemvalue="JUnit.All in knowtator" />
         <item itemvalue="JUnit.KnowtatorIaaTest.runClassAndSpanIaaTest" />
         <item itemvalue="JUnit.KnowtatorIaaTest" />
-        <item itemvalue="JUnit.ProjectManagerTest.importProjectTest" />
       </list>
     </recent_temporary>
   </component>

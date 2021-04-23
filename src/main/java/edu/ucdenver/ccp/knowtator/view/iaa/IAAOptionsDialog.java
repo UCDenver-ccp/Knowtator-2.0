@@ -100,7 +100,8 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
   private static final Logger log = Logger.getLogger(IAAOptionsDialog.class);
 
-  public IAAOptionsDialog(Window parent, KnowtatorModel model, KnowtatorView view, File outputDirectory) {
+  public IAAOptionsDialog(
+      Window parent, KnowtatorModel model, KnowtatorView view, File outputDirectory) {
     super(parent);
     this.outputDirectory = outputDirectory;
     this.model = model;
@@ -118,14 +119,16 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
     // call onCancel() when cross is clicked
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    addWindowListener(new WindowAdapter() {
-      public void windowClosing(WindowEvent e) {
-        onCancel();
-      }
-    });
+    addWindowListener(
+        new WindowAdapter() {
+          public void windowClosing(WindowEvent e) {
+            onCancel();
+          }
+        });
 
     // call onCancel() on ESCAPE
-    contentPane.registerKeyboardAction(e -> onCancel(),
+    contentPane.registerKeyboardAction(
+        e -> onCancel(),
         KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
         JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -137,67 +140,85 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     documentsSelectAllButton.addActionListener(e -> documentsTableModel.toggleAll());
     profilesSelectAllButton.addActionListener(e -> profilesTableModel.toggleAll());
 
-    compareAcrossProjectsButton.addActionListener(e -> {
-      JFileChooser fileChooser = new JFileChooser();
-      Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
-          .map(File::new)
-          .filter(File::exists)
-          .map(
-              file -> {
-                fileChooser.setCurrentDirectory(file);
-                return file;
-              })
-          .map(File::listFiles)
-          .flatMap(
-              files ->
-                  Arrays.stream(files)
-                      .filter(file1 -> file1.getName().endsWith(".knowtator"))
-                      .findAny())
-          .ifPresent(fileChooser::setSelectedFile);
-      fileChooser.addActionListener(
-          e1 ->
-              Optional.ofNullable(e1)
-                  .filter(
-                      event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
-                  .ifPresent(event -> {
-                    try {
-                      File projectLocation1 = fileChooser.getSelectedFile();
-                      KnowtatorModel newModel = mergeProjects(projectLocation1, this.model, view.getOWLWorkspace(), false, this);
+    compareAcrossProjectsButton.addActionListener(
+        e -> {
+          JFileChooser fileChooser = new JFileChooser();
+          Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
+              .map(File::new)
+              .filter(File::exists)
+              .map(
+                  file -> {
+                    fileChooser.setCurrentDirectory(file);
+                    return file;
+                  })
+              .map(File::listFiles)
+              .flatMap(
+                  files ->
+                      Arrays.stream(files)
+                          .filter(file1 -> file1.getName().endsWith(".knowtator"))
+                          .findAny())
+              .ifPresent(fileChooser::setSelectedFile);
+          fileChooser.addActionListener(
+              e1 ->
+                  Optional.ofNullable(e1)
+                      .filter(
+                          event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
+                      .ifPresent(
+                          event -> {
+                            try {
+                              File projectLocation1 = fileChooser.getSelectedFile();
+                              KnowtatorModel newModel =
+                                  mergeProjects(
+                                      projectLocation1,
+                                      this.model,
+                                      view.getOWLWorkspace(),
+                                      false,
+                                      this);
 
-                      setModels(newModel);
+                              setModels(newModel);
 
-                    } catch (IOException ioException) {
-                      ioException.printStackTrace();
-                    }
-                  }));
+                            } catch (IOException ioException) {
+                              ioException.printStackTrace();
+                            }
+                          }));
 
-      FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-      fileChooser.setFileFilter(fileFilter);
-      fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+          FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
+          fileChooser.setFileFilter(fileFilter);
+          fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-      fileChooser.showOpenDialog(view);
-    });
+          fileChooser.showOpenDialog(view);
+        });
 
     reset();
   }
 
-  public static KnowtatorModel mergeProjects(File projectLocation1, KnowtatorModel model2, OWLWorkspace owlWorkspace, boolean mergeProfiles, JDialog component) throws IOException {
+  public static KnowtatorModel mergeProjects(
+      File projectLocation1,
+      KnowtatorModel model2,
+      OWLWorkspace owlWorkspace,
+      boolean mergeProfiles,
+      JDialog component)
+      throws IOException {
     KnowtatorModel newModel = new KnowtatorModel(projectLocation1, owlWorkspace);
     newModel.load(projectLocation1);
-    Set<Profile> profilesInCommon = newModel.getProfiles().stream()
-        .filter(profile -> model2.getProfiles().contains(profile))
-        .collect(Collectors.toSet());
+    Set<Profile> profilesInCommon =
+        newModel.getProfiles().stream()
+            .filter(profile -> model2.getProfiles().contains(profile))
+            .collect(Collectors.toSet());
 
-    for (Profile profile : profilesInCommon) {
-      if (mergeProfiles || JOptionPane.showConfirmDialog(component,
-          String.format("Merge %s between projects for IAA?", profile),
-          "Profile merge?",
-          JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-        profile.setId(String.format("%s - %s",
-            profile.getId(),
-            projectLocation1
-                .getName()
-                .replace(".knowtator", "")));
+    if (!mergeProfiles) {
+      for (Profile profile : profilesInCommon) {
+        if (JOptionPane.showConfirmDialog(
+            component,
+            String.format("Merge %s between projects for IAA?", profile),
+            "Profile merge?",
+            JOptionPane.YES_NO_OPTION)
+            == JOptionPane.NO_OPTION) {
+          profile.setId(
+              String.format(
+                  "%s - %s",
+                  profile.getId(), projectLocation1.getName().replace(".knowtator", "")));
+        }
       }
     }
 
@@ -207,30 +228,32 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
   private void setModels(KnowtatorModel model) {
     this.iaaModel = model;
-    documentsTableModel = new IAATableModel(
-        new Object[][] {},
-        "Document",
-        model.getTextSources().stream()
-            .map(ModelObject::getId)
-            .collect(Collectors.toList()));
+    documentsTableModel =
+        new IAATableModel(
+            new Object[][] {},
+            "Document",
+            model.getTextSources().stream().map(ModelObject::getId).collect(Collectors.toList()));
     documentsTable.setModel(documentsTableModel);
 
-    profilesTableModel = new IAATableModel(
-        new Object[][] {},
-        "Profile",
-        model.getProfiles().stream()
-            .map(ModelObject::getId)
-            .collect(Collectors.toList()));
+    profilesTableModel =
+        new IAATableModel(
+            new Object[][] {},
+            "Profile",
+            model.getProfiles().stream().map(ModelObject::getId).collect(Collectors.toList()));
     profilesTable.setModel(profilesTableModel);
 
-
-    owlClassesTableModel = new IAATableModel(
-        new Object[][] {},
-        "OWL Classes",
-        new ArrayList<>(new HashSet<>(model.getTextSources().stream()
-            .flatMap(textSource -> textSource.getConceptAnnotations().stream()
-                .map(ConceptAnnotation::getOwlClass))
-            .collect(Collectors.toSet()))));
+    owlClassesTableModel =
+        new IAATableModel(
+            new Object[][] {},
+            "OWL Classes",
+            new ArrayList<>(
+                new HashSet<>(
+                    model.getTextSources().stream()
+                        .flatMap(
+                            textSource ->
+                                textSource.getConceptAnnotations().stream()
+                                    .map(ConceptAnnotation::getOwlClass))
+                        .collect(Collectors.toSet()))));
     owlClassesTable.setModel(owlClassesTableModel);
   }
 
@@ -239,7 +262,8 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     owlClassesTable = new OWLClassesTable(view, includeSubclassesCheckBox);
   }
 
-  private static class OWLClassesTable extends JTable implements KnowtatorComponent, OWLSelectionModelListener {
+  private static class OWLClassesTable extends JTable
+      implements KnowtatorComponent, OWLSelectionModelListener {
 
     private final KnowtatorView view;
     private final JCheckBox includeSubclassesCheckBox;
@@ -252,24 +276,25 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
     @Override
     public void selectionChanged() {
-      view.getModel().ifPresent(model -> {
-        Optional<String> owlClassOptional = model.getSelectedOwlClass();
+      view.getModel()
+          .ifPresent(
+              model -> {
+                Optional<String> owlClassOptional = model.getSelectedOwlClass();
 
-        owlClassOptional.ifPresent(owlClass -> {
-          int i = selectOwlClass(owlClass);
-          if (includeSubclassesCheckBox.isSelected()) {
-            for (String d : model.getOwlClassDescendants(owlClass)) {
-              selectOwlClass(d);
-            }
-          }
+                owlClassOptional.ifPresent(
+                    owlClass -> {
+                      int i = selectOwlClass(owlClass);
+                      if (includeSubclassesCheckBox.isSelected()) {
+                        for (String d : model.getOwlClassDescendants(owlClass)) {
+                          selectOwlClass(d);
+                        }
+                      }
 
-          if (-1 < i && i < getModel().getRowCount()) {
-            scrollRectToVisible(getCellRect(i, 0, true));
-          }
-        });
-
-      });
-
+                      if (-1 < i && i < getModel().getRowCount()) {
+                        scrollRectToVisible(getCellRect(i, 0, true));
+                      }
+                    });
+              });
     }
 
     private int selectOwlClass(String owlClass) {
@@ -330,20 +355,16 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     }
 
     boolean allSelected() {
-      return IntStream.range(0, getRowCount())
-          .allMatch(i -> (Boolean) getValueAt(i, 1));
+      return IntStream.range(0, getRowCount()).allMatch(i -> (Boolean) getValueAt(i, 1));
     }
 
     void toggleAll() {
       if (allSelected()) {
-        IntStream.range(0, getRowCount())
-            .forEach(i -> setValueAt(Boolean.FALSE, i, checkCol));
+        IntStream.range(0, getRowCount()).forEach(i -> setValueAt(Boolean.FALSE, i, checkCol));
       } else {
-        IntStream.range(0, getRowCount())
-            .forEach(i -> setValueAt(Boolean.TRUE, i, checkCol));
+        IntStream.range(0, getRowCount()).forEach(i -> setValueAt(Boolean.TRUE, i, checkCol));
       }
     }
-
   }
 
   private void onOK() {
@@ -351,10 +372,14 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
     Set<String> owlClasses = owlClassesTableModel.getSelectedItems();
 
     Set<String> textSources = documentsTableModel.getSelectedItems();
-    if (profiles.size() <= 2 && !textSources.isEmpty() &&
-        (iaaClassCheckBox.isSelected() || iaaSpanCheckBox.isSelected() || iaaClassAndSpanCheckBox.isSelected())) {
+    if (profiles.size() <= 2
+        && !textSources.isEmpty()
+        && (iaaClassCheckBox.isSelected()
+        || iaaSpanCheckBox.isSelected()
+        || iaaClassAndSpanCheckBox.isSelected())) {
       try {
-        KnowtatorIaa knowtatorIaa = new KnowtatorIaa(outputDirectory, iaaModel, textSources, profiles, owlClasses);
+        KnowtatorIaa knowtatorIaa =
+            new KnowtatorIaa(outputDirectory, iaaModel, textSources, profiles, owlClasses);
 
         if (iaaClassCheckBox.isSelected()) {
           knowtatorIaa.runClassIaa();

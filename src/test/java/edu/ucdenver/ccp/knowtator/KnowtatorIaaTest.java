@@ -24,6 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator;
 
+import static edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog.mergeProjects;
+
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
@@ -146,9 +148,9 @@ class KnowtatorIaaTest {
   @Test
   void overlappingIDsTest() throws IaaException, IOException {
     // Loading first project from Default
-    File projectDirectory = new File("/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
+    File projectLocation1 = new File("/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
     File tempProjectDir = Files.createTempDir();
-    FileUtils.copyDirectory(projectDirectory, tempProjectDir);
+    FileUtils.copyDirectory(projectLocation1, tempProjectDir);
 
     KnowtatorModel model1 = new KnowtatorModel(tempProjectDir, null);
 
@@ -186,25 +188,25 @@ class KnowtatorIaaTest {
     TestingHelpers.countCollections(model2, counts2);
 
     // Merge
-    model1.load(projectLocation2);
-    TestingHelpers.countCollections(model1, counts2.add(counts1, new TestingHelpers.ProjectCounts(97,0,0,0,2,387,0,0,0)));
+    KnowtatorModel mergeModel = mergeProjects(projectLocation2, model1, null, true, null);
+    TestingHelpers.countCollections(mergeModel, counts2.add(counts1, new TestingHelpers.ProjectCounts(97,0,0,0,2,387,0,0,0)));
 
     // IAA
 
 
-    outputDir = new File(model.getProjectLocation(), "test_results");
+    outputDir = new File(mergeModel.getProjectLocation(), "test_results");
     boolean created = outputDir.mkdir();
     if (created) {
-      ProfileCollection profiles = new ProfileCollection(model);
+      ProfileCollection profiles = new ProfileCollection(mergeModel);
       profiles.remove(profiles.getDefaultProfile());
 
       knowtatorIAA = new KnowtatorIaa(outputDir,
-          model,
-          model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
-          model.getProfiles().stream()
+          mergeModel,
+          mergeModel.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
+          mergeModel.getProfiles().stream()
               .map(Profile::getId)
               .collect(Collectors.toSet()),
-          new ArrayList<>(new HashSet<>(model.getTextSources().stream()
+          new ArrayList<>(new HashSet<>(mergeModel.getTextSources().stream()
               .flatMap(textSource -> textSource.getConceptAnnotations().stream()
                   .map(ConceptAnnotation::getOwlClass))
               .collect(Collectors.toSet()))));
