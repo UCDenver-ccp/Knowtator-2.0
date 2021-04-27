@@ -70,7 +70,8 @@
                                            (.-target %)
                                            "text-annotation-editor")]
                            (>evt [::events/record-selection selection doc-id]))
-              :style    {:padding "10px"}}
+              :style    {:padding "10px"
+                         :width   "400px"}}
                (doall (for [paragraph (<sub [::subs/highlighted-text])]
                         ^{:key (str (random-uuid))}
                         [:p [editor-paragraph paragraph] " "]))]])
