@@ -12,40 +12,40 @@
   [{:keys [content id ann]}]
   (let [e-id (random-uuid)]
     (r/create-class
-      {:reagent-render
-         (fn []
-           (let [selected? (some #(<sub [::subs/selected-span? %])
-                                 (cond-> id (not (coll? id)) vector))]
-             (when-let [e (and selected? (.getElementById js/document e-id))]
-               (.scrollIntoView e
-                                (clj->js {:behavior :smooth
-                                          #_[:auto :smooth]
-                                          :block    :center
-                                          #_[:start :center :end :nearest]
-                                          :inline   :nearest
-                                          #_[:start :center :end :nearest]})))
-             (let [color (<sub [::subs/ann-color ann])]
-               [re-com/p-span {:id    e-id
-                               :style (cond-> {:background-color color
-                                               :border           :solid
-                                               :border-color     color
-                                               :cursor           :pointer}
-                                        (coll? id) (assoc :border-color :grey)
-                                        selected?  (assoc :border-color :black)
-                                        #_#_searched (assoc :color :red))}
-                 content])))
-       :component-did-mount
-         (fn [_]
-           (let [e (.getElementById js/document e-id)]
-             (when (and (<sub [::subs/un-searched?]) #_searched)
-               (>evt [::events/done-searching])
-               (.scrollIntoView e
-                                {:behavior :smooth
-                                 #_[:auto :smooth]
-                                 :block    :end
-                                 #_[:start :center :end :nearest]
-                                 :inline   :nearest
-                                 #_[:start :center :end :nearest]}))))})))
+     {:reagent-render
+      (fn []
+        (let [selected? (some #(<sub [::subs/selected-span? %])
+                              (cond-> id (not (coll? id)) vector))]
+          (when-let [e (and selected? (.getElementById js/document e-id))]
+            (.scrollIntoView e
+                             (clj->js {:behavior :smooth
+                                       #_[:auto :smooth]
+                                       :block    :center
+                                       #_[:start :center :end :nearest]
+                                       :inline   :nearest
+                                       #_[:start :center :end :nearest]})))
+          (let [color (<sub [::subs/ann-color ann])]
+            [re-com/p-span {:id    e-id
+                            :style (cond-> {:background-color color
+                                            :border           :solid
+                                            :border-color     color
+                                            :cursor           :pointer}
+                                     (coll? id) (assoc :border-color :grey)
+                                     selected?  (assoc :border-color :black)
+                                     #_#_searched (assoc :color :red))}
+              content])))
+      :component-did-mount
+      (fn [_]
+        (let [e (.getElementById js/document e-id)]
+          (when (and (<sub [::subs/un-searched?]) #_searched)
+            (>evt [::events/done-searching])
+            (.scrollIntoView e
+                             {:behavior :smooth
+                              #_[:auto :smooth]
+                              :block    :end
+                              #_[:start :center :end :nearest]
+                              :inline   :nearest
+                              #_[:start :center :end :nearest]}))))})))
 
 (defn editor-paragraph
   [paragraph]
@@ -67,14 +67,14 @@
   [re-com/scroller
     :child [:div.text-annotation-editor
              {:on-click #(let [selection (html/text-selection
-                                           (.-target %)
-                                           "text-annotation-editor")]
+                                          (.-target %)
+                                          "text-annotation-editor")]
                            (>evt [::events/record-selection selection doc-id]))
               :style    {:padding "10px"
                          :width   "400px"}}
-               (doall (for [paragraph (<sub [::subs/highlighted-text])]
-                        ^{:key (str (random-uuid))}
-                        [:p [editor-paragraph paragraph] " "]))]])
+             (doall (for [paragraph (<sub [::subs/highlighted-text])]
+                      ^{:key (str (random-uuid))}
+                      [:p [editor-paragraph paragraph] " "]))]])
 
 (defn annotation-info
   []
@@ -92,4 +92,4 @@
                             ::dt/column-label "Property"}
                            {::dt/column-key   [:val]
                             ::dt/column-label "Value"}]
-                            {::dt/table-classes ["table" "ui" "celled"]}]]]])
+                          {::dt/table-classes ["table" "ui" "celled"]}]]]])
