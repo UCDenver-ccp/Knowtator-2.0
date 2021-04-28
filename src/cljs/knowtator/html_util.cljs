@@ -3,7 +3,8 @@
             [re-frame.core :as rf :refer
              [->interceptor assoc-coeffect assoc-effect get-coeffect
               get-effect]]
-            ["rangy/lib/rangy-textrange" :as rangy-txt]))
+            ["rangy/lib/rangy-textrange" :as rangy-txt]
+            [reagent.core :as r]))
 
 (defn win-inner-w [] js/window.innerWidth)
 
@@ -138,3 +139,15 @@
         (js->clj :keywordize-keys true)
         first
         :characterRange)))
+
+(defonce window-size
+         (let [a (r/atom {:width  (.-innerWidth js/window)
+                          :height (.-innerHeight js/window)})]
+           (.addEventListener js/window
+                              "resize"
+                              (fn []
+                                (println "change")
+                                (reset! a
+                                        {:width  (.-innerWidth js/window)
+                                         :height (.-innerHeight js/window)})))
+           a))

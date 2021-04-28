@@ -3,7 +3,8 @@
             [knowtator.relation-annotation.subs :as subs]
             [knowtator.util :as util :refer [<sub >evt]]
             [reagent.core :as r]
-            ["react-graph-vis" :as rgv]))
+            ["react-graph-vis" :as rgv]
+            [knowtator.html-util :as html]))
 
 (def visjs-graph (aget rgv "default"))
 
@@ -16,7 +17,10 @@
 (defn vis
   [id graph &
    {:keys [options events style]
-    :or   {style {:height "640px"}}}]
+    {:keys [width height]
+     :or   {height "50vh"
+            width  "100vh"}}
+    :style}]
   (when-let [graph (<sub graph)]
     [(r/adapt-react-class visjs-graph)
      {:graph   graph
@@ -25,52 +29,37 @@
                            (partial util/map-vals manipulation-handler-fn))
                    (assoc-in [:manipulation :enabled] true))
       :events  (util/map-vals handler-fn events)
-      :style   style}]))
+      :style   (-> style
+                   (assoc :height height :width width))}]))
 
 (defn graph
-  [graph-sub]
+  [graph-sub graph-id-sub]
   [vis
     :relation-annotation-graph graph-sub
-    :options                   {:layout {:hierarchical false}
-                                :edges {:color "#000000"}
-                                :physics {:enabled    (<sub
-                                                       [::subs/graph-physics])
-                                          :barnes-hut {:spring-length
-                                                       (<sub
-                                                        [::subs/edge-length])}}
-                                :interaction {:hover true}
-                                :manipulation
-                                {:add-node
-                                 (fn [node-data]
-                                   (>evt
-                                    [::evts/add-node
-                                     (<sub [::subs/selected-graph-space-id])
-                                     node-data]))
-                                 :add-edge
-                                 (fn [edge-data]
-                                   (>evt
-                                    [::evts/add-edge
-                                     (<sub [::subs/selected-graph-space-id])
-                                     edge-data]))
-                                 :edit-node (fn [node-data] (println node-data))
-                                 :edit-edge (fn [edge-data] (println edge-data))
-                                 :delete-node (fn [node-ids] (println node-ids))
-                                 :delete-edge (fn [edge-ids]
-                                                (println edge-ids))}}
-    :events                    {:click (fn [{:keys                   [nodes]
-                                             {{:keys [x y]} :canvas} :pointer}]
-                                         (>evt
-                                          [::evts/toggle-node-physics
-                                           (<sub
-                                            [::subs/selected-graph-space-id])
-                                           (first nodes) x y]))
-                                :select-node
-                                (fn [{:keys [nodes]}]
-                                  (>evt [::evts/select-ann-node
-                                         (<sub [::subs/selected-graph-space-id])
-                                         (first nodes)]))
-                                :select-edge
-                                (fn [{:keys [edges]}]
-                                  (>evt [::evts/select-relation-ann
-                                         (<sub [::subs/selected-graph-space-id])
-                                         (first edges)]))}])
+    :options
+    {:layout       {:hierarchical false}
+     :edges        {:color "#000000"}
+     :physics      {:enabled    (<sub [::subs/graph-physics])
+                    :barnes-hut {:spring-length (<sub [::subs/edge-length])}}
+     :interaction  {:hover true}
+     :manipulation {:add-node    (fn [node-data]
+                                   (>evt [::evts/add-node (<sub graph-id-sub)
+                                          node-data]))
+                    :add-edge    (fn [edge-data]
+                                   (>evt [::evts/add-edge (<sub graph-id-sub)
+                                          edge-data]))
+                    :edit-node   (fn [node-data] (println node-data))
+                    :edit-edge   (fn [edge-data] (println edge-data))
+                    :delete-node (fn [node-ids] (println node-ids))
+                    :delete-edge (fn [edge-ids] (println edge-ids))}}
+    :events {:click       (fn [{:keys                   [nodes]
+                                {{:keys [x y]} :canvas} :pointer}]
+                            (>evt [::evts/toggle-node-physics
+                                   (<sub graph-id-sub) (first nodes) x y]))
+             :select-node (fn [{:keys [nodes]}]
+                            (>evt [::evts/select-ann-node (<sub graph-id-sub)
+                                   (first nodes)]))
+             :select-edge (fn [{:keys [edges]}]
+                            (>evt [::evts/select-relation-ann
+                                   (<sub graph-id-sub) (first edges)]))}
+    :style {:background-color "white"}])

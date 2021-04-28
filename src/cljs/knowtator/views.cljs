@@ -17,19 +17,6 @@
             [knowtator.relation-annotation.events :as ra-evts]
             [knowtator.analogy.events :as ana-evts]))
 
-(defn graph-panel
-  []
-  [:div
-   [re-com/v-box
-     :children [[owl/owl-controls]
-                [ra-controls/graph-space-controls [::ra-subs/graph-spaces]
-                 [::ra-subs/selected-graph-space-id]
-                 #(>evt [::ra-evts/select-graph-space %])]
-                [ra-controls/node-controls] [ra-controls/edge-controls]
-                [re-com/h-box
-                  :children [[owl/owl-obj-prop-hierarchy]
-                             [ra/graph
-                              [::ra-subs/selected-realized-graph]]]]]]])
 
 (defn page-title
   []
@@ -180,6 +167,20 @@
      :label "Review"
      :level :level1] [review/chooser] [review/table] [filter-controls]])
 
+(defn graph-panel
+  []
+  [:div
+   [re-com/v-box
+     :children [[owl/owl-controls]
+                [ra-controls/graph-space-controls [::ra-subs/graph-spaces]
+                 [::ra-subs/selected-graph-space-id]
+                 #(>evt [::ra-evts/select-graph-space %])]
+                [ra-controls/node-controls] [ra-controls/edge-controls]
+                [re-com/h-box
+                  :children [[owl/owl-obj-prop-hierarchy]
+                             [ra/graph [::ra-subs/selected-realized-graph]
+                              [::ra-subs/selected-graph-space-id]]]]]]])
+
 (defn analogy-panel
   []
   [:div
@@ -188,7 +189,8 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
-                [ra/graph [::ana-subs/selected-analogy-graph]]]]])
+                [ra/graph [::ana-subs/selected-analogy-graph]
+                 [::ana-subs/selected-analogy-graph-id]]]]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
