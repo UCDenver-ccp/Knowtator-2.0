@@ -916,8 +916,9 @@
                                    (dissoc :id)
                                    (->> (mapcat (fn [[k vs]]
                                                   (map (fn [v]
-                                                         {:from k
-                                                          :to   v})
+                                                         {:from  (:id mop)
+                                                          :label k
+                                                          :to    v})
                                                        vs))))))))
                  {:nodes []
                   :edges []}))))
