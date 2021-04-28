@@ -28,9 +28,9 @@
       :style   style}]))
 
 (defn graph
-  []
+  [graph-sub]
   [vis
-    :relation-annotation-graph [::subs/selected-realized-graph]
+    :relation-annotation-graph graph-sub
     :options                   {:layout {:hierarchical false}
                                 :edges {:color "#000000"}
                                 :physics {:enabled    (<sub
@@ -42,14 +42,12 @@
                                 :manipulation
                                 {:add-node
                                  (fn [node-data]
-                                   (println node-data)
                                    (>evt
                                     [::evts/add-node
                                      (<sub [::subs/selected-graph-space-id])
                                      node-data]))
                                  :add-edge
                                  (fn [edge-data]
-                                   (println edge-data)
                                    (>evt
                                     [::evts/add-edge
                                      (<sub [::subs/selected-graph-space-id])

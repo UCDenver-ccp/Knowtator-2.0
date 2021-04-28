@@ -39,9 +39,7 @@
   (let [start (min s1e s2e)
         end   (max s1e s2e)]
     (when (not= start end)
-      (assoc (if (< s1e s2e) s2 s1)
-        :start start
-        :end   end))))
+      (assoc (if (< s1e s2e) s2 s1) :start start :end end))))
 
 (s/fdef split-right
   :args (s/cat :s1 ::specs/span
@@ -56,9 +54,7 @@
   (let [start (min s1s s2s)
         end   (max s1s s2s)]
     (when (not= start end)
-      (assoc (if (< s1s s2s) s1 s2)
-        :start start
-        :end   end))))
+      (assoc (if (< s1s s2s) s1 s2) :start start :end end))))
 
 (s/fdef split-left
   :args (s/cat :s1 ::specs/span
@@ -75,9 +71,7 @@
   (let [start (max s1s s2s)
         end   (min s1e s2e)]
     (when (not= start end)
-      (assoc (merge-with util/combine-as-set s1 s2)
-        :start start
-        :end   end))))
+      (assoc (merge-with util/combine-as-set s1 s2) :start start :end end))))
 
 (s/fdef split-overlap
   :args (s/cat :s1 ::specs/span
@@ -120,8 +114,8 @@
                                                   (remove nil?)
                                                   (into spans))
                                              (conj spans s2)))
-                                   #{}
-                                   spans) finished]
+                                         #{}
+                                         spans) finished]
                                 (if s1
                                   [spans (conj finished s1)]
                                   [spans finished]))]
@@ -129,23 +123,22 @@
 
 (s/def ::spans
   (s/with-gen
-    (s/coll-of ::specs/span)
-    #(s/gen
-       (s/coll-of
-         (s/with-gen ::specs/span (fn []
-                                    (gen/fmap (fn [{:keys [start end]
-                                                    :as   span}]
-                                                (cond-> span
-                                                  (< end start) (assoc :start
-                                                                  end :end
-                                                                  start)))
-                                              (s/gen ::specs/span))))))))
+   (s/coll-of ::specs/span)
+   #(s/gen
+     (s/coll-of (s/with-gen
+                 ::specs/span (fn []
+                                (gen/fmap (fn [{:keys [start end]
+                                                :as   span}]
+                                            (cond-> span
+                                              (< end start) (assoc :start end
+                                                                   :end start)))
+                                          (s/gen ::specs/span))))))))
 
 (s/fdef make-overlapping-spans
   :args (s/alt :unary  (s/cat :spans ::spans)
                :binary (s/cat :spans    ::spans
                               :finished (s/coll-of (s/or :overlap
-                                                           :span-overlap/span
+                                                         :span-overlap/span
                                                          :regular ::specs/span)
                                                    :kind set?)))
   :ret  (s/coll-of (s/or :overlap :span-overlap/span
@@ -154,36 +147,33 @@
 (defn resolve-span-content
   [content spans]
   (let [[container i] (->>
-                        spans
-                        make-overlapping-spans
-                        sort-spans-by-loc
-                        (reduce (fn [[container i]
-                                     {:keys [start end]
-                                      :as   span}]
-                                  [(conj container
-                                         (subs content i start)
-                                         (assoc span
-                                           :content (subs content start end)))
-                                   end])
-                          [[] 0]))]
+                       spans
+                       make-overlapping-spans
+                       sort-spans-by-loc
+                       (reduce
+                        (fn [[container i]
+                             {:keys [start end]
+                              :as   span}]
+                          [(conj container
+                                 (subs content i start)
+                                 (assoc span :content (subs content start end)))
+                           end])
+                        [[] 0]))]
     (conj container (subs content i))))
 
 (s/fdef resolve-span-content
   :args (s/with-gen
-          (s/cat :content ::specs/content
-                 :spans   ::spans)
-          #(gen/tuple
-             (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
-             (gen/fmap
-               (partial
-                 map
-                 (fn [span]
-                   (let [start (rand-int 100)
-                         end   (+ (inc start) (rand-int (- 100 (inc start))))]
-                     (assoc span
-                       :start start
-                       :end   end))))
-               (s/gen ::spans))))
+         (s/cat :content ::specs/content
+                :spans   ::spans)
+         #(gen/tuple
+           (gen/fmap (partial apply str) (gen/vector (gen/char-alpha) 100))
+           (gen/fmap (partial map
+                              (fn [span]
+                                (let [start (rand-int 100)
+                                      end   (+ (inc start)
+                                               (rand-int (- 100 (inc start))))]
+                                  (assoc span :start start :end end))))
+                     (s/gen ::spans))))
   :ret  (s/coll-of (s/or :string string?
                          :span   (s/merge (s/keys :req-un [::specs/content])
                                           (s/or :regular ::specs/span
@@ -201,7 +191,7 @@
                                            :restriction ::specs/restriction)
                :span-in-restriction (s/cat :span        ::specs/span
                                            :anns        (s/map-of ::specs/id
-                                                                    ::specs/ann)
+                                                                  ::specs/ann)
                                            :restriction ::specs/restriction))
   :ret  boolean?)
 
@@ -221,28 +211,28 @@
 
 (defn split-into-paragraphs
   [spans]
-  (->> spans
-       (reduce (fn [[paragraphs current] span]
-                 (if (string? span)
-                   (let [[first-p & rest-p] (str/split-lines span)
-                         middle-p           (->> rest-p
-                                                 butlast
-                                                 (map vector))
-                         rest-p             (map vector rest-p)
-                         last-p             (last rest-p)
-                         current            (conj current first-p)]
-                     (cond (and (empty? rest-p)
-                                (not (str/ends-with? span "\n")))
-                             [paragraphs current]
-                           (str/ends-with? span "\n") [(-> paragraphs
-                                                           (conj current)
-                                                           (into rest-p)) []]
-                           :else [(-> paragraphs
-                                      (conj current)
-                                      (into middle-p)) last-p]))
-                   [paragraphs (conj current span)]))
-         [[] []])
-       (apply conj)))
+  (->>
+   spans
+   (reduce (fn [[paragraphs current] span]
+             (if (string? span)
+               (let [[first-p & rest-p] (str/split-lines span)
+                     middle-p           (->> rest-p
+                                             butlast
+                                             (map vector))
+                     rest-p             (map vector rest-p)
+                     last-p             (last rest-p)
+                     current            (conj current first-p)]
+                 (cond (and (empty? rest-p) (not (str/ends-with? span "\n")))
+                       [paragraphs current]
+                       (str/ends-with? span "\n") [(-> paragraphs
+                                                       (conj current)
+                                                       (into rest-p)) []]
+                       :else [(-> paragraphs
+                                  (conj current)
+                                  (into middle-p)) last-p]))
+               [paragraphs (conj current span)]))
+           [[] []])
+   (apply conj)))
 
 (s/fdef split-into-paragraphs
   :args (s/cat :spans (s/coll-of (s/or :string  string?
@@ -286,21 +276,21 @@
   [db loc f]
   (let [s (get-in db [:selection :spans])]
     (update-in
-      db
-      [:text-annotation :spans]
-      (fn [spans]
-        (let [spans    (zipmap (map :id spans) spans)
-              new-span (let [new-span (-> spans
-                                          (get s)
-                                          (update loc f))]
-                         (fn-if new-span
-                                (comp (partial apply <) (juxt :end :start))
-                                #(set/rename-keys %
-                                                  {:start :end
-                                                   :end   :start})))]
-          (-> spans
-              (cond-> s (assoc s new-span))
-              vals))))))
+     db
+     [:text-annotation :spans]
+     (fn [spans]
+       (let [spans    (zipmap (map :id spans) spans)
+             new-span (let [new-span (-> spans
+                                         (get s)
+                                         (update loc f))]
+                        (fn-if new-span
+                               (comp (partial apply <) (juxt :end :start))
+                               #(set/rename-keys %
+                                                 {:start :end
+                                                  :end   :start})))]
+         (-> spans
+             (cond-> s (assoc s new-span))
+             vals))))))
 
 
 #_(let [spans         [{:id    :C
@@ -355,8 +345,8 @@
        :as   span}]
   (let [{:keys [doc]
          :as   ann}
-          (->> db
-               (sp/select-one (TXT-OBJ :anns :id ann)))
+        (->> db
+             (sp/select-one (TXT-OBJ :anns :id ann)))
         content (-> db
                     (->> (sp/select-one [(TXT-OBJ :docs :id doc) :content]))
                     (subs start end))]
@@ -375,17 +365,16 @@
    {:keys [profile id concept]
     :as   ann}]
   (-> ann
-      (assoc
-        :content (->> db
-                      (sp/select [(TXT-OBJS :spans :ann id) sp/ALL])
-                      (map (partial realize-span db))
-                      (map :content)
-                      (interpose " ")
-                      (apply str))
-        :color   (or (sp/select-one [(TXT-OBJ :profiles :id profile) :colors
-                                     concept]
-                                    db)
-                     color))))
+      (assoc :content (->> db
+                           (sp/select [(TXT-OBJS :spans :ann id) sp/ALL])
+                           (map (partial realize-span db))
+                           (map :content)
+                           (interpose " ")
+                           (apply str))
+             :color   (or (sp/select-one [(TXT-OBJ :profiles :id profile)
+                                          :colors concept]
+                                         db)
+                          color))))
 
 (defn realize-anns
   [db]
@@ -399,14 +388,15 @@
                          realize-anns
                          (sp/select-one (TXT-OBJ :anns :id ann)))
                     node)]
-    (assoc node
-      :label (->> node
-                  ((apply juxt
-                     :content
-                     (when owl-class?
-                       [(comp (partial get class-map) :concept)])))
-                  (interpose "\n")
-                  (apply str)))))
+    (assoc
+     node
+     :label
+     (->> node
+          ((apply juxt
+                  :content
+                  (when owl-class? [(comp (partial get class-map) :concept)])))
+          (interpose "\n")
+          (apply str)))))
 
 (defn realize-ann-nodes
   [graph db class-map owl-class?]
@@ -417,17 +407,19 @@
 (defn realize-relation-ann
   [property-map {{:keys                [property polarity]
                   {:keys [type value]} :quantifier}
-                   :predicate
+                 :predicate
                  :as relation-ann}]
   (-> relation-ann
-      (assoc :label (-> (list (name type) (get property-map property))
-                        (cond-> (#{:min} type) (conj value))
-                        (->> (interpose " ")
-                             (apply str))))
-      (assoc :color (case polarity
-                      :positive :black
-                      :negative :red
-                      :yellow))
+      (assoc :label
+             (-> (list (name type) (get property-map property))
+                 (cond-> (#{:min} type) (conj value))
+                 (->> (interpose " ")
+                      (apply str))))
+      (assoc :color
+             (case polarity
+               :positive :black
+               :negative :red
+               :yellow))
       (assoc-in [:font :align] :top)))
 
 (defn realize-relation-anns

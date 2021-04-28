@@ -1,11 +1,9 @@
 (ns knowtator.views
-  (:require [breaking-point.core :as bp]
-            [knowtator.events :as evts]
+  (:require [knowtator.events :as evts]
             [knowtator.owl.views :as owl]
             [knowtator.relation-annotation.controls :as ra-controls]
-            [knowtator.relation-annotation.events :as ra-events]
-            [knowtator.relation-annotation.subs :as ra-subs]
             [knowtator.relation-annotation.views :as ra]
+            [knowtator.relation-annotation.subs :as ra-subs]
             [knowtator.review.views :as review]
             [knowtator.routes :as routes]
             [knowtator.subs :as subs]
@@ -16,57 +14,6 @@
             [re-frame.core :as rf]
             [reagent.core :as r]))
 
-(defn display-re-pressed-example
-  []
-  (let [re-pressed-example (<sub [::subs/re-pressed-example])]
-    [:div
-     [:p
-      [:span
-       "Re-pressed is listening for keydown events. A message will be displayed when you type "]
-      [:strong [:code "hello"]] [:span ". So go ahead, try it out!"]]
-     (when-let [rpe re-pressed-example]
-       [re-com/alert-box
-         :src        (at)
-         :alert-type :info
-         :body       rpe])]))
-
-(defn home-title
-  []
-  (let [name (rf/subscribe [::subs/name])]
-    [re-com/title
-      :src   (at)
-      :label (str "Hello from " @name ". This is the Home Page.")
-      :level :level1]))
-
-(defn link-to-about-page
-  []
-  [re-com/hyperlink
-    :src      (at)
-    :label    "go to About Page"
-    :on-click #(rf/dispatch [::evts/navigate :about])])
-
-;; about
-
-(defn about-title
-  []
-  [re-com/title
-    :src   (at)
-    :label "This is the About Page."
-    :level :level1])
-
-(defn link-to-home-page
-  []
-  [re-com/hyperlink
-    :src      (at)
-    :label    "go to Home Page"
-    :on-click #(rf/dispatch [::evts/navigate :home])])
-
-(defn about-panel
-  []
-  [re-com/v-box
-    :src      (at)
-    :gap      "1em"
-    :children [[about-title] [link-to-home-page]]])
 
 (defn graph-panel
   []
@@ -75,60 +22,63 @@
      :children [[owl/owl-controls] [ra-controls/graph-space-controls]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
                 [re-com/h-box
-                  :children [[owl/owl-obj-prop-hierarchy] [ra/graph]]]]]])
+                  :children [[owl/owl-obj-prop-hierarchy]
+                             [ra/graph
+                              [::ra-subs/selected-realized-graph]]]]]]])
 
 (defn page-title
   []
   [re-com/v-box
     :children
-      [[re-com/h-box
-         :children
-           [[:img
-             (let [size "60px"]
-               {:src "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
-                :style {:width  size
-                        :height size}})]
-            [re-com/title
-              :label "Knowtator"
-              :level :level1]]]
-       [re-com/h-box
-         :children
-           [[re-com/single-dropdown
-              :src       (at)
-              :choices   (<sub [::subs/available-projects])
-              :label-fn  identity
-              :id-fn     identity
-              :model     (<sub [::subs/selected-project])
-              :on-change #(>evt [::evts/select-project %])]
-            [re-com/button
-              :src      (at)
-              :label    "Open project"
-              :on-click #(>evt [::evts/load-project
-                                (<sub [::subs/selected-project])])]
-            [re-com/alert-list
-              :on-close #(println %)
-              :alerts (->> [{:id         :project-loading
-                             :alert-type :info
-                             :heading    "Project Status"
-                             :body       (if (<sub [::subs/loading? :project])
-                                           "spinny"
-                                           "done")}
-                            (when (<sub [::subs/error? :project])
-                              {:id         :project-error
-                               :alert-type :danger
-                               :heading    "Project load error"})
-                            {:id         :ontology-loading
-                             :alert-type :info
-                             :heading    "Ontology status"
-                             :body       (if (<sub [::subs/loading? :ontology])
-                                           "spinny"
-                                           "done")}
-                            (when (<sub [::subs/error? :ontology])
-                              {:id         :ontology-error
-                               :alert-type :danger
-                               :heading    "Ontology load error"})]
-                           (keep identity)
-                           vec)]]]]])
+    [[re-com/h-box
+       :children
+       [[:img
+         (let [size "60px"]
+           {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
+            :style {:width  size
+                    :height size}})]
+        [re-com/title
+          :label "Knowtator"
+          :level :level1]]]
+     [re-com/h-box
+       :children
+       [[re-com/single-dropdown
+          :src       (at)
+          :choices   (<sub [::subs/available-projects])
+          :label-fn  identity
+          :id-fn     identity
+          :model     (<sub [::subs/selected-project])
+          :on-change #(>evt [::evts/select-project %])]
+        [re-com/button
+          :src      (at)
+          :label    "Open project"
+          :on-click #(>evt [::evts/load-project
+                            (<sub [::subs/selected-project])])]
+        [re-com/alert-list
+          :on-close #(println %)
+          :alerts
+          (->>
+           [{:id         :project-loading
+             :alert-type :info
+             :heading    "Project Status"
+             :body       (if (<sub [::subs/loading? :project]) "spinny" "done")}
+            (when (<sub [::subs/error? :project])
+              {:id         :project-error
+               :alert-type :danger
+               :heading    "Project load error"})
+            {:id         :ontology-loading
+             :alert-type :info
+             :heading    "Ontology status"
+             :body       (if (<sub [::subs/loading? :ontology])
+                           "spinny"
+                           "done")}
+            (when (<sub [::subs/error? :ontology])
+              {:id         :ontology-error
+               :alert-type :danger
+               :heading    "Ontology load error"})]
+           (keep identity)
+           vec)]]]]])
+
 (defn undo-controls
   []
   [re-com/h-box
