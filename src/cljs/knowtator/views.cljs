@@ -12,8 +12,8 @@
             [knowtator.util :refer [<sub >evt]]
             [re-com.core :as re-com :refer [at]]
             [re-frame.core :as rf]
-            [reagent.core :as r]))
-
+            [reagent.core :as r]
+            [knowtator.analogy.subs :as ana-subs]))
 
 (defn graph-panel
   []
@@ -175,10 +175,12 @@
      :label "Review"
      :level :level1] [review/chooser] [review/table] [filter-controls]])
 
+(defn analogy-panel [] [:div [ra/graph [::ana-subs/selected-analogy-graph]]])
+
 (defmethod routes/panels :review-panel [] [review-panel])
 (defmethod routes/panels :annotation-panel [] [annotation-panel])
 (defmethod routes/panels :graph-panel [] [graph-panel])
-(defmethod routes/panels :about-panel [] [about-panel])
+(defmethod routes/panels :analogy-panel [] [analogy-panel])
 
 ;; main
 

@@ -9,11 +9,12 @@
 
 (def routes
   (atom ["/"
-         {""           :annotation
+         {""           :analogy
           "about"      :about
           "graph"      :graph
           "annotation" :annotation
-          "review"     :review}]))
+          "review"     :review
+          "analogy"    :analogy}]))
 
 (defn parse [url] (bidi/match-route @routes url))
 
