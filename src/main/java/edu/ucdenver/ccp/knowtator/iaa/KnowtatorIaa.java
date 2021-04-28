@@ -135,8 +135,9 @@ public class KnowtatorIaa {
    * Run class iaa.
    *
    * @throws IaaException the iaa exception
+   * @return
    */
-  public void runClassIaa() throws IaaException {
+  public Iaa runClassIaa() throws IaaException {
     try {
       ClassMatcher classMatcher = new ClassMatcher();
       Iaa classIaa = new Iaa(setNames);
@@ -151,6 +152,8 @@ public class KnowtatorIaa {
       );
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n", classMatcher.getName(), classMatcher.getName());
+
+      return classIaa;
     } catch (Exception e) {
       throw new IaaException(e);
     }
@@ -197,9 +200,10 @@ public class KnowtatorIaa {
    * Run class and span iaa.
    *
    * @throws IaaException the iaa exception
+   * @return
    */
   @SuppressWarnings("Duplicates")
-  public void runClassAndSpanIaa() throws IaaException {
+  public Iaa runClassAndSpanIaa() throws IaaException {
     try {
       ClassAndSpanMatcher classAndSpanMatcher = new ClassAndSpanMatcher();
       Iaa classAndSpanIaa = new Iaa(setNames);
@@ -214,6 +218,7 @@ public class KnowtatorIaa {
       html.printf(
           "<li><a href=\"%s.html\">%s</a></li>%n",
           classAndSpanMatcher.getName(), classAndSpanMatcher.getName());
+      return classAndSpanIaa;
     } catch (Exception e) {
       throw new IaaException(e);
     }

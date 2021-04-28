@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator;
 import static edu.ucdenver.ccp.knowtator.view.iaa.IAAOptionsDialog.mergeProjects;
 
 import com.google.common.io.Files;
+import edu.ucdenver.ccp.knowtator.iaa.Iaa;
 import edu.ucdenver.ccp.knowtator.iaa.IaaException;
 import edu.ucdenver.ccp.knowtator.iaa.KnowtatorIaa;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
@@ -36,11 +37,15 @@ import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -50,7 +55,8 @@ class KnowtatorIaaTest {
   private static File outputDir;
   private static File goldStandardDir;
   private static KnowtatorModel model;
-  private static final TestingHelpers.ProjectCounts counts = new TestingHelpers.ProjectCounts(4, 446, 446, 4, 3, 0, 0, 0, 0);
+  private static final TestingHelpers.ProjectCounts counts =
+      new TestingHelpers.ProjectCounts(4, 446, 446, 4, 3, 0, 0, 0, 0);
 
   @BeforeAll
   static void makeProjectTest() throws IaaException, IOException {
@@ -76,17 +82,23 @@ class KnowtatorIaaTest {
 
       model.getProfile("Kristin Garcia").ifPresent(profiles::add);
       model.getProfile("Mike Bada").ifPresent(profiles::add);
-      knowtatorIAA = new KnowtatorIaa(outputDir,
-          model,
-          model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
-          model.getProfiles().stream()
-              .map(Profile::getId)
-              .filter(myProfiles::contains)
-              .collect(Collectors.toSet()),
-          new ArrayList<>(new HashSet<>(model.getTextSources().stream()
-              .flatMap(textSource -> textSource.getConceptAnnotations().stream()
-                  .map(ConceptAnnotation::getOwlClass))
-              .collect(Collectors.toSet()))));
+      knowtatorIAA =
+          new KnowtatorIaa(
+              outputDir,
+              model,
+              model.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
+              model.getProfiles().stream()
+                  .map(Profile::getId)
+                  .filter(myProfiles::contains)
+                  .collect(Collectors.toSet()),
+              new ArrayList<>(
+                  new HashSet<>(
+                      model.getTextSources().stream()
+                          .flatMap(
+                              textSource ->
+                                  textSource.getConceptAnnotations().stream()
+                                      .map(ConceptAnnotation::getOwlClass))
+                          .collect(Collectors.toSet()))));
     }
   }
 
@@ -102,7 +114,8 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Class matcher.dat"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
+      System.out.printf(
+          "Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
           new File(outputDir, "index.html").getAbsolutePath());
       throw e;
@@ -120,7 +133,8 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Span matcher.html"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
+      System.out.printf(
+          "Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
           new File(outputDir, "index.html").getAbsolutePath());
       throw e;
@@ -138,7 +152,8 @@ class KnowtatorIaaTest {
           new File(goldStandardDir, "Class and span matcher.dat"),
           "utf-8");
     } catch (AssertionError e) {
-      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
+      System.out.printf(
+          "Gold: file://%s\nThis: file://%s\n%n",
           new File(goldStandardDir, "index.html").getAbsolutePath(),
           new File(outputDir, "index.html").getAbsolutePath());
       throw e;
@@ -148,83 +163,104 @@ class KnowtatorIaaTest {
   @Test
   void overlappingIDsTest() throws IaaException, IOException {
     // Loading first project from Default
-    File projectLocation1 = new File("/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
-    File tempProjectDir = Files.createTempDir();
-    FileUtils.copyDirectory(projectLocation1, tempProjectDir);
+    File initProjectLocation1 =
+        new File(
+            "/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
+    File projectLocation1 = Files.createTempDir();
+    FileUtils.copyDirectory(initProjectLocation1, projectLocation1);
 
-    KnowtatorModel model1 = new KnowtatorModel(tempProjectDir, null);
+    KnowtatorModel model1 = new KnowtatorModel(projectLocation1, null);
 
     model1.load(model1.getProjectLocation());
 
-
     // Loading second project fom NV
-    File projectLocation2 = new File("/home/harrison/Downloads/Re _quick_question/NV annotations 15588329-15630473");
-    File tempProjectDir2 = Files.createTempDir();
-    FileUtils.copyDirectory(projectLocation2, tempProjectDir2);
-    KnowtatorModel model2 = new KnowtatorModel(tempProjectDir, null);
+    File initProjectLocation2 =
+        new File("/home/harrison/Downloads/Re _quick_question/NV annotations 15588329-15630473");
+    File projectLocation2 = Files.createTempDir();
+    FileUtils.copyDirectory(initProjectLocation2, projectLocation2);
+    KnowtatorModel model2 = new KnowtatorModel(projectLocation2, null);
     model2.load(projectLocation2);
 
-    TestingHelpers.ProjectCounts counts1 = new TestingHelpers.ProjectCounts(
-        97,
-        1996,
-        1998,
-        0,
-        2,
-        387,
-        0,
-        0,
-        0);
-    TestingHelpers.ProjectCounts counts2 = new TestingHelpers.ProjectCounts(
-        97,
-        1967,
-        1969,
-        0,
-        2,
-        387,
-        0,
-        0,
-        0);
+    TestingHelpers.ProjectCounts counts1 =
+        new TestingHelpers.ProjectCounts(97, 1996, 1998, 0, 2, 387, 0, 0, 0);
+    TestingHelpers.ProjectCounts counts2 =
+        new TestingHelpers.ProjectCounts(97, 1967, 1969, 0, 2, 387, 0, 0, 0);
     TestingHelpers.countCollections(model1, counts1);
     TestingHelpers.countCollections(model2, counts2);
 
     // Merge
-    KnowtatorModel mergeModel = mergeProjects(projectLocation2, model1, null, true, null);
-    TestingHelpers.countCollections(mergeModel, counts2.add(counts1, new TestingHelpers.ProjectCounts(97,0,0,0,2,387,0,0,0)));
+    KnowtatorModel mergeModel = mergeProjects(projectLocation2, model1, null, true, true, null);
+    TestingHelpers.countCollections(
+        mergeModel,
+        counts2.add(counts1, new TestingHelpers.ProjectCounts(97, 0, 0, 0, 2, 387, 0, 0, 0)));
 
     // IAA
-
-
-    outputDir = new File(mergeModel.getProjectLocation(), "test_results");
-    boolean created = outputDir.mkdir();
+    File outputDir = new File(mergeModel.getProjectLocation(), "test_results");
+    boolean created = true;
+    //boolean created = outputDir.mkdir();
     if (created) {
       ProfileCollection profiles = new ProfileCollection(mergeModel);
       profiles.remove(profiles.getDefaultProfile());
 
-      knowtatorIAA = new KnowtatorIaa(outputDir,
+      KnowtatorIaa knowtatorIAA = new KnowtatorIaa(
+          outputDir,
           mergeModel,
-          mergeModel.getTextSources().stream().map(TextSource::getId).collect(Collectors.toSet()),
-          mergeModel.getProfiles().stream()
-              .map(Profile::getId)
+          mergeModel.getTextSources().stream()
+              .map(TextSource::getId)
               .collect(Collectors.toSet()),
-          new ArrayList<>(new HashSet<>(mergeModel.getTextSources().stream()
-              .flatMap(textSource -> textSource.getConceptAnnotations().stream()
-                  .map(ConceptAnnotation::getOwlClass))
-              .collect(Collectors.toSet()))));
+          mergeModel.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()),
+          new ArrayList<>(
+              new HashSet<>(
+                  mergeModel.getTextSources().stream()
+                      .flatMap(
+                          textSource ->
+                              textSource.getConceptAnnotations().stream()
+                                  .map(ConceptAnnotation::getOwlClass))
+                      .collect(Collectors.toSet()))));
+      Iaa iaa = knowtatorIAA.runClassAndSpanIaa();
+      try {
+
+        int ams = iaa.getAllwayMatches().size();
+        int anms = iaa.getAllwayNonmatches().size();
+        int nams = iaa.getNontrivialAllwayMatches().size();
+        int nanms = iaa.getNontrivialAllwayNonmatches().size();
+        int tams = iaa.getTrivialAllwayMatches().size();
+        int tanms = iaa.getTrivialAllwayNonmatches().size();
+        int pms = iaa.getPairwiseMatches().size();
+        int pnms = iaa.getPairwiseNonmatches().size();
+        int pmss = iaa.getPairwiseMatches().values().stream().mapToInt(Map::size).sum();
+        int pnmss = iaa.getPairwiseNonmatches().values().stream().mapToInt(Map::size).sum();
+        int pmsss = iaa.getPairwiseMatches().values().stream().mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum()).sum();
+        int pnmsss = iaa.getPairwiseNonmatches().values().stream().mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum()).sum();
+
+        Assertions.assertAll(
+            () -> Assertions.assertEquals(2, ams),
+            () -> Assertions.assertEquals(2, anms),
+            () -> Assertions.assertEquals(2, nams),
+            () -> Assertions.assertEquals(2, tams),
+            () -> Assertions.assertEquals(2, nanms),
+            () -> Assertions.assertEquals(2, tanms),
+            () -> Assertions.assertEquals(2, pms),
+            () -> Assertions.assertEquals(2, pnms),
+            () -> Assertions.assertEquals(2, pmss),
+            () -> Assertions.assertEquals(2, pnmss),
+            () -> Assertions.assertEquals(3748, pmsss),
+            () -> Assertions.assertEquals(215, pnmsss));
+
+      } catch (AssertionError e) {
+        System.out.printf(
+            "Gold: file://%s\nThis: file://%s\n%n",
+            new File(goldStandardDir, "index.html").getAbsolutePath(),
+            new File(outputDir, "index.html").getAbsolutePath());
+        throw e;
+      }
+    } else {
+      throw new FileAlreadyExistsException(outputDir.getAbsolutePath());
     }
 
-    knowtatorIAA.runClassAndSpanIaa();
 
-    try {
-      assert FileUtils.contentEqualsIgnoreEOL(
-          new File(outputDir, "Class and span matcher.dat"),
-          new File(goldStandardDir, "Class and span matcher.dat"),
-          "utf-8");
-    } catch (AssertionError e) {
-      System.out.printf("Gold: file://%s\nThis: file://%s\n%n",
-          new File(goldStandardDir, "index.html").getAbsolutePath(),
-          new File(outputDir, "index.html").getAbsolutePath());
-      throw e;
-    }
+
+
   }
 
   @AfterAll

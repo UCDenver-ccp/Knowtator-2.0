@@ -173,6 +173,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
                                       this.model,
                                       view.getOWLWorkspace(),
                                       false,
+                                      true,
                                       this);
 
                               setModels(newModel);
@@ -197,6 +198,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
       KnowtatorModel model2,
       OWLWorkspace owlWorkspace,
       boolean mergeProfiles,
+      boolean allowIdOverlap,
       JDialog component)
       throws IOException {
     KnowtatorModel newModel = new KnowtatorModel(projectLocation1, owlWorkspace);
@@ -222,6 +224,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
       }
     }
 
+    newModel.setAllowIdOverlap(allowIdOverlap);
     newModel.load(model2.getProjectLocation());
     return newModel;
   }

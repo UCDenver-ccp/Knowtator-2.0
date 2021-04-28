@@ -56,11 +56,7 @@ public class Iaa2Html {
    * @param numberOfDocs the number of docs
    * @throws Exception the exception
    */
-  public static void printIaa(
-      Iaa iaa,
-      Matcher matcher,
-      File directory,
-      int numberOfDocs)
+  public static void printIaa(Iaa iaa, Matcher matcher, File directory, int numberOfDocs)
       throws Exception {
     NumberFormat percentageFormat = NumberFormat.getPercentInstance();
     percentageFormat.setMinimumFractionDigits(2);
@@ -202,7 +198,7 @@ public class Iaa2Html {
               / ((double) classNontrivialMatches + (double) classNontrivialNonmatches);
 
       if (type.startsWith("<") && type.endsWith(">")) {
-        type = type.substring(1, type.length()- 2);
+        type = type.substring(1, type.length() - 2);
       }
       if (matcher.returnsTrivials()) {
         html.printf(
@@ -230,15 +226,8 @@ public class Iaa2Html {
       } else {
         html.printf(
             "<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td></tr>%n",
-            type,
-            percentageFormat.format(iaaScore),
-            classMatches,
-            classNonmatches);
-        tabular.printf(
-            "%s\t%d\t%d%n",
-            type,
-            classMatches,
-            classNonmatches);
+            type, percentageFormat.format(iaaScore), classMatches, classNonmatches);
+        tabular.printf("%s\t%d\t%d%n", type, classMatches, classNonmatches);
       }
     }
     html.println("</table>");
@@ -273,7 +262,7 @@ public class Iaa2Html {
     Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches =
         iaa.getPairwiseNonmatches();
 
-    printPairwiseAgreement(html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
+    printPairwiseAgreement(html, sets, iaa, percentageFormat);
 
     html.flush();
     html.close();
@@ -312,11 +301,7 @@ public class Iaa2Html {
           String.format("%s.html", fileName),
           fileName,
           "Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
-      printInstances(
-          matchesStream,
-          sortedMatches,
-          sortedTypes,
-          matchSets);
+      printInstances(matchesStream, sortedMatches, sortedTypes, matchSets);
       matchesStream.flush();
       matchesStream.close();
 
@@ -335,11 +320,7 @@ public class Iaa2Html {
             String.format("%s.html", fileName),
             fileName,
             "Each concept that was considered a trival match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown.");
-        printInstances(
-            trivialMatchesStream,
-            sortedTrivialMatches,
-            sortedTypes,
-            matchSets);
+        printInstances(trivialMatchesStream, sortedTrivialMatches, sortedTypes, matchSets);
         trivialMatchesStream.flush();
         trivialMatchesStream.close();
 
@@ -359,11 +340,7 @@ public class Iaa2Html {
             String.format("%s.html", fileName),
             fileName,
             "Each concept that was considered a non-trival match is shown in the text that it was found in.  The matching from the other concept sets are also shown.");
-        printInstances(
-            nontrivialMatchesStream,
-            sortedNontrivialMatches,
-            sortedTypes,
-            matchSets);
+        printInstances(nontrivialMatchesStream, sortedNontrivialMatches, sortedTypes, matchSets);
         nontrivialMatchesStream.flush();
         nontrivialMatchesStream.close();
       }
@@ -405,11 +382,7 @@ public class Iaa2Html {
           String.format("%s.html", fileName),
           fileName,
           "Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
-      printInstances(
-          errors,
-          sortedNonmatches,
-          sortedTypes,
-          comparisonAnnotations);
+      printInstances(errors, sortedNonmatches, sortedTypes, comparisonAnnotations);
       errors.flush();
       errors.close();
 
@@ -430,11 +403,7 @@ public class Iaa2Html {
             String.format("%s.html", fileName),
             fileName,
             "Each concept that was considered a trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
-        printInstances(
-            trivialErrors,
-            sortedTrivialNonmatches,
-            sortedTypes,
-            comparisonAnnotations);
+        printInstances(trivialErrors, sortedTrivialNonmatches, sortedTypes, comparisonAnnotations);
         trivialErrors.flush();
         trivialErrors.close();
 
@@ -455,10 +424,7 @@ public class Iaa2Html {
             fileName,
             "Each concept that was considered a non-trival non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown.");
         printInstances(
-            nontrivialErrors,
-            sortedNontrivialNonmatches,
-            sortedTypes,
-            comparisonAnnotations);
+            nontrivialErrors, sortedNontrivialNonmatches, sortedTypes, comparisonAnnotations);
         nontrivialErrors.flush();
         nontrivialErrors.close();
       }
@@ -493,7 +459,9 @@ public class Iaa2Html {
       Map<ConceptAnnotation, Set<ConceptAnnotation>> comparisonAnnotations) {
     for (String type : sortedTypes) {
 
-      out.printf("<h2>%s</h2>%n", type.startsWith("<") && type.endsWith(">") ? type.substring(1, type.length()- 1) : type);
+      out.printf(
+          "<h2>%s</h2>%n",
+          type.startsWith("<") && type.endsWith(">") ? type.substring(1, type.length() - 1) : type);
       Set<ConceptAnnotation> typeConceptAnnotations = sortedAnnotations.get(type);
       for (ConceptAnnotation conceptAnnotation : typeConceptAnnotations) {
         writeAnnotationTextSourceHTML(out, conceptAnnotation);
@@ -560,11 +528,14 @@ public class Iaa2Html {
     return sortedAnnotations;
   }
 
-  private static void writeAnnotationTextSourceHTML(PrintStream out, ConceptAnnotation conceptAnnotation) {
+  private static void writeAnnotationTextSourceHTML(
+      PrintStream out, ConceptAnnotation conceptAnnotation) {
     StringBuilder html = new StringBuilder("<hr><p>");
     String content = conceptAnnotation.getTextSource().getContent();
 
-    html.append("Text source docID = ").append(conceptAnnotation.getTextSource().getId()).append("<p>");
+    html.append("Text source docID = ")
+        .append(conceptAnnotation.getTextSource().getId())
+        .append("<p>");
 
     TreeSet<Span> spans = conceptAnnotation.getCollection();
 
@@ -584,11 +555,9 @@ public class Iaa2Html {
     out.println(html);
   }
 
-  private static void printAnnotationHTML(
-      PrintStream out, ConceptAnnotation conceptAnnotation) {
+  private static void printAnnotationHTML(PrintStream out, ConceptAnnotation conceptAnnotation) {
 
-    String html = conceptAnnotation.toString() +
-        "  " + conceptAnnotation.toHtml();
+    String html = conceptAnnotation.toString() + "  " + conceptAnnotation.toHtml();
     out.print(html);
   }
 
@@ -682,11 +651,7 @@ public class Iaa2Html {
           initHTML(
               String.format("Matches for %s", set),
               "Each concept that was considered a match is shown in the text that it was found in.  The matching annotations from the other concept sets are also shown."));
-      Iaa2Html.printInstances(
-          matchesStream,
-          sortedMatches,
-          sortedTypes,
-          matchSets);
+      Iaa2Html.printInstances(matchesStream, sortedMatches, sortedTypes, matchSets);
       matchesStream.flush();
       matchesStream.close();
     }
@@ -737,11 +702,7 @@ public class Iaa2Html {
           initHTML(
               String.format("Non-matches for %s", set),
               "Each concept that was considered a non-match is shown in the text that it was found in.  Overlapping annotations from the other concept sets are also shown."));
-      Iaa2Html.printInstances(
-          errors,
-          sortedNonmatches,
-          sortedTypes,
-          comparisonAnnotations);
+      Iaa2Html.printInstances(errors, sortedNonmatches, sortedTypes, comparisonAnnotations);
       errors.flush();
       errors.close();
     }
@@ -753,16 +714,10 @@ public class Iaa2Html {
    *
    * @param html the html
    * @param sets the sets
-   * @param pairwiseMatches the pairwise matches
-   * @param pairwiseNonmatches the pairwise nonmatches
    * @param percentageFormat the percentage format
    */
   static void printPairwiseAgreement(
-      PrintStream html,
-      Set<String> sets,
-      Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches,
-      Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches,
-      NumberFormat percentageFormat) {
+      PrintStream html, Set<String> sets, Iaa iaa, NumberFormat percentageFormat) {
     html.println("<h2>Pair-wise agreement</h2>");
     html.printf(
         "<table border=1><tr><td><b>Gold standard set</b></td><td><b>compared set</b></td><td><b>true positives</b></td><td><b>false positives</b></td><td><b>false negatives</b></td><td><b>precision</b></td><td><b>recall</b></td><td><b>F-score</b></td></tr>%n");
@@ -771,24 +726,20 @@ public class Iaa2Html {
       for (String setName2 : sets) {
 
         if (!setName.equals(setName2)) {
-          Set<ConceptAnnotation> truePositives = pairwiseMatches.get(setName).get(setName2);
-          Set<ConceptAnnotation> falseNegatives = pairwiseNonmatches.get(setName).get(setName2);
-          Set<ConceptAnnotation> falsePositives = pairwiseNonmatches.get(setName2).get(setName);
-          double precision =
-              (double) truePositives.size()
-                  / ((double) truePositives.size() + (double) falsePositives.size());
-          double recall =
-              (double) truePositives.size()
-                  / ((double) truePositives.size() + (double) falseNegatives.size());
+          double truePositives = iaa.getPairwiseMatches().get(setName).get(setName2).size();
+          double falseNegatives = iaa.getPairwiseNonmatches().get(setName).get(setName2).size();
+          double falsePositives = iaa.getPairwiseNonmatches().get(setName2).get(setName).size();
+          double precision = truePositives / (truePositives + falsePositives);
+          double recall = truePositives / (truePositives + falseNegatives);
           double f_score = ((double) 2 * precision * recall) / (recall + precision);
 
           html.printf(
               "<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>%n",
               setName,
               setName2,
-              truePositives.size(),
-              falsePositives.size(),
-              falseNegatives.size(),
+              (int) truePositives,
+              (int) falsePositives,
+              (int) falseNegatives,
               percentageFormat.format(precision),
               percentageFormat.format(recall),
               percentageFormat.format(f_score));

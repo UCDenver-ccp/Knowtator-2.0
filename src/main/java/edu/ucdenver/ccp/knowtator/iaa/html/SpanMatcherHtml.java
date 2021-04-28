@@ -152,12 +152,8 @@ public class SpanMatcherHtml {
         spanIndex,
         classes);
 
-    Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseMatches = iaa.getPairwiseMatches();
-    Map<String, Map<String, Set<ConceptAnnotation>>> pairwiseNonmatches =
-        iaa.getPairwiseNonmatches();
-
     Iaa2Html.printPairwiseAgreement(
-        html, sets, pairwiseMatches, pairwiseNonmatches, percentageFormat);
+        html, sets, iaa, percentageFormat);
 
     html.flush();
     html.close();

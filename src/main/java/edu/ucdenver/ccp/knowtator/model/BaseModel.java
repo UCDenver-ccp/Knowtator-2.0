@@ -74,6 +74,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   private final Set<StructureModeListener> structureModeListeners;
   private final Set<String> activeLayers;
+  private boolean allowIdOverlap;
 
   /**
    * Instantiates a new Base model.
@@ -92,6 +93,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     loading = false;
     activeLayers = new HashSet<>();
     activeLayers.addAll(DEFAULT_LAYERS);
+    allowIdOverlap = false;
 
     selection = new Selection(0, 0);
 
@@ -176,7 +178,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    */
   public static File getAnnotationsLocation(File projectLocation) {
     return new File(projectLocation, "Annotations");
-
   }
 
   /**
@@ -237,9 +238,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     } else {
       int i = idRegistry.size();
 
-      while (verifiedId == null
-          || verifiedId.equals("")
-          || idRegistry.containsKey(verifiedId)) {
+      while (verifiedId == null || verifiedId.equals("") || idRegistry.containsKey(verifiedId)) {
         if (modelObject instanceof TextBoundModelObject) {
           verifiedId =
               String.format(
@@ -251,7 +250,10 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
       }
     }
     idRegistry.put(verifiedId, modelObject);
-    return id == null || id.equals("") ? verifiedId : id;
+    return id == null
+            || (id.equals("") || (allowIdOverlap && modelObject instanceof TextBoundModelObject))
+        ? verifiedId
+        : id;
   }
 
   /**
@@ -440,5 +442,9 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
     } else {
       return getArticlesLocation(projectLocation);
     }
+  }
+
+  public void setAllowIdOverlap(boolean b) {
+    allowIdOverlap = b;
   }
 }

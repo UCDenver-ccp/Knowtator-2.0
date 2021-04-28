@@ -68,21 +68,21 @@ public class KnowtatorModel extends OwlModel {
    */
   public KnowtatorModel(File projectLocation, OWLWorkspace owlWorkspace) throws IOException {
     super(projectLocation, owlWorkspace);
-    textSources = new TextSourceCollection(this);
-    profiles = new ProfileCollection(this);
+    super.textSources = new TextSourceCollection(this);
+    super.profiles = new ProfileCollection(this);
   }
 
   public void setLoading(Boolean isLoading) {
-    this.loading = isLoading;
+    super.loading = isLoading;
   }
 
   @Override
   public void save() {
-    log.info(String.format("Saving project %d", getNumberOfTextSources()));
+    log.info(String.format("Saving project %d", super.getNumberOfTextSources()));
 
     super.save();
-    profiles.forEach(Profile::save);
-    textSources.forEach(
+    super.profiles.forEach(Profile::save);
+    super.textSources.forEach(
         textSource -> {
           textSource.save();
           log.info(String.format("Saved %s", textSource.getId()));
@@ -92,7 +92,7 @@ public class KnowtatorModel extends OwlModel {
   @Override
   public void load(File projectLocation) {
     try {
-      projectLocation = validateProjectLocation(projectLocation);
+      projectLocation = BaseModel.validateProjectLocation(projectLocation);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -106,7 +106,7 @@ public class KnowtatorModel extends OwlModel {
     OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
 
     try {
-      Files.list(getProfilesLocation(projectLocation).toPath())
+      Files.list(BaseModel.getProfilesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .forEach(file -> xmlUtil.readToProfileCollection(this, file));
@@ -114,13 +114,13 @@ public class KnowtatorModel extends OwlModel {
       e.printStackTrace();
     }
     try {
-      Files.list(getArticlesLocation(projectLocation).toPath())
+      Files.list(BaseModel.getArticlesLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".txt"))
           .map(Path::toFile)
           .forEach(
               file -> {
                 TextSource newTextSource = new TextSource(this, file, null);
-                textSources.add(newTextSource);
+                super.textSources.add(newTextSource);
               });
     } catch (IOException e) {
       e.printStackTrace();
@@ -129,7 +129,7 @@ public class KnowtatorModel extends OwlModel {
 
       log.info("Loading annotations");
       OWLClassNotFoundAnnotations = new ArrayList<>();
-      Files.list(getAnnotationsLocation(projectLocation).toPath())
+      Files.list(BaseModel.getAnnotationsLocation(projectLocation).toPath())
           .filter(path -> path.toString().endsWith(".xml"))
           .map(Path::toFile)
           .peek(file -> xmlUtil.readToTextSourceCollection(this, file))
@@ -137,12 +137,12 @@ public class KnowtatorModel extends OwlModel {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    profiles.first().ifPresent(profiles::setSelection);
-    textSources.first().ifPresent(textSources::setSelection);
+    super.profiles.first().ifPresent(super.profiles::setSelection);
+    super.textSources.first().ifPresent(super.textSources::setSelection);
 
     Set<String> owlClasses = new HashSet<>();
-    textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
-    profiles.verifyHighlighters(owlClasses);
+    super.textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
+    super.profiles.verifyHighlighters(owlClasses);
 
 
     setLoading(false);
