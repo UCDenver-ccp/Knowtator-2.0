@@ -34,6 +34,7 @@ import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
@@ -165,7 +167,10 @@ class KnowtatorIaaTest {
     // Loading first project from Default
     File initProjectLocation1 =
         new File(
-            "/home/harrison/Downloads/Re _quick_question/Default annotations 15588329-15630473");
+            Objects.requireNonNull(
+                    KnowtatorIaaTest.class.getResource(
+                        "/iaa_test_overlapping_annotations/project1"))
+                .getFile());
     File projectLocation1 = Files.createTempDir();
     FileUtils.copyDirectory(initProjectLocation1, projectLocation1);
 
@@ -175,48 +180,56 @@ class KnowtatorIaaTest {
 
     // Loading second project fom NV
     File initProjectLocation2 =
-        new File("/home/harrison/Downloads/Re _quick_question/NV annotations 15588329-15630473");
+        new File(
+            Objects.requireNonNull(
+                    KnowtatorIaaTest.class.getResource(
+                        "/iaa_test_overlapping_annotations/project2"))
+                .getFile());
     File projectLocation2 = Files.createTempDir();
     FileUtils.copyDirectory(initProjectLocation2, projectLocation2);
     KnowtatorModel model2 = new KnowtatorModel(projectLocation2, null);
     model2.load(projectLocation2);
 
     TestingHelpers.ProjectCounts counts1 =
-        new TestingHelpers.ProjectCounts(97, 1996, 1998, 0, 2, 387, 0, 0, 0);
+        new TestingHelpers.ProjectCounts(1, 2, 3, 1, 2, 3, 2, 1, 0);
     TestingHelpers.ProjectCounts counts2 =
-        new TestingHelpers.ProjectCounts(97, 1967, 1969, 0, 2, 387, 0, 0, 0);
+        new TestingHelpers.ProjectCounts(1, 2, 3, 1, 2, 3, 2, 1, 0);
     TestingHelpers.countCollections(model1, counts1);
     TestingHelpers.countCollections(model2, counts2);
 
     // Merge
-    KnowtatorModel mergeModel = mergeProjects(projectLocation2, model1, null, true, true, null);
-    TestingHelpers.countCollections(
-        mergeModel,
-        counts2.add(counts1, new TestingHelpers.ProjectCounts(97, 0, 0, 0, 2, 387, 0, 0, 0)));
+    KnowtatorModel mergeModel = mergeProjects(projectLocation2, model1, null, false, false);
+    TestingHelpers.ProjectCounts mergeCounts =
+        counts2.add(counts1, new TestingHelpers.ProjectCounts(1, 2, 3, 1, 0, 0, 0, 0, 0));
+    TestingHelpers.countCollections(mergeModel, mergeCounts);
+    mergeModel = mergeProjects(projectLocation2, model1, null, false, true);
+    mergeCounts = counts2.add(counts1, new TestingHelpers.ProjectCounts(1, 0, 0, 1, 0, 0, 0, 0, 0));
+
+    TestingHelpers.countCollections(mergeModel, mergeCounts);
 
     // IAA
     File outputDir = new File(mergeModel.getProjectLocation(), "test_results");
-    boolean created = true;
-    //boolean created = outputDir.mkdir();
+    boolean created = outputDir.mkdir();
     if (created) {
       ProfileCollection profiles = new ProfileCollection(mergeModel);
       profiles.remove(profiles.getDefaultProfile());
 
-      KnowtatorIaa knowtatorIAA = new KnowtatorIaa(
-          outputDir,
-          mergeModel,
-          mergeModel.getTextSources().stream()
-              .map(TextSource::getId)
-              .collect(Collectors.toSet()),
-          mergeModel.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()),
-          new ArrayList<>(
-              new HashSet<>(
-                  mergeModel.getTextSources().stream()
-                      .flatMap(
-                          textSource ->
-                              textSource.getConceptAnnotations().stream()
-                                  .map(ConceptAnnotation::getOwlClass))
-                      .collect(Collectors.toSet()))));
+      KnowtatorIaa knowtatorIAA =
+          new KnowtatorIaa(
+              outputDir,
+              mergeModel,
+              mergeModel.getTextSources().stream()
+                  .map(TextSource::getId)
+                  .collect(Collectors.toSet()),
+              mergeModel.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()),
+              new ArrayList<>(
+                  new HashSet<>(
+                      mergeModel.getTextSources().stream()
+                          .flatMap(
+                              textSource ->
+                                  textSource.getConceptAnnotations().stream()
+                                      .map(ConceptAnnotation::getOwlClass))
+                          .collect(Collectors.toSet()))));
       Iaa iaa = knowtatorIAA.runClassAndSpanIaa();
       try {
 
@@ -230,22 +243,28 @@ class KnowtatorIaaTest {
         int pnms = iaa.getPairwiseNonmatches().size();
         int pmss = iaa.getPairwiseMatches().values().stream().mapToInt(Map::size).sum();
         int pnmss = iaa.getPairwiseNonmatches().values().stream().mapToInt(Map::size).sum();
-        int pmsss = iaa.getPairwiseMatches().values().stream().mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum()).sum();
-        int pnmsss = iaa.getPairwiseNonmatches().values().stream().mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum()).sum();
+        int pmsss =
+            iaa.getPairwiseMatches().values().stream()
+                .mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum())
+                .sum();
+        int pnmsss =
+            iaa.getPairwiseNonmatches().values().stream()
+                .mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum())
+                .sum();
 
         Assertions.assertAll(
-            () -> Assertions.assertEquals(2, ams),
-            () -> Assertions.assertEquals(2, anms),
-            () -> Assertions.assertEquals(2, nams),
-            () -> Assertions.assertEquals(2, tams),
-            () -> Assertions.assertEquals(2, nanms),
-            () -> Assertions.assertEquals(2, tanms),
-            () -> Assertions.assertEquals(2, pms),
-            () -> Assertions.assertEquals(2, pnms),
-            () -> Assertions.assertEquals(2, pmss),
-            () -> Assertions.assertEquals(2, pnmss),
-            () -> Assertions.assertEquals(3748, pmsss),
-            () -> Assertions.assertEquals(215, pnmsss));
+            () -> Assertions.assertEquals(4, ams),
+            () -> Assertions.assertEquals(4, anms),
+            () -> Assertions.assertEquals(4, nams),
+            () -> Assertions.assertEquals(4, tams),
+            () -> Assertions.assertEquals(4, nanms),
+            () -> Assertions.assertEquals(4, tanms),
+            () -> Assertions.assertEquals(4, pms),
+            () -> Assertions.assertEquals(4, pnms),
+            () -> Assertions.assertEquals(12, pmss),
+            () -> Assertions.assertEquals(12, pnmss),
+            () -> Assertions.assertEquals(4, pmsss),
+            () -> Assertions.assertEquals(8, pnmsss));
 
       } catch (AssertionError e) {
         System.out.printf(
@@ -258,9 +277,94 @@ class KnowtatorIaaTest {
       throw new FileAlreadyExistsException(outputDir.getAbsolutePath());
     }
 
+    TextSource textSource = model1.getTextSources().getSelection().get();
+    ConceptAnnotation conceptAnnotation =
+        new ConceptAnnotation(
+            textSource,
+            "new_ann",
+            "owl_class",
+            model1.getDefaultProfile(),
+            "",
+            "",
+            new HashSet<>());
+    conceptAnnotation.add(new Span(conceptAnnotation, null, 0, 5));
+    textSource.getConceptAnnotations().add(conceptAnnotation);
 
+    mergeModel = mergeProjects(projectLocation2, model1, null, false, true);
+    TestingHelpers.countCollections(
+        mergeModel,
+        mergeCounts.add(
+            new TestingHelpers.ProjectCounts(0, 1, 1, 0, 0, 0, 0, 0, 0),
+            new TestingHelpers.ProjectCounts(0, 0, 0, 0, 0, 0, 0, 0, 0)));
 
+    outputDir = new File(mergeModel.getProjectLocation(), "test_results_diff");
+    created = outputDir.mkdir();
+    if (created) {
+      ProfileCollection profiles = new ProfileCollection(mergeModel);
+      profiles.remove(profiles.getDefaultProfile());
 
+      KnowtatorIaa knowtatorIAA =
+          new KnowtatorIaa(
+              outputDir,
+              mergeModel,
+              mergeModel.getTextSources().stream()
+                  .map(TextSource::getId)
+                  .collect(Collectors.toSet()),
+              mergeModel.getProfiles().stream().map(Profile::getId).collect(Collectors.toSet()),
+              new ArrayList<>(
+                  new HashSet<>(
+                      mergeModel.getTextSources().stream()
+                          .flatMap(
+                              textSource1 ->
+                                  textSource1.getConceptAnnotations().stream()
+                                      .map(ConceptAnnotation::getOwlClass))
+                          .collect(Collectors.toSet()))));
+      Iaa iaa = knowtatorIAA.runClassAndSpanIaa();
+      try {
+
+        int ams = iaa.getAllwayMatches().size();
+        int anms = iaa.getAllwayNonmatches().size();
+        int nams = iaa.getNontrivialAllwayMatches().size();
+        int nanms = iaa.getNontrivialAllwayNonmatches().size();
+        int tams = iaa.getTrivialAllwayMatches().size();
+        int tanms = iaa.getTrivialAllwayNonmatches().size();
+        int pms = iaa.getPairwiseMatches().size();
+        int pnms = iaa.getPairwiseNonmatches().size();
+        int pmss = iaa.getPairwiseMatches().values().stream().mapToInt(Map::size).sum();
+        int pnmss = iaa.getPairwiseNonmatches().values().stream().mapToInt(Map::size).sum();
+        int pmsss =
+            iaa.getPairwiseMatches().values().stream()
+                .mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum())
+                .sum();
+        int pnmsss =
+            iaa.getPairwiseNonmatches().values().stream()
+                .mapToInt(stringSetMap -> stringSetMap.values().stream().mapToInt(Set::size).sum())
+                .sum();
+
+        Assertions.assertAll(
+            () -> Assertions.assertEquals(4, ams),
+            () -> Assertions.assertEquals(4, anms),
+            () -> Assertions.assertEquals(4, nams),
+            () -> Assertions.assertEquals(4, tams),
+            () -> Assertions.assertEquals(4, nanms),
+            () -> Assertions.assertEquals(4, tanms),
+            () -> Assertions.assertEquals(4, pms),
+            () -> Assertions.assertEquals(4, pnms),
+            () -> Assertions.assertEquals(12, pmss),
+            () -> Assertions.assertEquals(12, pnmss),
+            () -> Assertions.assertEquals(4, pmsss),
+            () -> Assertions.assertEquals(11, pnmsss));
+
+      } catch (AssertionError e) {
+        System.out.printf(
+            "Gold: file://%s\nThis: file://%s\n%n",
+            new File(goldStandardDir, "index.html").getAbsolutePath(),
+            new File(outputDir, "index.html").getAbsolutePath());
+        throw e;
+      }
+    } else {
+      throw new FileAlreadyExistsException(outputDir.getAbsolutePath());
+    }
   }
 
   @AfterAll

@@ -172,9 +172,13 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
                                       projectLocation1,
                                       this.model,
                                       view.getOWLWorkspace(),
-                                      false,
-                                      true,
-                                      this);
+                                      JOptionPane.showConfirmDialog(
+                                          this,
+                                          "Merge profiles between projects for IAA?",
+                                          "Profile merge?",
+                                          JOptionPane.YES_NO_OPTION)
+                                          == JOptionPane.NO_OPTION,
+                                      true);
 
                               setModels(newModel);
 
@@ -198,8 +202,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
       KnowtatorModel model2,
       OWLWorkspace owlWorkspace,
       boolean mergeProfiles,
-      boolean allowIdOverlap,
-      JDialog component)
+      boolean allowIdOverlap)
       throws IOException {
     KnowtatorModel newModel = new KnowtatorModel(projectLocation1, owlWorkspace);
     newModel.load(projectLocation1);
@@ -210,17 +213,9 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
 
     if (!mergeProfiles) {
       for (Profile profile : profilesInCommon) {
-        if (JOptionPane.showConfirmDialog(
-            component,
-            String.format("Merge %s between projects for IAA?", profile),
-            "Profile merge?",
-            JOptionPane.YES_NO_OPTION)
-            == JOptionPane.NO_OPTION) {
-          profile.setId(
-              String.format(
-                  "%s - %s",
-                  profile.getId(), projectLocation1.getName().replace(".knowtator", "")));
-        }
+        profile.setId(
+            String.format(
+                "%s - %s", profile.getId(), projectLocation1.getName().replace(".knowtator", "")));
       }
     }
 

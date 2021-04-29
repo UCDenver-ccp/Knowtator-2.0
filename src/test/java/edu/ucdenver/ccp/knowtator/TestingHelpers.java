@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 
@@ -93,8 +94,8 @@ public class TestingHelpers {
    */
   public static File getArticleFile(String projectName, String articleName) {
     return new File(
-        TestingHelpers.class
-            .getResource(String.format("/%s/Articles/%s.txt", projectName, articleName))
+        Objects.requireNonNull(TestingHelpers.class
+            .getResource(String.format("/%s/Articles/%s.txt", projectName, articleName)))
             .getFile());
   }
 

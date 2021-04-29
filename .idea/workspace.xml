@@ -33,16 +33,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Annotations/document1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Articles/document1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Ontologies/catalog-v001.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Ontologies/pizza.owl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Profiles/Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Profiles/profile1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/Structures/document3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project1/test_project_using_uris.knowtator" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Annotations/document1-alt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Articles/document1.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Ontologies/catalog-v001.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Ontologies/pizza.owl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Profiles/Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Profiles/profile1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/Structures/document3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/project2/test_project_using_uris.knowtator" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/KnowtatorIaa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/Iaa2Html.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/Iaa2Html.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/html/SpanMatcherHtml.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/KnowtatorToUIMAAnnotator.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/uima/UIMAXMIUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/BaseModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/AnnotationMetadata.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotation.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/annotation/CCPAnnotationSet.java" beforeDir="false" />
@@ -75,6 +84,7 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/uima/mention/CCPStringSlotMention.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/iaa/IAAOptionsDialog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,7 +155,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/edu.uchsc.ccp.knowtator/edu.uchsc.ccp.knowtator" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -155,16 +165,22 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateTestDialog.RecentsKey">
-      <recent name="edu.ucdenver.ccp.knowtator.view.iaa" />
-      <recent name="edu.ucdenver.ccp.knowtator.view.profile" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations" />
+      <recent name="$PROJECT_DIR$/src/test/resources" />
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations/Annotations" />
+      <recent name="$PROJECT_DIR$/src/test/resources/import_test_project2" />
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src/test/resources/import_test_project2" />
-      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_project/Profiles" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/resources/iaa_test_overlapping_annotations" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="edu.ucdenver.ccp.knowtator.view.iaa" />
+      <recent name="edu.ucdenver.ccp.knowtator.view.profile" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.KnowtatorIaaTest.overlappingIDsTest">
@@ -703,11 +719,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java</url>
-          <line>175</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/object/TextSource.java</url>
           <line>93</line>
           <option name="timeStamp" value="35" />
@@ -723,9 +734,9 @@
           <option name="timeStamp" value="136" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/KnowtatorIaaTest.java</url>
-          <line>200</line>
-          <option name="timeStamp" value="139" />
+          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/iaa/Iaa.java</url>
+          <line>379</line>
+          <option name="timeStamp" value="147" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
