@@ -30,6 +30,9 @@
         re-com/re-com             {:mvn/version "2.13.2"}
         bidi/bidi                 {:mvn/version "2.1.6"}
         kibu/pushy                {:mvn/version "0.3.8"}
+        github-tuh8888/SME-clj
+        {:git/url "git@github.com:tuh8888/SME-clj",
+         :sha "14f8bed0819e79cb38994695deb8f7922ffe1b9a"}
 
         ns-tracker/ns-tracker         {:mvn/version "0.4.0"}
         re-pressed/re-pressed         {:mvn/version "0.3.1"}

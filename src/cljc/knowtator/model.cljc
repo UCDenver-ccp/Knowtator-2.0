@@ -511,19 +511,20 @@
   (-> mm
       :mops
       vals
-      (->> (map #(dissoc % :inst? :names)))
       (->> (reduce (fn [m mop]
-                     (-> m
-                         (update :nodes conj mop)
-                         (update :edges
-                                 into
-                                 (-> mop
-                                     (dissoc :id)
-                                     (->> (mapcat (fn [[k vs]]
-                                                    (map (fn [v]
-                                                           {:from  (:id mop)
-                                                            :label k
-                                                            :to    v})
-                                                         vs))))))))
+                     (let [id (-> mop
+                                  meta
+                                  :id)]
+                       (-> m
+                           (update :nodes conj (assoc mop :id id))
+                           (update :edges
+                                   into
+                                   (->> mop
+                                        (mapcat (fn [[k vs]]
+                                                  (map (fn [v]
+                                                         {:from      id
+                                                          :predicate k
+                                                          :to        v})
+                                                       vs))))))))
                    {:nodes []
                     :edges []}))))
