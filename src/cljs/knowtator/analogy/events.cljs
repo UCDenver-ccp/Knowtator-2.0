@@ -2,4 +2,9 @@
   (:require [re-frame.core :refer [reg-event-fx reg-event-db trim-v]]))
 
 (reg-event-db ::select-graph-space
-  (fn [db [_ id]] (assoc-in db [:selection :analogy-graphs] id)))
+  trim-v
+  (fn [db [id]] (assoc-in db [:selection :analogy-graphs] id)))
+
+(reg-event-db ::select-concept-graph
+  trim-v
+  (fn [db [id]] (assoc-in db [:selection :concept-graphs] id)))

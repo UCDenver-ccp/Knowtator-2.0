@@ -60,13 +60,20 @@
     (->> graphs
          (sp/select-one [(sp/filterer #(= id (:id %))) sp/FIRST]))))
 
-(reg-sub ::concept-graphs-of-selected-mop-map
+(reg-sub ::concept-graphs-for-selected-mop-map
   :<- [::selected-mop-map]
   (fn [mm _]
     (->> mm
          :mops
          keys
-         (filter #(mops/abstr? mm % :sme-clj.typedef/ConceptGraph)))))
+         (filter #(mops/abstr? mm % :sme-clj.typedef/ConceptGraph))
+         (map #(mops/get-mop mm %))
+         (map #(assoc %
+                      :id
+                      (-> %
+                          meta
+                          :id)))
+         vec)))
 
 (reg-sub ::selection :selection)
 
@@ -82,6 +89,12 @@
   (fn [mm _]
     (-> mm
         model/mop-map->graph)))
+
+(reg-sub ::selected-concept-graph-id
+  :<- [::selection]
+  :<- [::concept-graphs-for-selected-mop-map]
+  (fn [[selected choices] _]
+    (get selected :concept-graphs (:id (first choices)))))
 
 (reg-sub ::selected-analogy-graph
   :<- [::selected-graph]

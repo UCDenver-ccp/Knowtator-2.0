@@ -15,7 +15,8 @@
             [reagent.core :as r]
             [knowtator.analogy.subs :as ana-subs]
             [knowtator.relation-annotation.events :as ra-evts]
-            [knowtator.analogy.events :as ana-evts]))
+            [knowtator.analogy.events :as ana-evts]
+            [knowtator.analogy.views :as ana-views]))
 
 
 (defn page-title
@@ -189,6 +190,7 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
+                [ana-views/concept-graph-chooser]
                 [ra/graph [::ana-subs/selected-analogy-graph]
                  [::ana-subs/selected-analogy-graph-id]]]]])
 
