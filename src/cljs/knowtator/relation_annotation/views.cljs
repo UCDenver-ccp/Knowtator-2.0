@@ -19,7 +19,7 @@
    {:keys [options events style]
     {:keys [width height]
      :or   {height "50vh"
-            width  "100vh"}}
+            width  "100%"}}
     :style}]
   (when-let [graph (<sub graph)]
     [(r/adapt-react-class visjs-graph)

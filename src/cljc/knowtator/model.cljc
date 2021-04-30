@@ -507,11 +507,13 @@
 
 
 (defn mop-map->graph
-  [mm]
+  [mm concept-graph-id]
   (-> mm
       :mops
       vals
-      (->> (reduce (fn [m mop]
+      (->> (filter (fn [{:keys [concept-graph]}]
+                     (contains? concept-graph concept-graph-id)))
+           (reduce (fn [m mop]
                      (let [id (-> mop
                                   meta
                                   :id)]
