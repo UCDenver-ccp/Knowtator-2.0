@@ -192,8 +192,12 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
-                (for [id (<sub [::ana-subs/selected-graph-panels])]
-                  ^{:key (str (random-uuid))} [ana-views/analogy-graph id])
+                (map (fn [e] (with-meta e {:key (str (random-uuid))}))
+                     (interpose [re-com/line
+                                  :size  "4px"
+                                  :color "black"]
+                      (for [id (<sub [::ana-subs/selected-graph-panels])]
+                        [ana-views/analogy-graph id])))
                 [ana-views/add-graph-panel-button]]]])
 
 (defmethod routes/panels :review-panel [] [review-panel])

@@ -43,28 +43,16 @@
 
 (defn analogy-graph
   [graph-id]
-  (let [showing?         (r/atom false)
-        roles-table-id   (subs/table-name ::roles-table graph-id)
+  (let [roles-table-id   (subs/table-name ::roles-table graph-id)
         fillers-table-id (subs/table-name ::fillers-table graph-id)]
-    [re-com/v-box
-      :children
-      [[ra/graph graph-id
-        [::subs/selected-analogy-graph
-         (<sub [::subs/selected-slots roles-table-id fillers-table-id])]
-        [::subs/selected-analogy-graph-id]]
-       [re-com/popover-anchor-wrapper
-         :src      (at)
-         :showing? showing?
-         :position :above-center
-         :anchor   [re-com/button
-                     :label    "Roles"
-                     :on-click #(swap! showing? not)]
-         :popover  [re-com/popover-content-wrapper
-                     :title "Roles"
-                     :body  [re-com/scroller
-                              :height "200px"
-                              :child  [roles-table roles-table-id
-                                       fillers-table-id]]]]]]))
+    [re-com/h-split
+      :panel-1 [ra/graph graph-id
+                [::subs/selected-analogy-graph
+                 (<sub [::subs/selected-slots roles-table-id fillers-table-id])]
+                [::subs/selected-analogy-graph-id]]
+      :panel-2 [re-com/scroller
+                 :height "50vh"
+                 :child  [roles-table roles-table-id fillers-table-id]]]))
 
 (defn add-graph-panel-button
   []
