@@ -68,42 +68,42 @@
                                        (str (name ::first-path-store)
                                             (random-uuid)))]
      (->interceptor
-       :id     :viz-id-path
-       :before (fn [context]
-                 (let [original-db (get-coeffect context :db)
-                       viz-id      (get-in context [:coeffects :event i])
-                       new-db      (get original-db viz-id)]
-                   (-> context
-                       (update-in [:coeffects :event] remove-nth i)
-                       (update db-store-key conj original-db)
-                       (assoc first-path-store-key viz-id)
-                       (assoc-coeffect :db new-db))))
-       :after  (fn [context]
-                 (let [db-store     (get context db-store-key)
-                       original-db  (peek db-store)
-                       new-db-store (pop db-store)
-                       viz-id       (get context first-path-store-key)
-                       context'     (-> context
-                                        (assoc db-store-key new-db-store)
-                                        (assoc-coeffect :db original-db)) ;; put
-                                                                          ;; the
-                                                                          ;; original
-                                                                          ;; db
-                                                                          ;; back
-                                                                          ;; so
-                                                                          ;; that
-                                                                          ;; things
-                                                                          ;; like
-                                                                          ;; debug
-                                                                          ;; work
-                                                                          ;; later
-                                                                          ;; on
-                       db           (get-effect context :db ::not-found)]
-                   (if (= db ::not-found)
-                     context'
-                     (->> db
-                          (assoc original-db viz-id)
-                          (assoc-effect context' :db)))))))))
+      :id     :viz-id-path
+      :before (fn [context]
+                (let [original-db (get-coeffect context :db)
+                      viz-id      (get-in context [:coeffects :event i])
+                      new-db      (get original-db viz-id)]
+                  (-> context
+                      (update-in [:coeffects :event] remove-nth i)
+                      (update db-store-key conj original-db)
+                      (assoc first-path-store-key viz-id)
+                      (assoc-coeffect :db new-db))))
+      :after  (fn [context]
+                (let [db-store     (get context db-store-key)
+                      original-db  (peek db-store)
+                      new-db-store (pop db-store)
+                      viz-id       (get context first-path-store-key)
+                      context'     (-> context
+                                       (assoc db-store-key new-db-store)
+                                       (assoc-coeffect :db original-db)) ;; put
+                                                                         ;; the
+                                                                         ;; original
+                                                                         ;; db
+                                                                         ;; back
+                                                                         ;; so
+                                                                         ;; that
+                                                                         ;; things
+                                                                         ;; like
+                                                                         ;; debug
+                                                                         ;; work
+                                                                         ;; later
+                                                                         ;; on
+                      db           (get-effect context :db ::not-found)]
+                  (if (= db ::not-found)
+                    context'
+                    (->> db
+                         (assoc original-db viz-id)
+                         (assoc-effect context' :db)))))))))
 
 (defn len-text
   "Calculates the length of a span of text."
@@ -146,7 +146,6 @@
            (.addEventListener js/window
                               "resize"
                               (fn []
-                                (println "change")
                                 (reset! a
                                         {:width  (.-innerWidth js/window)
                                          :height (.-innerHeight js/window)})))

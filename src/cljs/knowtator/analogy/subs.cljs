@@ -129,9 +129,7 @@
 
 (defn table-name
   [base-name ext]
-  (let [v (keyword (namespace base-name) (str (name base-name) ext))]
-    (println v)
-    v))
+  (keyword (namespace base-name) (str (name base-name) "-" ext)))
 
 (reg-sub ::selected-slots
   (fn [[_ roles-dt _] _] [(rf/subscribe [::dt/selected-items roles-dt
@@ -141,10 +139,14 @@
      roles
      (map :id)
      (reduce (fn [m id]
-               (assoc m
-                      id
-                      (set (map :id
-                                @(rf/subscribe [::dt/selected-items
-                                                (table-name fillers-dt id)
-                                                [::fillers-for-role id]])))))
+               (let [selected-fillers (set (map :id
+                                                @(rf/subscribe
+                                                  [::dt/selected-items
+                                                   (table-name fillers-dt id)
+                                                   [::fillers-for-role id]])))]
+                 (assoc m id selected-fillers)))
              {}))))
+
+(reg-sub ::selected-graph-panels
+  :<- [::selection]
+  (fn [selected _] (get selected :graph-panels)))

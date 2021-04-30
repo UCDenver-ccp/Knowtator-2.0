@@ -179,8 +179,10 @@
                 [ra-controls/node-controls] [ra-controls/edge-controls]
                 [re-com/h-box
                   :children [[owl/owl-obj-prop-hierarchy]
-                             [ra/graph [::ra-subs/selected-realized-graph]
-                              [::ra-subs/selected-graph-space-id]]]]]]])
+                             [ra/graph
+                               :relation-annotation-graph
+                               [::ra-subs/selected-realized-graph]
+                               [::ra-subs/selected-graph-space-id]]]]]]])
 
 (defn analogy-panel
   []
@@ -190,7 +192,9 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
-                [ana-views/analogy-graph]]]])
+                (for [id (<sub [::ana-subs/selected-graph-panels])]
+                  ^{:key (str (random-uuid))} [ana-views/analogy-graph id])
+                [ana-views/add-graph-panel-button]]]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
 (defmethod routes/panels :annotation-panel [] [annotation-panel])

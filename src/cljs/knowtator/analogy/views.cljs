@@ -42,13 +42,13 @@
       ::dt/selection     {::dt/enabled? true}}]))
 
 (defn analogy-graph
-  []
+  [graph-id]
   (let [showing?         (r/atom false)
-        roles-table-id   ::roles-table
-        fillers-table-id ::fillers-table]
+        roles-table-id   (subs/table-name ::roles-table graph-id)
+        fillers-table-id (subs/table-name ::fillers-table graph-id)]
     [re-com/v-box
       :children
-      [[ra/graph
+      [[ra/graph graph-id
         [::subs/selected-analogy-graph
          (<sub [::subs/selected-slots roles-table-id fillers-table-id])]
         [::subs/selected-analogy-graph-id]]
@@ -65,3 +65,9 @@
                               :height "200px"
                               :child  [roles-table roles-table-id
                                        fillers-table-id]]]]]]))
+
+(defn add-graph-panel-button
+  []
+  [re-com/button
+    :label    "Add graph panel"
+    :on-click #(>evt [::evts/add-graph-panel])])

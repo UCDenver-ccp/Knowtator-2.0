@@ -8,3 +8,10 @@
 (reg-event-db ::select-concept-graph
   trim-v
   (fn [db [id]] (assoc-in db [:selection :concept-graphs] id)))
+
+(reg-event-db ::add-graph-panel
+  trim-v
+  (fn [db _]
+    (update-in db
+               [:selection :graph-panels]
+               (comp (partial apply conj) (juxt identity count)))))
