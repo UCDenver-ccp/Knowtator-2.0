@@ -21,26 +21,31 @@
     [{::dt/column-key   [:id]
       ::dt/sorting      {::dt/enabled? true}
       ::dt/column-label "ID"}
-     {::dt/column-key   [:count]
-      ::dt/column-label "Count"}
+     {::dt/column-key   [:mops]
+      ::dt/column-label "Mops Count"
+      ::dt/render-fn    count}
      {::dt/column-key   [:fillers]
+      ::dt/column-label "Filler Count"
+      ::dt/render-fn    count}
+     {::dt/column-key [:fillers]
       ::dt/column-label "Fillers"
-      ::dt/render-fn    (fn [fillers {:keys [id]}]
-                          (when ((set (map :id
-                                           (<sub
-                                            [::dt/selected-items ::roles-table
-                                             [::subs/selected-mop-map-roles]])))
-                                 id)
-                            [dt/datatable (subs/table-name ::fillers-table id)
-                             [::subs/fillers-for-role id]
-                             [{::dt/column-key   [:id]
-                               ::dt/render-fn    (fn [val]
-                                                   ((if (keyword? val) name str)
-                                                    val))
-                               ::dt/sorting      {::dt/enabled? true}
-                               ::dt/column-label "Filler"}]
-                             {::dt/table-classes ["table" "ui" "celled"]
-                              ::dt/selection     {::dt/enabled? true}}]))}]
+      ::dt/render-fn
+      (fn [_ {:keys [id]}]
+        (when ((set (map :id
+                         (<sub [::dt/selected-items ::roles-table
+                                [::subs/selected-mop-map-roles]])))
+               id)
+          [re-com/scroller
+            :height "200px"
+            :child  [dt/datatable (subs/table-name ::fillers-table id)
+                     [::subs/fillers-for-role id]
+                     [{::dt/column-key   [:id]
+                       ::dt/render-fn    (fn [val]
+                                           ((if (keyword? val) name str) val))
+                       ::dt/sorting      {::dt/enabled? true}
+                       ::dt/column-label "Filler"}]
+                     {::dt/table-classes ["table" "ui" "celled"]
+                      ::dt/selection     {::dt/enabled? true}}]]))}]
     {::dt/table-classes ["table" "ui" "celled"]
      ::dt/selection     {::dt/enabled? true}}])
 

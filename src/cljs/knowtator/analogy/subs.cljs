@@ -123,7 +123,7 @@
                                  (fn [role-m]
                                    (-> role-m
                                        (update :fillers (fnil into #{}) fillers)
-                                       (update :count + (count fillers))
+                                       (update :mops (fnil conj #{}) mop)
                                        (assoc :mop (mops/get-mop mm role))
                                        (assoc :id role)))))
                        m)))
