@@ -89,7 +89,7 @@
   :<- [::selected-concept-graph-id]
   (fn [[mm concept-graph-id] _]
     (-> mm
-        (model/mop-map->graph concept-graph-id))))
+        (model/mop-map->graph {:concept-graph #{concept-graph-id}}))))
 
 (reg-sub ::selected-concept-graph-id
   :<- [::selection]

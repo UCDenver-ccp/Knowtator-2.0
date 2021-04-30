@@ -507,12 +507,14 @@
 
 
 (defn mop-map->graph
-  [mm concept-graph-id]
+  [mm slots-to-keep]
   (-> mm
       :mops
       vals
-      (->> (filter (fn [{:keys [concept-graph]}]
-                     (contains? concept-graph concept-graph-id)))
+      (->> (filter (fn [mop]
+                     (every? (fn [[role fillers]]
+                               (some fillers (get mop role fillers)))
+                             slots-to-keep)))
            (reduce (fn [m mop]
                      (let [id (-> mop
                                   meta
