@@ -111,27 +111,39 @@
 
 (defn all-roles
   [mm]
-  (->>
-   mm
-   :mops
-   vals
-   (reduce (fn [m mop]
-             (->> mop
-                  (reduce (fn [m [role fillers]]
-                            (update m
-                                    role
-                                    (fn [role-m]
-                                      (-> role-m
-                                          (update :fillers into fillers)
-                                          (update :count + (count fillers))
-                                          (assoc :mop (mops/get-mop mm role))
-                                          (assoc :id role)))))
-                          m)))
-           {})))
+  (->> mm
+       :mops
+       vals
+       (reduce
+        (fn [m mop]
+          (->> mop
+               (reduce (fn [m [role fillers]]
+                         (update m
+                                 role
+                                 (fn [role-m]
+                                   (-> role-m
+                                       (update :fillers (fnil into #{}) fillers)
+                                       (update :count + (count fillers))
+                                       (assoc :mop (mops/get-mop mm role))
+                                       (assoc :id role)))))
+                       m)))
+        {})))
 
-(reg-sub ::selected-mop-map-roles
+(reg-sub ::selected-mop-map-roles-map
   :<- [::selected-mop-map]
   (fn [mm _]
     (-> mm
-        all-roles
+        all-roles)))
+
+(reg-sub ::selected-mop-map-roles
+  :<- [::selected-mop-map-roles-map]
+  (fn [m _]
+    (-> m
         vals)))
+
+(reg-sub ::fillers-for-role
+  :<- [::selected-mop-map-roles-map]
+  (fn [roles-map [_ role]]
+    (->> (get-in roles-map
+                 [role :fillers])
+         (map (partial hash-map :id)))))
