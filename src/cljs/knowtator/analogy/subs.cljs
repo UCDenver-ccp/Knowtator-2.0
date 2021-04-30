@@ -1,11 +1,12 @@
 (ns knowtator.analogy.subs
-  (:require [re-frame.core :refer [reg-sub]]
+  (:require [re-frame.core :as rf :refer [reg-sub]]
             [knowtator.model :as model]
             [knowtator.util :as util]
             [com.rpl.specter :as sp]
             [mops.core :as mops]
             [mops.records :as mr]
-            [sme-clj.typedef :as types]))
+            [sme-clj.typedef :as types]
+            [re-frame-datatable.core :as dt]))
 
 (def default-mop-map
   (as-> (mr/make-mop-map) m
@@ -86,10 +87,9 @@
 
 (reg-sub ::selected-graph
   :<- [::selected-mop-map]
-  :<- [::selected-concept-graph-id]
-  (fn [[mm concept-graph-id] _]
+  (fn [mm [_ slots]]
     (-> mm
-        (model/mop-map->graph {:concept-graph #{concept-graph-id}}))))
+        (model/mop-map->graph slots))))
 
 (reg-sub ::selected-concept-graph-id
   :<- [::selection]
@@ -98,9 +98,9 @@
     (get selected :concept-graphs (:id (first choices)))))
 
 (reg-sub ::selected-analogy-graph
-  :<- [::selected-graph]
-  :<- [::selected-node-label]
-  :<- [::selected-edge-label]
+  (fn [[_ slots] _] [(rf/subscribe [::selected-graph slots])
+                     (rf/subscribe [::selected-node-label])
+                     (rf/subscribe [::selected-edge-label])])
   (fn [[graph node-label edge-label] _]
     (-> graph
         (update :nodes (partial map #(assoc % :label (get % node-label))))
@@ -147,3 +147,27 @@
     (->> (get-in roles-map
                  [role :fillers])
          (map (partial hash-map :id)))))
+
+(defn table-name
+  [base-name ext]
+  (keyword (namespace base-name) (str (name base-name) ext)))
+
+(reg-sub ::selected-slots
+  (fn [[_ roles-dt _] _]
+    (println roles-dt)
+    [(rf/subscribe [::dt/selected-items roles-dt [::selected-mop-map-roles]])])
+  (fn [[roles] [_ _ fillers-dt]]
+    (println roles)
+    (let [v (->> roles
+                 (map :id)
+                 (reduce (fn [m id]
+                           (assoc m
+                                  id
+                                  (set (map :id
+                                            @(rf/subscribe
+                                              [::dt/selected-items
+                                               (table-name fillers-dt id)
+                                               [::fillers-for-role id]])))))
+                         {}))]
+      (println v)
+      v)))
