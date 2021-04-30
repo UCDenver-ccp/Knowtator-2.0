@@ -2,56 +2,66 @@
   (:require [knowtator.analogy.events :as evts]
             [knowtator.analogy.subs :as subs]
             [knowtator.util :refer [<sub >evt]]
-            [re-com.core :as re-com]
+            [re-com.core :as re-com :refer [at]]
             [re-frame-datatable.core :as dt]
-            [knowtator.relation-annotation.views :as ra]))
+            [knowtator.relation-annotation.views :as ra]
+            [reagent.core :as r]))
 
-(defn concept-graph-chooser
-  []
-  [re-com/single-dropdown
-    :model     (<sub [::subs/selected-concept-graph-id])
-    :choices   (<sub [::subs/concept-graphs-for-selected-mop-map])
-    :label-fn  :id
-    :on-change #(>evt [::evts/select-concept-graph %])])
+(defn fillers-table
+  [fillers-table-id role]
+  [dt/datatable (subs/table-name fillers-table-id role)
+   [::subs/fillers-for-role role]
+   [{::dt/column-key   [:id]
+     ::dt/render-fn    (fn [val] ((if (keyword? val) name str) val))
+     ::dt/sorting      {::dt/enabled? true}
+     ::dt/column-label "Filler"}]
+   {::dt/table-classes ["table" "ui" "celled"]
+    ::dt/selection     {::dt/enabled? true}}])
 
 (defn roles-table
-  []
-  [dt/datatable
-    ::roles-table [::subs/selected-mop-map-roles]
-    [{::dt/column-key   [:id]
-      ::dt/sorting      {::dt/enabled? true}
-      ::dt/column-label "ID"}
-     {::dt/column-key   [:mops]
-      ::dt/column-label "Mops Count"
-      ::dt/render-fn    count}
-     {::dt/column-key   [:fillers]
-      ::dt/column-label "Filler Count"
-      ::dt/render-fn    count}
-     {::dt/column-key [:fillers]
-      ::dt/column-label "Fillers"
-      ::dt/render-fn
-      (fn [_ {:keys [id]}]
-        (when ((set (map :id
-                         (<sub [::dt/selected-items ::roles-table
-                                [::subs/selected-mop-map-roles]])))
-               id)
-          [re-com/scroller
-            :height "200px"
-            :child  [dt/datatable (subs/table-name ::fillers-table id)
-                     [::subs/fillers-for-role id]
-                     [{::dt/column-key   [:id]
-                       ::dt/render-fn    (fn [val]
-                                           ((if (keyword? val) name str) val))
-                       ::dt/sorting      {::dt/enabled? true}
-                       ::dt/column-label "Filler"}]
-                     {::dt/table-classes ["table" "ui" "celled"]
-                      ::dt/selection     {::dt/enabled? true}}]]))}]
-    {::dt/table-classes ["table" "ui" "celled"]
-     ::dt/selection     {::dt/enabled? true}}])
+  [roles-table-id fillers-table-id]
+  (let [roles-sub [::subs/selected-mop-map-roles]]
+    [dt/datatable roles-table-id roles-sub
+     [{::dt/column-key   [:id]
+       ::dt/sorting      {::dt/enabled? true}
+       ::dt/column-label "ID"}
+      {::dt/column-key   [:mops]
+       ::dt/column-label "Mops Count"
+       ::dt/render-fn    count}
+      {::dt/column-key   [:fillers]
+       ::dt/column-label "Fillers"
+       ::dt/render-fn    (fn [fillers {role :id}]
+                           (if (some (fn [{:keys [id]}] (= role id))
+                                     (<sub [::dt/selected-items roles-table-id
+                                            roles-sub]))
+                             [re-com/scroller
+                               :height "200px"
+                               :child  [fillers-table fillers-table-id role]]
+                             (count fillers)))}]
+     {::dt/table-classes ["table" "ui" "celled"]
+      ::dt/selection     {::dt/enabled? true}}]))
 
 (defn analogy-graph
   []
-  [ra/graph
-   [::subs/selected-analogy-graph
-    (<sub [::subs/selected-slots ::roles-table ::fillers-table])]
-   [::subs/selected-analogy-graph-id]])
+  (let [showing?         (r/atom false)
+        roles-table-id   ::roles-table
+        fillers-table-id ::fillers-table]
+    [re-com/v-box
+      :children
+      [[ra/graph
+        [::subs/selected-analogy-graph
+         (<sub [::subs/selected-slots roles-table-id fillers-table-id])]
+        [::subs/selected-analogy-graph-id]]
+       [re-com/popover-anchor-wrapper
+         :src      (at)
+         :showing? showing?
+         :position :above-center
+         :anchor   [re-com/button
+                     :label    "Roles"
+                     :on-click #(swap! showing? not)]
+         :popover  [re-com/popover-content-wrapper
+                     :title "Roles"
+                     :body  [re-com/scroller
+                              :height "200px"
+                              :child  [roles-table roles-table-id
+                                       fillers-table-id]]]]]]))

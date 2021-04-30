@@ -190,7 +190,6 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
-                [ana-views/concept-graph-chooser] [ana-views/roles-table]
                 [ana-views/analogy-graph]]]])
 
 (defmethod routes/panels :review-panel [] [review-panel])

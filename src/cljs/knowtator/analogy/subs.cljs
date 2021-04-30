@@ -61,21 +61,6 @@
     (->> graphs
          (sp/select-one [(sp/filterer #(= id (:id %))) sp/FIRST]))))
 
-(reg-sub ::concept-graphs-for-selected-mop-map
-  :<- [::selected-mop-map]
-  (fn [mm _]
-    (->> mm
-         :mops
-         keys
-         (filter #(mops/abstr? mm % :sme-clj.typedef/ConceptGraph))
-         (map #(mops/get-mop mm %))
-         (map #(assoc %
-                      :id
-                      (-> %
-                          meta
-                          :id)))
-         vec)))
-
 (reg-sub ::selection :selection)
 
 (reg-sub ::selected-analogy-graph-id
@@ -90,12 +75,6 @@
   (fn [mm [_ slots]]
     (-> mm
         (model/mop-map->graph slots))))
-
-(reg-sub ::selected-concept-graph-id
-  :<- [::selection]
-  :<- [::concept-graphs-for-selected-mop-map]
-  (fn [[selected choices] _]
-    (get selected :concept-graphs (:id (first choices)))))
 
 (reg-sub ::selected-analogy-graph
   (fn [[_ slots] _] [(rf/subscribe [::selected-graph slots])
@@ -150,24 +129,22 @@
 
 (defn table-name
   [base-name ext]
-  (keyword (namespace base-name) (str (name base-name) ext)))
+  (let [v (keyword (namespace base-name) (str (name base-name) ext))]
+    (println v)
+    v))
 
 (reg-sub ::selected-slots
-  (fn [[_ roles-dt _] _]
-    (println roles-dt)
-    [(rf/subscribe [::dt/selected-items roles-dt [::selected-mop-map-roles]])])
+  (fn [[_ roles-dt _] _] [(rf/subscribe [::dt/selected-items roles-dt
+                                         [::selected-mop-map-roles]])])
   (fn [[roles] [_ _ fillers-dt]]
-    (println roles)
-    (let [v (->> roles
-                 (map :id)
-                 (reduce (fn [m id]
-                           (assoc m
-                                  id
-                                  (set (map :id
-                                            @(rf/subscribe
-                                              [::dt/selected-items
-                                               (table-name fillers-dt id)
-                                               [::fillers-for-role id]])))))
-                         {}))]
-      (println v)
-      v)))
+    (->>
+     roles
+     (map :id)
+     (reduce (fn [m id]
+               (assoc m
+                      id
+                      (set (map :id
+                                @(rf/subscribe [::dt/selected-items
+                                                (table-name fillers-dt id)
+                                                [::fillers-for-role id]])))))
+             {}))))
