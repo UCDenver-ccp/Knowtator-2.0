@@ -15,3 +15,13 @@
     (update-in db
                [:selection :graph-panels]
                (comp (partial apply conj) (juxt identity count)))))
+
+(reg-event-db ::select-graph
+  trim-v
+  (fn [db [id]]
+    (update-in db
+               [:selection :graphs]
+               (fnil
+                (fn [graphs]
+                  (if (graphs id) (disj graphs id) (conj (or graphs #{}) id)))
+                #{}))))

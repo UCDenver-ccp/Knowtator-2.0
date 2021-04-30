@@ -150,3 +150,7 @@
 (reg-sub ::selected-graph-panels
   :<- [::selection]
   (fn [selected _] (get selected :graph-panels)))
+
+(reg-sub ::selected-graphs
+  :<- [::selection]
+  (fn [selected _] (get selected :graphs)))

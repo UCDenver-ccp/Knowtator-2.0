@@ -45,14 +45,20 @@
   [graph-id]
   (let [roles-table-id   (subs/table-name ::roles-table graph-id)
         fillers-table-id (subs/table-name ::fillers-table graph-id)]
-    [re-com/h-split
-      :panel-1 [ra/graph graph-id
-                [::subs/selected-analogy-graph
-                 (<sub [::subs/selected-slots roles-table-id fillers-table-id])]
-                [::subs/selected-analogy-graph-id]]
-      :panel-2 [re-com/scroller
-                 :height "50vh"
-                 :child  [roles-table roles-table-id fillers-table-id]]]))
+    [re-com/h-box
+      :children
+      [[re-com/checkbox
+         :model     (contains? (<sub [::subs/selected-graphs]) graph-id)
+         :on-change #(>evt [::evts/select-graph graph-id])]
+       [re-com/h-split
+         :panel-1 [ra/graph graph-id
+                   [::subs/selected-analogy-graph
+                    (<sub [::subs/selected-slots roles-table-id
+                           fillers-table-id])]
+                   [::subs/selected-analogy-graph-id]]
+         :panel-2 [re-com/scroller
+                    :height "50vh"
+                    :child  [roles-table roles-table-id fillers-table-id]]]]]))
 
 (defn add-graph-panel-button
   []
