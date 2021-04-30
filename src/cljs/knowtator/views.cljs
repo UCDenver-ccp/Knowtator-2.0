@@ -190,7 +190,7 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
-                [ana-views/concept-graph-chooser]
+                [ana-views/concept-graph-chooser] [ana-views/roles-table]
                 [ra/graph [::ana-subs/selected-analogy-graph]
                  [::ana-subs/selected-analogy-graph-id]]]]])
 

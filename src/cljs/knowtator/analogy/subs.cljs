@@ -108,3 +108,30 @@
         (#(or %
               {:nodes []
                :edges []})))))
+
+(defn all-roles
+  [mm]
+  (->>
+   mm
+   :mops
+   vals
+   (reduce (fn [m mop]
+             (->> mop
+                  (reduce (fn [m [role fillers]]
+                            (update m
+                                    role
+                                    (fn [role-m]
+                                      (-> role-m
+                                          (update :fillers into fillers)
+                                          (update :count + (count fillers))
+                                          (assoc :mop (mops/get-mop mm role))
+                                          (assoc :id role)))))
+                          m)))
+           {})))
+
+(reg-sub ::selected-mop-map-roles
+  :<- [::selected-mop-map]
+  (fn [mm _]
+    (-> mm
+        all-roles
+        vals)))
