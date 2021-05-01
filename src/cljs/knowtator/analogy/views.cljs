@@ -45,7 +45,10 @@
                                :height "200px"
                                :child  [fillers-table fillers-table-id role
                                         graph-id]]
-                             (count fillers)))}]
+                             (str (count fillers)
+                                  (let [x (count (<sub [::subs/selected-fillers
+                                                        role graph-id]))]
+                                    (when-not (zero? x) (str "(" x ")"))))))}]
      {::dt/table-classes ["table" "ui" "celled"]}]))
 
 (defn analogy-graph
