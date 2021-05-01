@@ -507,15 +507,17 @@
 
 (defn filter-mops
   [mm slots]
-  (->
-    mm
-    (update :mops
-            (partial into
-                     {}
-                     (filter (fn [[_ mop]]
-                               (every? (fn [[role fillers]]
-                                         (some fillers (get mop role fillers)))
-                                       slots)))))))
+  (-> mm
+      (update
+       :mops
+       (partial into
+                {}
+                (filter (fn [[_ mop]]
+                          (every? (fn [[role fillers]]
+                                    (if (empty? fillers)
+                                      true
+                                      (some fillers (get mop role fillers))))
+                                  slots)))))))
 
 
 (defn mop-id
