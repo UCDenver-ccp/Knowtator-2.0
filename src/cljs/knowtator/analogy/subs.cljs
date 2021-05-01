@@ -70,22 +70,29 @@
 (reg-sub ::selected-node-label (fn [_ _] :id))
 (reg-sub ::selected-edge-label (fn [_ _] :predicate))
 
+(reg-sub ::slots
+  (fn [db [_ graph-id]]
+    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+                    :fillers]
+                   db)))
+
 (reg-sub ::filtered-mop-map
-  :<- [::selected-mop-map]
-  (fn [mm [_ slots]]
+  (fn [[_ graph-id] _] [(rf/subscribe [::selected-mop-map])
+                        (rf/subscribe [::slots graph-id])])
+  (fn [[mm slots] _]
     (-> mm
         (model/filter-mops slots))))
 
 (reg-sub ::selected-graph
-  (fn [[_ slots] _] (rf/subscribe [::filtered-mop-map slots]))
+  (fn [[_ graph-id] _] (rf/subscribe [::filtered-mop-map graph-id]))
   (fn [mm _]
     (-> mm
         model/mop-map->graph)))
 
 (reg-sub ::selected-analogy-graph
-  (fn [[_ slots] _] [(rf/subscribe [::selected-graph slots])
-                     (rf/subscribe [::selected-node-label])
-                     (rf/subscribe [::selected-edge-label])])
+  (fn [[_ graph-id] _] [(rf/subscribe [::selected-graph graph-id])
+                        (rf/subscribe [::selected-node-label])
+                        (rf/subscribe [::selected-edge-label])])
   (fn [[graph node-label edge-label] _]
     (-> graph
         (update :nodes (partial map #(assoc % :label (get % node-label))))
@@ -137,26 +144,28 @@
   [base-name ext]
   (keyword (namespace base-name) (str (name base-name) "-" ext)))
 
-(reg-sub ::selected-slots
-  (fn [[_ roles-dt _] _] [(rf/subscribe [::dt/selected-items roles-dt
-                                         [::selected-mop-map-roles]])])
-  (fn [[roles] [_ _ fillers-dt]]
-    (->>
-     roles
-     (map :id)
-     (reduce (fn [m id]
-               (let [selected-fillers (set (map :id
-                                                @(rf/subscribe
-                                                  [::dt/selected-items
-                                                   (table-name fillers-dt id)
-                                                   [::fillers-for-role id]])))]
-                 (assoc m id selected-fillers)))
-             {}))))
-
-(reg-sub ::selected-graph-panels
-  :<- [::selection]
-  (fn [selected _] (get selected :graph-panels)))
+(reg-sub ::graph-panels (fn [db _] (map :id (get db :graph-panels))))
 
 (reg-sub ::selected-graphs
   :<- [::selection]
   (fn [selected _] (get selected :graphs)))
+
+(reg-sub ::selected-roles
+  (fn [db [_ graph-id]]
+    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+                    :roles]
+                   db)))
+
+(reg-sub ::selected-role?
+  (fn [[_ _ graph-id] _] (rf/subscribe [::selected-roles graph-id]))
+  (fn [roles [_ role _]] (contains? roles role)))
+
+(reg-sub ::selected-fillers
+  (fn [db [_ role graph-id]]
+    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+                    :fillers role]
+                   db)))
+
+(reg-sub ::selected-filler?
+  (fn [[_ _ role graph-id] _] (rf/subscribe [::selected-fillers role graph-id]))
+  (fn [roles [_ filler _ _]] (contains? roles filler)))

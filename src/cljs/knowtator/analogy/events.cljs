@@ -1,5 +1,7 @@
 (ns knowtator.analogy.events
-  (:require [re-frame.core :refer [reg-event-fx reg-event-db trim-v]]))
+  (:require [com.rpl.specter :as sp]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
+            [re-frame.core :refer [reg-event-db trim-v]]))
 
 (reg-event-db ::select-graph-space
   trim-v
@@ -13,15 +15,32 @@
   trim-v
   (fn [db _]
     (update-in db
-               [:selection :graph-panels]
-               (comp (partial apply conj) (juxt identity count)))))
+               [:graph-panels]
+               (fn [graph-panels]
+                 (conj graph-panels
+                       {:id (keyword (str "gp-" (count graph-panels)))})))))
+
+(defn toggle-selection
+  [id items]
+  (let [items (or items #{})] (if (items id) (disj items id) (conj items id))))
 
 (reg-event-db ::select-graph
   trim-v
   (fn [db [id]]
-    (update-in db
-               [:selection :graphs]
-               (fnil
-                (fn [graphs]
-                  (if (graphs id) (disj graphs id) (conj (or graphs #{}) id)))
-                #{}))))
+    (update-in db [:selection :graphs] (partial toggle-selection id))))
+
+(reg-event-db ::select-role
+  trim-v
+  (fn-traced [db [role graph-id]]
+    (sp/transform [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL
+                   :roles]
+                  (partial toggle-selection role)
+                  db)))
+
+(reg-event-db ::select-filler
+  trim-v
+  (fn-traced [db [filler role graph-id]]
+    (sp/transform [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL
+                   :fillers role]
+                  (partial toggle-selection filler)
+                  db)))

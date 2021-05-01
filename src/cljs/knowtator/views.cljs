@@ -196,8 +196,8 @@
                      (interpose [re-com/line
                                   :size  "4px"
                                   :color "black"]
-                      (for [id (<sub [::ana-subs/selected-graph-panels])]
-                        [ana-views/analogy-graph id])))
+                      (for [graph-panel (<sub [::ana-subs/graph-panels])]
+                        [ana-views/analogy-graph graph-panel])))
                 [ana-views/add-graph-panel-button]]]])
 
 (defmethod routes/panels :review-panel [] [review-panel])
