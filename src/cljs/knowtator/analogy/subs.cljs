@@ -70,11 +70,17 @@
 (reg-sub ::selected-node-label (fn [_ _] :id))
 (reg-sub ::selected-edge-label (fn [_ _] :predicate))
 
-(reg-sub ::selected-graph
+(reg-sub ::filtered-mop-map
   :<- [::selected-mop-map]
   (fn [mm [_ slots]]
     (-> mm
-        (model/mop-map->graph slots))))
+        (model/filter-mops slots))))
+
+(reg-sub ::selected-graph
+  (fn [[_ slots] _] (rf/subscribe [::filtered-mop-map slots]))
+  (fn [mm _]
+    (-> mm
+        model/mop-map->graph)))
 
 (reg-sub ::selected-analogy-graph
   (fn [[_ slots] _] [(rf/subscribe [::selected-graph slots])

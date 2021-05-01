@@ -505,30 +505,45 @@
                                                     :value nil}}})]
       (sp/transform (GRAPH-OBJS graph-space-id :edges) #(conj % new-edge) db))))
 
+(defn filter-mops
+  [mm slots]
+  (->
+    mm
+    (update :mops
+            (partial into
+                     {}
+                     (filter (fn [[_ mop]]
+                               (every? (fn [[role fillers]]
+                                         (some fillers (get mop role fillers)))
+                                       slots)))))))
+
+
+(defn mop-id
+  [mop]
+  (-> mop
+      meta
+      :id))
+
+(defn mop->node [mop] (assoc mop :id (mop-id mop)))
+
+(defn mop->edges
+  [mop]
+  (let [id (mop-id mop)]
+    (->> mop
+         (mapcat (fn [[k vs]]
+                   (map (fn [v]
+                          {:from      id
+                           :predicate k
+                           :to        v})
+                        vs))))))
 
 (defn mop-map->graph
-  [mm slots-to-keep]
+  [mm]
   (-> mm
       :mops
       vals
-      (->> (filter (fn [mop]
-                     (every? (fn [[role fillers]]
-                               (some fillers (get mop role fillers)))
-                             slots-to-keep)))
-           (reduce (fn [m mop]
-                     (let [id (-> mop
-                                  meta
-                                  :id)]
-                       (-> m
-                           (update :nodes conj (assoc mop :id id))
-                           (update :edges
-                                   into
-                                   (->> mop
-                                        (mapcat (fn [[k vs]]
-                                                  (map (fn [v]
-                                                         {:from      id
-                                                          :predicate k
-                                                          :to        v})
-                                                       vs))))))))
-                   {:nodes []
-                    :edges []}))))
+      (->> (reduce (fn [m mop]
+                     (-> m
+                         (update :nodes conj (mop->node mop))
+                         (update :edges into (mop->edges mop))))
+                   nil))))
