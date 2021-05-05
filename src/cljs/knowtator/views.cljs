@@ -192,6 +192,7 @@
                  [::ana-subs/selected-analogy-graph-id]
                  #(>evt [::ana-evts/select-graph-id %])]
                 [ra-controls/node-controls] [ra-controls/edge-controls]
+                [ana-views/perform-analogy-button]
                 (map (fn [e] (with-meta e {:key (str (random-uuid))}))
                      (interpose [re-com/line
                                   :size  "4px"

@@ -1,7 +1,10 @@
 (ns knowtator.analogy.events
   (:require [com.rpl.specter :as sp]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [re-frame.core :refer [reg-event-db trim-v]]))
+            [re-frame.core :refer [reg-event-db trim-v]]
+            [sme-clj.core :as sme]
+            [sme-clj.ruledef :as rules]
+            [mops.core :as mops]))
 
 (reg-event-db ::select-graph-space
   trim-v
@@ -52,3 +55,32 @@
 (reg-event-db ::select-base
   trim-v
   (fn-traced [db [graph-id]] (assoc-in db [:selection :sme :base] graph-id)))
+
+(reg-event-db ::perform-analogy
+  trim-v
+  (fn-traced [db [base-id target-id]]
+    (let [id     :default
+          kg     (sp/select-one [:analogy (sp/filterer #(= id (:id %)))
+                                 sp/FIRST]
+                                db)
+          result (sme/match kg
+                   :solar-system :rutherford-atom
+                   rules/analogy)
+          mhs    (-> result
+                     first
+                     :mhs)]
+      (reduce
+       (fn [db mh]
+         (reduce (fn [db mh-val]
+                   (sp/transform
+                    [:analogy (sp/filterer #(= id (:id %))) sp/FIRST]
+                    (fn [mm]
+                      (-> mm
+                          (assoc :analogy? true)
+                          (update-in [:mops mh-val]
+                                     (fn [mop] (vary-meta mop assoc :mh mh)))))
+                    db))
+                 db
+                 mh))
+       db
+       mhs))))

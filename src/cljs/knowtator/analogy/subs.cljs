@@ -47,7 +47,12 @@
                         (rf/subscribe [::selected-edge-label])])
   (fn [[graph node-label edge-label] _]
     (-> graph
-        (update :nodes (partial map #(assoc % :label (get % node-label))))
+        (update :nodes
+                (comp (partial sort-by :group)
+                      (partial map
+                               #(assoc %
+                                       :label (get % node-label)
+                                       :group (hash (get % :mh))))))
         (update :edges (partial map #(assoc % :label (get % edge-label))))
         (#(or %
               {:nodes []

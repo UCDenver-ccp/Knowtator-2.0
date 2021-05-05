@@ -80,3 +80,10 @@
   [re-com/button
     :label    "Add graph panel"
     :on-click #(>evt [::evts/add-graph-panel])])
+
+(defn perform-analogy-button
+  []
+  [re-com/button
+    :label    "Perform analogy"
+    :on-click #(>evt [::evts/perform-analogy (<sub [::subs/selected-base])
+                      (<sub [::subs/selected-target])])])

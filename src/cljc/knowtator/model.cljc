@@ -526,7 +526,7 @@
       meta
       :id))
 
-(defn mop->node [mop] (assoc mop :id (mop-id mop)))
+(defn mop->node [mop] (merge (meta mop) mop))
 
 (defn mop->edges
   [mop]
