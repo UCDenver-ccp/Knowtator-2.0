@@ -3,8 +3,7 @@
             [knowtator.relation-annotation.subs :as subs]
             [knowtator.util :as util :refer [<sub >evt]]
             [reagent.core :as r]
-            ["react-graph-vis" :as rgv]
-            [knowtator.html-util :as html]))
+            ["react-graph-vis" :as rgv]))
 
 (def visjs-graph (aget rgv "default"))
 
@@ -23,7 +22,8 @@
     :style}]
   (when-let [graph (<sub graph)]
     [(r/adapt-react-class visjs-graph)
-     {:graph   graph
+     {:id      id
+      :graph   graph
       :options (-> options
                    (update :manipulation
                            (partial util/map-vals manipulation-handler-fn))
