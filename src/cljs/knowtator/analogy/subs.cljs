@@ -41,6 +41,34 @@
     (-> mm
         model/mop-map->graph)))
 
+(defn prune-graph
+  "Removes nodes without edges and edges without endpoints."
+  [graph]
+  (loop [graph graph]
+    (let [edge-nodes (->> graph
+                          :edges
+                          ((juxt (partial map :to) (partial map :from)))
+                          (apply concat)
+                          set)
+          new-graph  (update graph
+                             :nodes
+                             (fn [nodes]
+                               (->> nodes
+                                    (filter (comp edge-nodes :id))
+                                    (sort-by :group))))
+          nodes      (->> new-graph
+                          :nodes
+                          (map :id)
+                          set)
+          new-graph  (update new-graph
+                             :edges
+                             (fn [edges]
+                               (->> edges
+                                    (filter (fn [{:keys [from to]}]
+                                              (and (nodes from)
+                                                   (nodes to)))))))]
+      (if (= new-graph graph) new-graph (recur new-graph)))))
+
 (reg-sub ::selected-analogy-graph
   (fn [[_ graph-id] _] [(rf/subscribe [::selected-graph graph-id])
                         (rf/subscribe [::selected-node-label])
@@ -48,15 +76,15 @@
   (fn [[graph node-label edge-label] _]
     (-> graph
         (update :nodes
-                (comp (partial sort-by :group)
-                      (partial map
-                               #(assoc %
-                                       :label (get % node-label)
-                                       :group (hash (get % :mh))))))
+                (partial map
+                         #(assoc %
+                                 :label (get % node-label)
+                                 :group (hash (get % :mh)))))
         (update :edges (partial map #(assoc % :label (get % edge-label))))
         (#(or %
               {:nodes []
-               :edges []})))))
+               :edges []}))
+        prune-graph)))
 
 (defn all-roles
   [mm]
