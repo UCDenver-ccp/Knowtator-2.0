@@ -84,3 +84,11 @@
                  mh))
        db
        mhs))))
+
+(reg-event-db ::set-hierarchical
+  trim-v
+  (fn-traced [db [graph-id val]]
+    (sp/setval [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+                :hierarchical?]
+               val
+               db)))

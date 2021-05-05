@@ -57,7 +57,11 @@
         fillers-table-id (subs/table-name ::fillers-table graph-id)]
     [re-com/h-box
       :children
-      [[re-com/v-box
+      [[re-com/checkbox
+         :label     "Hierarchical?"
+         :model     (<sub [::subs/hierarchical? graph-id])
+         :on-change #(>evt [::evts/set-hierarchical graph-id %])]
+       [re-com/v-box
          :children [[re-com/checkbox
                       :label     "Base"
                       :model     (= (<sub [::subs/selected-base]) graph-id)
@@ -69,7 +73,9 @@
        [re-com/h-split
          :panel-1 [ra/graph graph-id [::subs/selected-analogy-graph graph-id]
                    [::subs/selected-analogy-graph-id]
-                   {:events {:click identity}}]
+                   {:events  {:click identity}
+                    :options {:layout {:hierarchical (<sub [::subs/hierarchical?
+                                                            graph-id])}}}]
          :panel-2 [re-com/scroller
                     :height "50vh"
                     :child  [roles-table roles-table-id fillers-table-id

@@ -13,6 +13,13 @@
     (->> graphs
          (sp/select-one [(sp/filterer #(= id (:id %))) sp/FIRST]))))
 
+(reg-sub ::hierarchical?
+  (fn [db [_ id]]
+    (->> db
+         (sp/select-one [:graph-panels (sp/filterer #(= (:id %) id)) sp/FIRST
+                         :hierarchical?])
+         true?)))
+
 (reg-sub ::selection :selection)
 
 (reg-sub ::selected-analogy-graph-id
