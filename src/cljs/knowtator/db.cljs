@@ -1,4 +1,7 @@
-(ns knowtator.db)
+(ns knowtator.db
+  (:require [mops.records :as mr]
+            [sme-clj.typedef :as types]
+            [mops.core :as mops]))
 
 (def default-db
   {:name "re-frame"
@@ -60,7 +63,6 @@
                :review-type :anns
                :ann-props   "http://www.w3.org/2004/02/skos/core#prefLabel"
                :ana-graphs  :default}
-   :graph-panels [{:id :gp-0}]
    :defaults {:color "#00ffff"}
    :ontology
    {:ann-props [{:type :aproperty
@@ -74,4 +76,52 @@
                         :namespace "http://www.w3.org/2004/02/skos/core#"}}
                 {:type :aproperty
                  :iri  {:fragment  "title"
-                        :namespace "http://purl.org/dc/elements/1.1/"}}]}})
+                        :namespace "http://purl.org/dc/elements/1.1/"}}]}
+   :analogy
+   [(as-> (mr/make-mop-map) mm
+      (types/initialize-kg mm)
+      (reduce
+       (partial apply types/add-entity)
+       mm
+       [[:mass ::types/Function nil ::types/Entity]
+        [:charge ::types/Function nil ::types/Entity]
+        [:attracts ::types/Function nil ::types/Entity ::types/Entity]
+        [:revolve-around ::types/Function nil ::types/Entity ::types/Entity]
+        [:temperature ::types/Function nil ::types/Entity]
+        [:gravity ::types/Function nil ::types/Expression ::types/Expression]
+        [:opposite-sign ::types/Function nil ::types/Expression
+         ::types/Expression]
+        [:greater ::types/Relation nil ::types/Entity ::types/Entity]
+        [:cause ::types/Relation nil ::types/Expression ::types/Expression]
+        [:and ::types/Relation {:ordered? false} ::types/Expression
+         ::types/Expression] [:Sun ::types/Entity nil]
+        [:Planet ::types/Entity nil] [:Nucleus ::types/Entity nil]
+        [:Electron ::types/Entity nil]])
+      (apply types/add-concept-graph
+             mm
+             :solar-system
+             (let [attracts    [:attracts :Sun :Planet]
+                   mass-sun    [:mass :Sun]
+                   mass-planet [:mass :Planet]]
+               [[:cause [:and [:greater mass-sun mass-planet] attracts]
+                 [:revolve-around :Planet :Sun]]
+                [:greater [:temperature :Sun] [:temperature :Planet]]
+                [:cause [:gravity mass-sun mass-planet] attracts]]))
+      (apply types/add-concept-graph
+             mm
+             :rutherford-atom
+             [[:greater [:mass :Nucleus] [:mass :Electron]]
+              [:revolve-around :Electron :Nucleus]
+              [:cause [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
+               [:attracts :Nucleus :Electron]]])
+      (mops/infer-hierarchy mm)
+      (assoc mm :id :default))]
+   :graph-panels
+   [{:id      :gp-0
+     :roles   #{:concept-graph :parents}
+     :fillers {:concept-graph #{:solar-system}
+               :parents       #{::types/Expression ::types/Entity}}}
+    {:id      :gp-1
+     :roles   #{:concept-graph :parents}
+     :fillers {:concept-graph #{:rutherford-atom}
+               :parents       #{::types/Expression ::types/Entity}}}]})

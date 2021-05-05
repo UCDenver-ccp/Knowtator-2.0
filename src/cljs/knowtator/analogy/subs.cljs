@@ -1,58 +1,10 @@
 (ns knowtator.analogy.subs
   (:require [re-frame.core :as rf :refer [reg-sub]]
             [knowtator.model :as model]
-            [knowtator.util :as util]
             [com.rpl.specter :as sp]
-            [mops.core :as mops]
-            [mops.records :as mr]
-            [sme-clj.typedef :as types]
-            [re-frame-datatable.core :as dt]))
+            [mops.core :as mops]))
 
-(def default-mop-map
-  (as-> (mr/make-mop-map) m
-    (types/initialize-kg m)
-    (reduce
-     (partial apply types/add-entity)
-     m
-     [[:mass ::types/Function nil ::types/Entity]
-      [:charge ::types/Function nil ::types/Entity]
-      [:attracts ::types/Function nil ::types/Entity ::types/Entity]
-      [:revolve-around ::types/Function nil ::types/Entity ::types/Entity]
-      [:temperature ::types/Function nil ::types/Entity]
-      [:gravity ::types/Function nil ::types/Expression ::types/Expression]
-      [:opposite-sign ::types/Function nil ::types/Expression
-       ::types/Expression]
-      [:greater ::types/Relation nil ::types/Entity ::types/Entity]
-      [:cause ::types/Relation nil ::types/Expression ::types/Expression]
-      [:and ::types/Relation {:ordered? false} ::types/Expression
-       ::types/Expression] [:Sun ::types/Entity nil]
-      [:Planet ::types/Entity nil] [:Nucleus ::types/Entity nil]
-      [:Electron ::types/Entity nil]])
-    (apply types/add-concept-graph
-           m
-           :solar-system
-           (let [attracts    [:attracts :Sun :Planet]
-                 mass-sun    [:mass :Sun]
-                 mass-planet [:mass :Planet]]
-             [[:cause [:and [:greater mass-sun mass-planet] attracts]
-               [:revolve-around :Planet :Sun]]
-              [:greater [:temperature :Sun] [:temperature :Planet]]
-              [:cause [:gravity mass-sun mass-planet] attracts]]))
-    (apply types/add-concept-graph
-           m
-           :rutherford-atom
-           [[:greater [:mass :Nucleus] [:mass :Electron]]
-            [:revolve-around :Electron :Nucleus]
-            [:cause [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
-             [:attracts :Nucleus :Electron]]])
-    (mops/infer-hierarchy m)))
-
-(reg-sub ::analogy-graphs
-  (fn [_ _]
-    (->> [(-> default-mop-map
-              (assoc :id :default))]
-         (sort-by (comp name :id) util/compare-alpha-num)
-         (#(or % [])))))
+(reg-sub ::analogy-graphs :analogy)
 
 (reg-sub ::selected-mop-map
   :<- [::analogy-graphs]
