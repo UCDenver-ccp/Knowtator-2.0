@@ -62,7 +62,8 @@
          :on-change #(>evt [::evts/select-graph graph-id])]
        [re-com/h-split
          :panel-1 [ra/graph graph-id [::subs/selected-analogy-graph graph-id]
-                   [::subs/selected-analogy-graph-id]]
+                   [::subs/selected-analogy-graph-id]
+                   {:events {:click identity}}]
          :panel-2 [re-com/scroller
                     :height "50vh"
                     :child  [roles-table roles-table-id fillers-table-id
