@@ -44,3 +44,11 @@
                    :fillers role]
                   (partial toggle-selection filler)
                   db)))
+
+(reg-event-db ::select-target
+  trim-v
+  (fn-traced [db [graph-id]] (assoc-in db [:selection :sme :target] graph-id)))
+
+(reg-event-db ::select-base
+  trim-v
+  (fn-traced [db [graph-id]] (assoc-in db [:selection :sme :base] graph-id)))

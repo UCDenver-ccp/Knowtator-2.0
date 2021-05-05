@@ -121,3 +121,11 @@
 (reg-sub ::selected-filler?
   (fn [[_ _ role graph-id] _] (rf/subscribe [::selected-fillers role graph-id]))
   (fn [roles [_ filler _ _]] (contains? roles filler)))
+
+(reg-sub ::selected-base
+  :<- [::selection]
+  (fn [selected _] (get-in selected [:sme :base])))
+
+(reg-sub ::selected-target
+  :<- [::selection]
+  (fn [selected _] (get-in selected [:sme :target])))

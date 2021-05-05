@@ -57,9 +57,15 @@
         fillers-table-id (subs/table-name ::fillers-table graph-id)]
     [re-com/h-box
       :children
-      [[re-com/checkbox
-         :model     (contains? (<sub [::subs/selected-graphs]) graph-id)
-         :on-change #(>evt [::evts/select-graph graph-id])]
+      [[re-com/v-box
+         :children [[re-com/checkbox
+                      :label     "Base"
+                      :model     (= (<sub [::subs/selected-base]) graph-id)
+                      :on-change #(>evt [::evts/select-base graph-id])]
+                    [re-com/checkbox
+                      :label     "Target"
+                      :model     (= (<sub [::subs/selected-target]) graph-id)
+                      :on-change #(>evt [::evts/select-target graph-id])]]]
        [re-com/h-split
          :panel-1 [ra/graph graph-id [::subs/selected-analogy-graph graph-id]
                    [::subs/selected-analogy-graph-id]
