@@ -16,13 +16,8 @@
   []
   (mount/start-without #'knowtator/repl-server))
 
-(defn stop
-  "Stops application."
-  []
-  (mount/stop-except #'knowtator/repl-server))
+(defn stop "Stops application." [] (mount/stop-except #'knowtator/repl-server))
 
-(defn restart
-  "Restarts application."
-  []
-  (stop)
-  (start))
+(defn restart "Restarts application." [] (stop) (start))
+
+(start)
