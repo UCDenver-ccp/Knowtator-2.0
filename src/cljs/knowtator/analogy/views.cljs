@@ -8,32 +8,40 @@
 
 (defn fillers-table
   [fillers-table-id role graph-id]
-  [dt/datatable (subs/table-name fillers-table-id role)
+  [dt/datatable
+   (subs/table-name fillers-table-id role)
    [::subs/fillers-for-role role]
    [{::dt/column-key   [:id]
      ::dt/render-fn    (fn [val] [re-com/checkbox
-                                   :model     (<sub [::subs/selected-filler? val
-                                                     role graph-id])
-                                   :on-change #(>evt [::evts/select-filler val
-                                                      role graph-id])
-                                   :label     ((if (keyword? val) name str)
-                                               val)])
+                                  :model
+                                  (<sub [::subs/selected-filler? val role
+                                         graph-id])
+                                  :on-change
+                                  #(>evt [::evts/select-filler val role
+                                          graph-id])
+                                  :label
+                                  ((if (keyword? val) name str) val)])
      ::dt/sorting      {::dt/enabled? true}
-     ::dt/column-label "Filler"}] {::dt/table-classes ["table" "ui" "celled"]}])
+     ::dt/column-label "Filler"}]
+   {::dt/table-classes ["table" "ui" "celled"]}])
 
 (defn roles-table
   [roles-table-id fillers-table-id graph-id]
   (let [roles-sub [::subs/selected-mop-map-roles]]
-    [dt/datatable roles-table-id roles-sub
+    [dt/datatable
+     roles-table-id
+     roles-sub
      [{::dt/column-key   [:id]
        ::dt/sorting      {::dt/enabled? true}
        ::dt/column-label "ID"
        ::dt/render-fn    (fn [role] [re-com/checkbox
-                                      :model     (<sub [::subs/selected-role?
-                                                        role graph-id])
-                                      :on-change #(>evt [::evts/select-role role
-                                                         graph-id])
-                                      :label     (name role)])}
+                                     :model
+                                     (<sub [::subs/selected-role? role
+                                            graph-id])
+                                     :on-change
+                                     #(>evt [::evts/select-role role graph-id])
+                                     :label
+                                     (name role)])}
       {::dt/column-key   [:mops]
        ::dt/column-label "Mops Count"
        ::dt/render-fn    count}
@@ -42,9 +50,10 @@
        ::dt/render-fn    (fn [fillers {role :id}]
                            (if (<sub [::subs/selected-role? role graph-id])
                              [re-com/scroller
-                               :height "200px"
-                               :child  [fillers-table fillers-table-id role
-                                        graph-id]]
+                              :height
+                              "200px"
+                              :child
+                              [fillers-table fillers-table-id role graph-id]]
                              (str (count fillers)
                                   (let [x (count (<sub [::subs/selected-fillers
                                                         role graph-id]))]
@@ -55,41 +64,59 @@
   [graph-id]
   (let [roles-table-id   (subs/table-name ::roles-table graph-id)
         fillers-table-id (subs/table-name ::fillers-table graph-id)]
-    [re-com/h-box
-      :children
-      [[re-com/checkbox
-         :label     "Hierarchical?"
-         :model     (<sub [::subs/hierarchical? graph-id])
-         :on-change #(>evt [::evts/set-hierarchical graph-id %])]
-       [re-com/v-box
-         :children [[re-com/checkbox
-                      :label     "Base"
-                      :model     (= (<sub [::subs/selected-base]) graph-id)
-                      :on-change #(>evt [::evts/select-base graph-id])]
-                    [re-com/checkbox
-                      :label     "Target"
-                      :model     (= (<sub [::subs/selected-target]) graph-id)
-                      :on-change #(>evt [::evts/select-target graph-id])]]]
-       [re-com/h-split
-         :panel-1 [ra/graph graph-id [::subs/selected-analogy-graph graph-id]
-                   [::subs/selected-analogy-graph-id]
-                   {:events  {:click identity}
-                    :options {:layout {:hierarchical (<sub [::subs/hierarchical?
-                                                            graph-id])}}}]
-         :panel-2 [re-com/scroller
-                    :height "33vh"
-                    :child  [roles-table roles-table-id fillers-table-id
-                             graph-id]]]]]))
+    [re-com/v-box
+     :size
+     "1 1 100%"
+     :children
+     [[re-com/checkbox
+       :label
+       "Hierarchical?"
+       :model
+       (<sub [::subs/hierarchical? graph-id])
+       :on-change
+       #(>evt [::evts/set-hierarchical graph-id %])]
+      [re-com/v-box
+       :children
+       [[re-com/checkbox
+         :label
+         "Base"
+         :model
+         (= (<sub [::subs/selected-base]) graph-id)
+         :on-change
+         #(>evt [::evts/select-base graph-id])]
+        [re-com/checkbox
+         :label
+         "Target"
+         :model
+         (= (<sub [::subs/selected-target]) graph-id)
+         :on-change
+         #(>evt [::evts/select-target graph-id])]]]
+      [re-com/v-split
+       :initial-split
+       75
+       :panel-1
+       [ra/graph
+        graph-id
+        [::subs/selected-analogy-graph graph-id]
+        [::subs/selected-analogy-graph-id]
+        {:events  {:click identity}
+         :options {:layout {:hierarchical (<sub [::subs/hierarchical?
+                                                 graph-id])}}}]
+       :panel-2
+       [re-com/scroller
+        :height
+        "100%"
+        :child
+        [roles-table roles-table-id fillers-table-id graph-id]]]]]))
 
 (defn add-graph-panel-button
   []
-  [re-com/button
-    :label    "Add graph panel"
-    :on-click #(>evt [::evts/add-graph-panel])])
+  [re-com/button :label "Add graph panel" :on-click
+   #(>evt [::evts/add-graph-panel])])
 
 (defn perform-analogy-button
   []
-  [re-com/button
-    :label    "Perform analogy"
-    :on-click #(>evt [::evts/perform-analogy (<sub [::subs/selected-base])
-                      (<sub [::subs/selected-target])])])
+  [re-com/button :label "Perform analogy" :on-click
+   #(>evt [::evts/perform-analogy
+           (<sub [::subs/selected-base])
+           (<sub [::subs/selected-target])])])
