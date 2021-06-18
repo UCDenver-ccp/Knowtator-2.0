@@ -16,8 +16,8 @@
 (reg-sub ::hierarchical?
   (fn [db [_ id]]
     (->> db
-         (sp/select-one [:graph-panels (sp/filterer #(= (:id %) id)) sp/FIRST
-                         :hierarchical?])
+         (sp/select-one
+          [:graph-panels (sp/filterer #(= (:id %) id)) sp/FIRST :hierarchical?])
          true?)))
 
 (reg-sub ::selection :selection)
@@ -31,7 +31,9 @@
 
 (reg-sub ::slots
   (fn [db [_ graph-id]]
-    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+    (sp/select-one [:graph-panels
+                    (sp/filterer #(= (:id %) graph-id))
+                    sp/FIRST
                     :fillers]
                    db)))
 
@@ -101,16 +103,17 @@
        (reduce
         (fn [m mop]
           (->> mop
-               (reduce (fn [m [role fillers]]
-                         (update m
-                                 role
-                                 (fn [role-m]
-                                   (-> role-m
-                                       (update :fillers (fnil into #{}) fillers)
-                                       (update :mops (fnil conj #{}) mop)
-                                       (assoc :mop (mops/get-mop mm role))
-                                       (assoc :id role)))))
-                       m)))
+               (reduce
+                (fn [m [role fillers]]
+                  (update m
+                          role
+                          (fn [role-m]
+                            (-> role-m
+                                (update :fillers (fnil into #{}) (keys fillers))
+                                (update :mops (fnil conj #{}) mop)
+                                (assoc :mop (mops/get-mop mm role))
+                                (assoc :id role)))))
+                m)))
         {})))
 
 (reg-sub ::selected-mop-map-roles-map
@@ -128,8 +131,7 @@
 (reg-sub ::fillers-for-role
   :<- [::selected-mop-map-roles-map]
   (fn [roles-map [_ role]]
-    (->> (get-in roles-map
-                 [role :fillers])
+    (->> (get-in roles-map [role :fillers])
          (map (partial hash-map :id)))))
 
 (defn table-name
@@ -144,7 +146,9 @@
 
 (reg-sub ::selected-roles
   (fn [db [_ graph-id]]
-    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
+    (sp/select-one [:graph-panels
+                    (sp/filterer #(= (:id %) graph-id))
+                    sp/FIRST
                     :roles]
                    db)))
 
@@ -154,9 +158,9 @@
 
 (reg-sub ::selected-fillers
   (fn [db [_ role graph-id]]
-    (sp/select-one [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
-                    :fillers role]
-                   db)))
+    (sp/select-one
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST :fillers role]
+     db)))
 
 (reg-sub ::selected-filler?
   (fn [[_ _ role graph-id] _] (rf/subscribe [::selected-fillers role graph-id]))

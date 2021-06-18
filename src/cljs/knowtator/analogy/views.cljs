@@ -77,7 +77,7 @@
                     :options {:layout {:hierarchical (<sub [::subs/hierarchical?
                                                             graph-id])}}}]
          :panel-2 [re-com/scroller
-                    :height "50vh"
+                    :height "33vh"
                     :child  [roles-table roles-table-id fillers-table-id
                              graph-id]]]]]))
 

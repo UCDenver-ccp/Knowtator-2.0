@@ -22,35 +22,35 @@
 (defn page-title
   []
   [re-com/v-box
-    :children
-    [[re-com/h-box
-       :children
-       [[:img
-         (let [size "60px"]
-           {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
-            :style {:width  size
-                    :height size}})]
-        [re-com/title
-          :label "Knowtator"
-          :level :level1]]]
-     [re-com/h-box
+   :children
+   [[re-com/h-box
+     :children
+     [[:img
+       (let [size "60px"]
+         {:src   "https://avatars.githubusercontent.com/u/1854424?s=200&v=4"
+          :style {:width  size
+                  :height size}})]
+      [re-com/title
+       :label "Knowtator"
+       :level :level1]]]
+    #_[re-com/h-box
        :children
        [[re-com/single-dropdown
-          :src       (at)
-          :choices   (<sub [::subs/available-projects])
-          :label-fn  identity
-          :id-fn     identity
-          :model     (<sub [::subs/selected-project])
-          :on-change #(>evt [::evts/select-project %])]
+         :src       (at)
+         :choices   (<sub [::subs/available-projects])
+         :label-fn  identity
+         :id-fn     identity
+         :model     (<sub [::subs/selected-project])
+         :on-change #(>evt [::evts/select-project %])]
         [re-com/button
-          :src      (at)
-          :label    "Open project"
-          :on-click #(>evt [::evts/load-project
-                            (<sub [::subs/selected-project])])]
+         :src      (at)
+         :label    "Open project"
+         :on-click #(>evt [::evts/load-project
+                           (<sub [::subs/selected-project])])]
         [re-com/alert-list
-          :on-close #(println %)
-          :alerts
-          (->>
+         :on-close #(println %)
+         :alerts
+         (->>
            [{:id         :project-loading
              :alert-type :info
              :heading    "Project Status"
@@ -75,12 +75,12 @@
 (defn undo-controls
   []
   [re-com/h-box
-    :children [[re-com/md-circle-icon-button
-                 :md-icon-name "zmdi-undo"
-                 :on-click     #(>evt [:undo])]
-               [re-com/md-circle-icon-button
-                 :md-icon-name "zmdi-redo"
-                 :on-click     #(>evt [:redo])]]])
+   :children [[re-com/md-circle-icon-button
+               :md-icon-name "zmdi-undo"
+               :on-click     #(>evt [:undo])]
+              [re-com/md-circle-icon-button
+               :md-icon-name "zmdi-redo"
+               :on-click     #(>evt [:redo])]]])
 
 
 (defn target-value

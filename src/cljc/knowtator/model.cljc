@@ -16,9 +16,7 @@
 
 (defn ann-color
   [{:keys [profile concept]} profiles]
-  (get-in (util/map-with-key :id profiles)
-          [profile
-            :colors concept]))
+  (get-in (util/map-with-key :id profiles) [profile :colors concept]))
 
 (s/fdef ann-color
   :args (s/cat :ann      (s/keys :req-un [:ann/profile :ann/concept])
@@ -115,7 +113,8 @@
                                                   (into spans))
                                              (conj spans s2)))
                                          #{}
-                                         spans) finished]
+                                         spans)
+                                 finished]
                                 (if s1
                                   [spans (conj finished s1)]
                                   [spans finished]))]
@@ -211,28 +210,30 @@
 
 (defn split-into-paragraphs
   [spans]
-  (->>
-   spans
-   (reduce (fn [[paragraphs current] span]
-             (if (string? span)
-               (let [[first-p & rest-p] (str/split-lines span)
-                     middle-p           (->> rest-p
-                                             butlast
-                                             (map vector))
-                     rest-p             (map vector rest-p)
-                     last-p             (last rest-p)
-                     current            (conj current first-p)]
-                 (cond (and (empty? rest-p) (not (str/ends-with? span "\n")))
-                       [paragraphs current]
-                       (str/ends-with? span "\n") [(-> paragraphs
-                                                       (conj current)
-                                                       (into rest-p)) []]
-                       :else [(-> paragraphs
-                                  (conj current)
-                                  (into middle-p)) last-p]))
-               [paragraphs (conj current span)]))
-           [[] []])
-   (apply conj)))
+  (->> spans
+       (reduce (fn [[paragraphs current] span]
+                 (if (string? span)
+                   (let [[first-p & rest-p] (str/split-lines span)
+                         middle-p           (->> rest-p
+                                                 butlast
+                                                 (map vector))
+                         rest-p             (map vector rest-p)
+                         last-p             (last rest-p)
+                         current            (conj current first-p)]
+                     (cond (and (empty? rest-p)
+                                (not (str/ends-with? span "\n")))
+                           [paragraphs current]
+                           (str/ends-with? span "\n") [(-> paragraphs
+                                                           (conj current)
+                                                           (into rest-p))
+                                                       []]
+                           :else [(-> paragraphs
+                                      (conj current)
+                                      (into middle-p))
+                                  last-p]))
+                   [paragraphs (conj current span)]))
+               [[] []])
+       (apply conj)))
 
 (s/fdef split-into-paragraphs
   :args (s/cat :spans (s/coll-of (s/or :string  string?
@@ -341,8 +342,9 @@
             (clojure.data/diff overlaps true-overlaps)))
 
 (defn realize-span
-  [db {:keys [start end ann]
-       :as   span}]
+  [db
+   {:keys [start end ann]
+    :as   span}]
   (let [{:keys [doc]
          :as   ann}
         (->> db
@@ -372,7 +374,8 @@
                            (interpose " ")
                            (apply str))
              :color   (or (sp/select-one [(TXT-OBJ :profiles :id profile)
-                                          :colors concept]
+                                          :colors
+                                          concept]
                                          db)
                           color))))
 
@@ -381,7 +384,9 @@
   (sp/transform [:text-annotation :anns sp/ALL] (partial realize-ann db) db))
 
 (defn realize-ann-node
-  [db class-map owl-class?
+  [db
+   class-map
+   owl-class?
    {:keys [ann]
     :as   node}]
   (let [node (merge (->> db
@@ -405,10 +410,11 @@
                 graph))
 
 (defn realize-relation-ann
-  [property-map {{:keys                [property polarity]
-                  {:keys [type value]} :quantifier}
-                 :predicate
-                 :as relation-ann}]
+  [property-map
+   {{:keys                [property polarity]
+     {:keys [type value]} :quantifier}
+    :predicate
+    :as relation-ann}]
   (-> relation-ann
       (assoc :label
              (-> (list (name type) (get property-map property))
@@ -455,8 +461,7 @@
                                                 parent-id)
                                       sp/ALL)]
     (as-> db db
-      (->> (for [parent-id   (sp/select [child-objs-nav :id]
-                                        db)
+      (->> (for [parent-id   (sp/select [child-objs-nav :id] db)
                  child-obj-k (descendants text-objs-hierarchy child-objs-k)]
              [(objs->obj child-objs-k) child-obj-k parent-id])
            (reduce (fn [db args] (apply remove-matching-sub-items db args)) db))
@@ -508,16 +513,17 @@
 (defn filter-mops
   [mm slots]
   (-> mm
-      (update
-       :mops
-       (partial into
-                {}
-                (filter (fn [[_ mop]]
-                          (every? (fn [[role fillers]]
-                                    (if (empty? fillers)
-                                      true
-                                      (some fillers (get mop role fillers))))
-                                  slots)))))))
+      (update :mops
+              (partial
+               into
+               {}
+               (filter (fn [[_ mop]]
+                         (every? (fn [[role fillers]]
+                                   (if (empty? fillers)
+                                     true
+                                     (some fillers
+                                           (or (keys (get mop role)) fillers))))
+                                 slots)))))))
 
 
 (defn mop-id
@@ -537,7 +543,7 @@
                           {:from      id
                            :predicate k
                            :to        v})
-                        vs))))))
+                        (keys vs)))))))
 
 (defn mop-map->graph
   [mm]
