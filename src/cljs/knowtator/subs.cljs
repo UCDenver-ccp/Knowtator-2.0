@@ -135,8 +135,8 @@
 (reg-sub ::spans (comp :spans :text-annotation))
 
 (reg-sub ::available-projects
-  (fn [_ _] ["concepts+assertions 3_2 copy" "test_project_using_uris"
-             "default"]))
+  (fn [_ _] ["concepts+assertions" "test_project_using_uris"
+             "test_project_using_uris2" "default"]))
 
 (reg-sub ::selected-project (fn [db _] (get-in db [:selection :project])))
 

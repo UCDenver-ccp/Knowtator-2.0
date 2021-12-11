@@ -65,19 +65,27 @@
                :ann-props   "http://www.w3.org/2004/02/skos/core#prefLabel"
                :ana-graphs  :default}
    :defaults {:color "#00ffff"}
-   :ontology
-   {:ann-props [{:type :aproperty
-                 :iri  {:fragment  "prefLabel"
-                        :namespace "http://www.w3.org/2004/02/skos/core#"}}
-                {:type :aproperty
-                 :iri  {:fragment  "comment"
-                        :namespace "http://www.w3.org/2000/01/rdf-schema#"}}
-                {:type :aproperty
-                 :iri  {:fragment  "definition"
-                        :namespace "http://www.w3.org/2004/02/skos/core#"}}
-                {:type :aproperty
-                 :iri  {:fragment  "title"
-                        :namespace "http://purl.org/dc/elements/1.1/"}}]}
+   :ontology {:ann-props       [{:type :aproperty
+                                 :iri  {:fragment "prefLabel"
+                                        :namespace
+                                        "http://www.w3.org/2004/02/skos/core#"}}
+                                {:type :aproperty
+                                 :iri {:fragment "comment"
+                                       :namespace
+                                       "http://www.w3.org/2000/01/rdf-schema#"}}
+                                {:type :aproperty
+                                 :iri  {:fragment "definition"
+                                        :namespace
+                                        "http://www.w3.org/2004/02/skos/core#"}}
+                                {:type :aproperty
+                                 :iri  {:fragment "title"
+                                        :namespace
+                                        "http://purl.org/dc/elements/1.1/"}}]
+              :classes         {}
+              :class-hierarchy {:parents     {:c1 #{:C}
+                                              :c2 #{:C}}
+                                :ancestors   {:c1 #{:C}}
+                                :descendants {:C #{:c1 :c2}}}}
    :analogy
    [(as-> (mr/make-mop-map) mm
       (types/initialize-kg mm)
@@ -94,14 +102,9 @@
          ::types/Expression]
         [:greater ::types/Relation nil ::types/Entity ::types/Entity]
         [:cause ::types/Relation nil ::types/Expression ::types/Expression]
-        [:and
-         ::types/Relation
-         {:ordered? {false {}}}
-         ::types/Expression
-         ::types/Expression]
-        [:Sun ::types/Entity nil]
-        [:Planet ::types/Entity nil]
-        [:Nucleus ::types/Entity nil]
+        [:and ::types/Relation {:ordered? {false {}}} ::types/Expression
+         ::types/Expression] [:Sun ::types/Entity nil]
+        [:Planet ::types/Entity nil] [:Nucleus ::types/Entity nil]
         [:Electron ::types/Entity nil]])
       (apply types/add-concept-graph
              mm
@@ -109,8 +112,7 @@
              (let [attracts    [:attracts :Sun :Planet]
                    mass-sun    [:mass :Sun]
                    mass-planet [:mass :Planet]]
-               [[:cause
-                 [:and [:greater mass-sun mass-planet] attracts]
+               [[:cause [:and [:greater mass-sun mass-planet] attracts]
                  [:revolve-around :Planet :Sun]]
                 [:greater [:temperature :Sun] [:temperature :Planet]]
                 [:cause [:gravity mass-sun mass-planet] attracts]]))
@@ -119,8 +121,7 @@
              :rutherford-atom
              [[:greater [:mass :Nucleus] [:mass :Electron]]
               [:revolve-around :Electron :Nucleus]
-              [:cause
-               [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
+              [:cause [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
                [:attracts :Nucleus :Electron]]])
       (mops/infer-hierarchy mm)
       (assoc mm :id :default))]

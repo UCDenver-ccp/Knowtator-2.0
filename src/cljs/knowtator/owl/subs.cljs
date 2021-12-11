@@ -28,7 +28,7 @@
 (defn make-uri->label-map
   [owl-entities annotation-iri]
   (->> owl-entities
-       (map (fn [{:keys                        [annotation]
+       (map (fn [{:keys [annotation]
                   {:keys [namespace fragment]} :iri}]
               [(str namespace fragment)
                (or (->> annotation

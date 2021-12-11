@@ -22,9 +22,7 @@
                                                         cider.piggieback/wrapt-cljs-repl]"]}
   :resource-paths ["resources"]
   :shadow-cljs {:main-opts ["-m" "shadow.cljs.devtools.cli"]}
-  :test {:extra-paths
-         ["test/cljs" "test/clj" "test_resources"
-          "/home/harrison/Downloads/concepts+assertions 3_2 copy"]}}
+  :test {:extra-paths ["test/cljs" "test/clj" "test_resources"]}}
  :deps {;; Clojure server
         org.clojure/clojure {:mvn/version "1.10.3"}
         metosin/reitit {:mvn/version "0.5.12"}

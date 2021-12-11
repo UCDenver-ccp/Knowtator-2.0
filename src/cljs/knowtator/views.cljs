@@ -117,7 +117,8 @@
 (defn doc-display
   []
   [re-com/v-box
-    :height   "300px"
+    :height   "500px"
+    :width    "100%"
     :children [[tav/doc-header (<sub [::subs/selected-doc])]
                [re-com/h-split
                  :src           (at)
@@ -135,6 +136,7 @@
                [re-com/h-box
                  :children [[color-controls] [tac/ann-controls]]]
                [re-com/h-split
+                 :width         "100%"
                  :src           (at)
                  :initial-split 25
                  :panel-1       [owl/owl-hierarchies]
