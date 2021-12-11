@@ -9,11 +9,11 @@
     "-Dclojure.tools.logging.factory=clojure.tools.logging.impl/slf4j-factory"]}
   :clj-paths ["src/clj" "src/cljc" "src/cljs"]
   :cljs-dev
-  {:extra-deps {binaryage/devtools            {:mvn/version "1.0.2"}
-                cider/cider-nrepl             {:mvn/version "0.25.9"}
-                cider/piggieback              {:mvn/version "0.5.2"}
-                nrepl/nrepl                   {:mvn/version "0.8.3"}
-                refactor-nrepl/refactor-nrepl {:mvn/version "2.5.1"}}
+  {:extra-deps {binaryage/devtools {:mvn/version "1.0.2"}
+                cider/cider-nrepl  {:mvn/version "0.27.2"}
+                cider/piggieback   {:mvn/version "0.5.2"}
+                nrepl/nrepl        {:mvn/version "0.8.3"}
+                refactor-nrepl/refactor-nrepl {:mvn/version "3.1.0"}}
    :extra-paths ["dev/cljs"]
    :main-opts
    ["-m" "nrepl.cmdline" "--middleware"

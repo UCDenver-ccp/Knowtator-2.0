@@ -2,7 +2,7 @@
 ** Starting development environment
 *** Starting sever
 **** Config
-     The server is configured using [[./dev-config.edn]].
+     The server is configured using [[file:dev-config.edn]] .
 ***** port
       This is the port that the server serves webpages to.
 **** Running
