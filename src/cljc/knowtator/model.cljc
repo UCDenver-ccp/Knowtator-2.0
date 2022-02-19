@@ -1,11 +1,12 @@
 (ns knowtator.model
-  (:require [clojure.set :as set]
-            [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]
-            [clojure.string :as str]
-            [com.rpl.specter :as sp]
-            [knowtator.specs :as specs]
-            [knowtator.util :as util]))
+  (:require
+   [clojure.set            :as set]
+   [clojure.spec.alpha     :as s]
+   [clojure.spec.gen.alpha :as gen]
+   [clojure.string         :as str]
+   [com.rpl.specter        :as sp]
+   [knowtator.specs        :as specs]
+   [knowtator.util         :as util]))
 
 (defn TXT-OBJS
   [k-type k id]
@@ -139,7 +140,8 @@
                               :finished (s/coll-of (s/or :overlap
                                                          :span-overlap/span
                                                          :regular ::specs/span)
-                                                   :kind set?)))
+                                                   :kind
+                                                   set?)))
   :ret  (s/coll-of (s/or :overlap :span-overlap/span
                          :regular ::specs/span)))
 
@@ -177,7 +179,8 @@
                          :span   (s/merge (s/keys :req-un [::specs/content])
                                           (s/or :regular ::specs/span
                                                 :overlap :span-overlap/span)))
-                   :kind vector?))
+                   :kind
+                   vector?))
 
 (defn in-restriction?
   [m restriction]
@@ -242,8 +245,10 @@
   :ret  (s/coll-of (s/coll-of (s/or :p       string?
                                     :regular ::specs/span
                                     :overlap :span-overlap/span)
-                              :kind vector?)
-                   :kind vector?)
+                              :kind
+                              vector?)
+                   :kind
+                   vector?)
   :fn   (fn [{:keys [args ret]}] (<= (count ret) (count args))))
 
 (defn unique-id
@@ -257,7 +262,8 @@
   [id coll dir]
   (let [coll (vec coll)
         f    (case dir
-               :next #(let [val (inc %)] (if (<= (count coll) val) 0 val))
+               :next #(let [val (inc %)]
+                        (if (<= (count coll) val) 0 val))
                :prev #(let [val (dec %)]
                         (if (neg? val) (dec (count coll)) val)))]
     (->> id
@@ -512,18 +518,18 @@
 
 (defn filter-mops
   [mm slots]
-  (-> mm
-      (update :mops
-              (partial
-               into
-               {}
-               (filter (fn [[_ mop]]
-                         (every? (fn [[role fillers]]
-                                   (if (empty? fillers)
-                                     true
-                                     (some fillers
-                                           (or (keys (get mop role)) fillers))))
-                                 slots)))))))
+  (->
+    mm
+    (update :mops
+      (partial
+       into
+       {}
+       (filter (fn [[_ mop]]
+                 (every? (fn [[role fillers]]
+                           (if (empty? fillers)
+                             true
+                             (some fillers (or (keys (get mop role)) fillers))))
+                         slots)))))))
 
 
 (defn mop-id

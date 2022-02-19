@@ -1,10 +1,12 @@
 (ns knowtator.review.subs
-  (:require [clojure.spec.alpha :as s]
-            [knowtator.specs :as specs]
-            [knowtator.util :as util]
-            [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.subs :as subs]
-            [knowtator.model :as model]))
+  (:require
+   [clojure.spec.alpha :as s]
+   [knowtator.specs    :as specs]
+   [knowtator.util     :as util]
+   [re-frame.core      :as    rf
+                       :refer [reg-sub]]
+   [knowtator.subs     :as subs]
+   [knowtator.model    :as model]))
 
 (reg-sub ::restricted-anns
   :<- [::subs/anns]
@@ -63,7 +65,9 @@
 (reg-sub ::flattened-review-filters
   :<- [::review-filters]
   (fn [filts _]
-    (for [filt filts item (:filter-values filt)] (assoc filt :item item))))
+    (for [filt filts
+          item (:filter-values filt)]
+      (assoc filt :item item))))
 
 (reg-sub ::review-filter-types
   (fn [_ _] [{:id    :doc

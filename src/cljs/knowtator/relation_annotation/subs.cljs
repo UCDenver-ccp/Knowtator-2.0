@@ -1,10 +1,11 @@
 (ns knowtator.relation-annotation.subs
-  (:require [knowtator.model :as model]
-            [knowtator.owl.subs :as owl]
-            [knowtator.util :as util]
-            [re-frame.core :refer [reg-sub]]
-            [com.rpl.specter :as sp]
-            [knowtator.html-util :as html]))
+  (:require
+   [knowtator.model     :as model]
+   [knowtator.owl.subs  :as owl]
+   [knowtator.util      :as util]
+   [re-frame.core       :refer [reg-sub]]
+   [com.rpl.specter     :as sp]
+   [knowtator.html-util :as html]))
 
 (reg-sub ::graph-spaces
   (comp #(or % [])

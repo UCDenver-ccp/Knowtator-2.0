@@ -1,5 +1,6 @@
 (ns knowtator.hierarchy
-  (:require [clojure.zip :as zip]))
+  (:require
+   [clojure.zip :as zip]))
 
 (defn roots
   [h]
@@ -20,10 +21,10 @@
        roots
        (map node-fn)
        (map (partial
-              zip/zipper
-              (comp (partial descendants h) id-fn)
-              (comp (partial map node-fn) (partial direct-descendants h) id-fn)
-              second))))
+             zip/zipper
+             (comp (partial descendants h) id-fn)
+             (comp (partial map node-fn) (partial direct-descendants h) id-fn)
+             second))))
 
 (defn right-nodes
   [loc]

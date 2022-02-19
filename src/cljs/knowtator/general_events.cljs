@@ -1,5 +1,6 @@
 (ns knowtator.general-events
-  (:require [re-frame.core :refer [reg-event-fx reg-event-db]]))
+  (:require
+   [re-frame.core :refer [reg-event-fx reg-event-db]]))
 
 (reg-event-fx ::load-success
   (fn [{:keys [db]} [_ place evt data]]
@@ -9,7 +10,8 @@
 (reg-event-fx ::load-failure
   (fn [{:keys [db]} [_ place _]]
     {:db         db
-     :dispatch-n [[::report-failure] [::set-error place true]
+     :dispatch-n [[::report-failure]
+                  [::set-error place true]
                   [::set-spinny place false]]}))
 
 (reg-event-db ::set-spinny

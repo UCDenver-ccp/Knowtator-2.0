@@ -1,10 +1,12 @@
 (ns knowtator.knowtator-xml-parser
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [clojure.walk :as walk]
-            [clojure.xml :as xml]
-            [knowtator.util :as util]
-            [meander.epsilon :as m :refer [defsyntax]])
+  (:require
+   [clojure.java.io :as io]
+   [clojure.string  :as str]
+   [clojure.walk    :as walk]
+   [clojure.xml     :as xml]
+   [knowtator.util  :as util]
+   [meander.epsilon :as    m
+                    :refer [defsyntax]])
   (:import [clojure.lang PersistentStructMap]))
 
 (declare !quants
@@ -42,17 +44,17 @@
 (defn read-project-xml-dir
   [dir project-file-name]
   (letfn [(struct->map [x]
-                       (cond->> x (instance? PersistentStructMap x) (into {})))]
-    (->> dir
-         (io/file project-file-name)
-         file-seq
-         rest
-         sort
-         (filter (comp #(str/ends-with? % ".xml") str))
-         (map xml/parse)
-         (map (partial walk/postwalk struct->map))
-         (apply merge-with
-                (fn [x y] (if (and (coll? x) (coll? y)) (into x y) y))))))
+            (cond->> x (instance? PersistentStructMap x) (into {})))]
+   (->> dir
+     (io/file project-file-name)
+     file-seq
+     rest
+     sort
+     (filter (comp #(str/ends-with? % ".xml") str))
+     (map xml/parse)
+     (map (partial walk/postwalk struct->map))
+     (apply merge-with
+            (fn [x y] (if (and (coll? x) (coll? y)) (into x y) y))))))
 
 (defn read-project-xmls
   [project-file-name]
@@ -87,19 +89,27 @@
     :attrs {:id         (m/app (partial verify-id ~counter "node-") ~node)
             :annotation (m/app keyword ~node-ann)}})
 
-(defsyntax relation-annotation [{:keys [edge from to property counter
-                                        ra-motivation ra-annotator polarity
-                                        quantifier quantifier-value]
-                                 :or   {edge             '_
-                                        from             '_
-                                        to               '_
-                                        ra-motivation    '_
-                                        ra-annotator     '_
-                                        property         '_
-                                        quantifier       '_
-                                        quantifier-value '_
-                                        counter          '(atom -1)
-                                        polarity         '_}}]
+(defsyntax relation-annotation
+  [{:keys [edge
+           from
+           to
+           property
+           counter
+           ra-motivation
+           ra-annotator
+           polarity
+           quantifier
+           quantifier-value]
+    :or   {edge             '_
+           from             '_
+           to               '_
+           ra-motivation    '_
+           ra-annotator     '_
+           property         '_
+           quantifier       '_
+           quantifier-value '_
+           counter          '(atom -1)
+           polarity         '_}}]
   `{:tag   :triple
     :attrs {:id         (m/app (partial verify-id ~counter "edge-") ~edge)
             :subject    ~from
@@ -185,7 +195,8 @@
                                       :colors   !colors
                                       :counter  counter})
                   [{:id     !ids
-                    :colors (m/map-of !concepts !colors)} ...])
+                    :colors (m/map-of !concepts !colors)}
+                   ...])
       (->> (apply concat))))
 
 (defn parse-graph-spaces
@@ -197,7 +208,8 @@
                                       :node-ann !node-concept-anns
                                       :counter  counter})
                   [{:doc   !docs
-                    :graph !graphs} ...])
+                    :graph !graphs}
+                   ...])
       (->> (apply concat))
       (m/rewrites
        (m/scan {:doc   !docs
@@ -215,7 +227,8 @@
        [{:id    !ids
          :doc   !docs
          :nodes [{:id  !concept-ann-nodes
-                  :ann !node-concept-anns} ...]
+                  :ann !node-concept-anns}
+                 ...]
          :edges [(m/app (fn [{:keys [from to]
                               :as   e}]
                           (let [vs (set (map keyword !concept-ann-nodes))]
@@ -226,7 +239,8 @@
                          :predicate {:property   !properties
                                      :polarity   !polarities
                                      :quantifier {:type  !quants
-                                                  :value !quant-vals}}}) ...]}
+                                                  :value !quant-vals}}})
+                 ...]}
         ...])
       (->> (apply concat)
            (map #(update % :edges (partial remove nil?))))))
@@ -248,10 +262,13 @@
                     :concept !concepts
                     :spans   [{:id    !spans
                                :start !starts
-                               :end   !ends} ...]} ...])
+                               :end   !ends}
+                              ...]}
+                   ...])
       (->> (apply concat)
-           (reduce (fn [annotations {:keys [id]
-                                     :as   ann}]
+           (reduce (fn [annotations
+                        {:keys [id]
+                         :as   ann}]
                      (let [new-id (verify-id counter
                                              "annotation-"
                                              (when-not (id annotations) id))]
@@ -265,20 +282,19 @@
 
 (defn read-articles
   [project-file]
-  (letfn [(file-name [f] (str (.getName f))) (file-name->id
-                                              [f]
-                                              (-> f
-                                                  file-name
-                                                  (str/replace-first #"\.txt$"
-                                                                     "")
-                                                  keyword))]
-    (->> "Articles"
-         (io/file project-file)
-         file-seq
-         rest
-         sort
-         (map (juxt file-name file-name->id slurp))
-         (map (partial zipmap [:file-name :id :content])))))
+  (letfn [(file-name [f] (str (.getName f)))
+          (file-name->id [f]
+            (-> f
+                file-name
+                (str/replace-first #"\.txt$" "")
+                keyword))]
+   (->> "Articles"
+     (io/file project-file)
+     file-seq
+     rest
+     sort
+     (map (juxt file-name file-name->id slurp))
+     (map (partial zipmap [:file-name :id :content])))))
 
 (defn parse-documents
   [counter articles xml]
@@ -292,7 +308,8 @@
          [{:id        !ids
            :file-name (m/app (fn [[id file-name]]
                                (or file-name (str (str (name id)) ".txt")))
-                             [!file-name-ids !file-names])} ...])
+                             [!file-name-ids !file-names])}
+          ...])
         (->> (apply concat)
              (util/map-with-key :id)
              (merge-with (partial merge-with
@@ -304,13 +321,13 @@
   [anns]
   (letfn [(fix-range [{:keys [start end]
                        :as   span}]
-                     (assoc span :start (min start end) :end (max start end)))]
-    (->> anns
-         (mapcat (fn [{:keys [id spans]}] (map #(assoc % :ann id) spans)))
-         (map fix-range)
-         (group-by (juxt :ann :start :end))
-         vals
-         (map first))))
+            (assoc span :start (min start end) :end (max start end)))]
+   (->> anns
+     (mapcat (fn [{:keys [id spans]}] (map #(assoc % :ann id) spans)))
+     (map fix-range)
+     (group-by (juxt :ann :start :end))
+     vals
+     (map first))))
 
 (defn parse-project
   [articles xml]

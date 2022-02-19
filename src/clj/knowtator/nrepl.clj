@@ -1,6 +1,7 @@
 (ns knowtator.nrepl
-  (:require [clojure.tools.logging :as log]
-            [nrepl.server :as nrepl]))
+  (:require
+   [clojure.tools.logging :as log]
+   [nrepl.server :as nrepl]))
 
 (defn start
   "Start a network repl for debugging on specified port followed by

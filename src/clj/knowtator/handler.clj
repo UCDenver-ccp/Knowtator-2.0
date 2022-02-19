@@ -1,19 +1,21 @@
 (ns knowtator.handler
-  (:require [clojure.java.io :as io]
-            [clojure.string :as str]
-            [knowtator.env :refer [defaults]]
-            [knowtator.knowtator-xml-parser :as kparser]
-            [knowtator.layout :as layout :refer [error-page]]
-            [knowtator.middleware :as middleware]
-            [knowtator.owl-parser :as oparser]
-            [mount.core :as mount]
-            [muuntaja.middleware :as muun-m]
-            [reitit.coercion.schema :as schema]
-            [reitit.ring :as ring]
-            [reitit.ring.coercion :as rrc]
-            [ring.middleware.content-type :refer [wrap-content-type]]
-            [ring.middleware.webjars :refer [wrap-webjars]]
-            [schema.core :as s]))
+  (:require
+   [clojure.java.io         :as io]
+   [clojure.string          :as str]
+   [knowtator.env           :refer [defaults]]
+   [knowtator.knowtator-xml-parser :as kparser]
+   [knowtator.layout        :as    layout
+                            :refer [error-page]]
+   [knowtator.middleware    :as middleware]
+   [knowtator.owl-parser    :as oparser]
+   [mount.core              :as mount]
+   [muuntaja.middleware     :as muun-m]
+   [reitit.coercion.schema  :as schema]
+   [reitit.ring             :as ring]
+   [reitit.ring.coercion    :as rrc]
+   [ring.middleware.content-type :refer [wrap-content-type]]
+   [ring.middleware.webjars :refer [wrap-webjars]]
+   [schema.core             :as s]))
 
 (declare init-app)
 (mount/defstate init-app
@@ -24,10 +26,15 @@
 
 (defn home-routes
   []
-  ["" {:middleware [middleware/wrap-csrf middleware/wrap-formats]}
-   ["/" ["" {:get home-page}] ["annotation" {:get home-page}]
-    ["graph" {:get home-page}] ["about" {:get home-page}]
-    ["review" {:get home-page}] ["analogy" {:get home-page}]]])
+  [""
+   {:middleware [middleware/wrap-csrf middleware/wrap-formats]}
+   ["/"
+    ["" {:get home-page}]
+    ["annotation" {:get home-page}]
+    ["graph" {:get home-page}]
+    ["about" {:get home-page}]
+    ["review" {:get home-page}]
+    ["analogy" {:get home-page}]]])
 
 (def projects (atom {}))
 (def last-loaded-project (atom nil))

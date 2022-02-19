@@ -1,8 +1,9 @@
 (ns knowtator.db
-  (:require [mops.records :as mr]
-            [sme-clj.typedef :as types]
-            [mops.core :as mops]
-            sme-clj.mops))
+  (:require
+   [mops.records    :as mr]
+   [sme-clj.typedef :as types]
+   [mops.core       :as mops]
+   sme-clj.mops))
 
 (def default-db
   {:name "re-frame"
@@ -98,13 +99,21 @@
         [:revolve-around ::types/Function nil ::types/Entity ::types/Entity]
         [:temperature ::types/Function nil ::types/Entity]
         [:gravity ::types/Function nil ::types/Expression ::types/Expression]
-        [:opposite-sign ::types/Function nil ::types/Expression
+        [:opposite-sign
+         ::types/Function
+         nil
+         ::types/Expression
          ::types/Expression]
         [:greater ::types/Relation nil ::types/Entity ::types/Entity]
         [:cause ::types/Relation nil ::types/Expression ::types/Expression]
-        [:and ::types/Relation {:ordered? {false {}}} ::types/Expression
-         ::types/Expression] [:Sun ::types/Entity nil]
-        [:Planet ::types/Entity nil] [:Nucleus ::types/Entity nil]
+        [:and
+         ::types/Relation
+         {:ordered? {false {}}}
+         ::types/Expression
+         ::types/Expression]
+        [:Sun ::types/Entity nil]
+        [:Planet ::types/Entity nil]
+        [:Nucleus ::types/Entity nil]
         [:Electron ::types/Entity nil]])
       (apply types/add-concept-graph
              mm
@@ -112,7 +121,8 @@
              (let [attracts    [:attracts :Sun :Planet]
                    mass-sun    [:mass :Sun]
                    mass-planet [:mass :Planet]]
-               [[:cause [:and [:greater mass-sun mass-planet] attracts]
+               [[:cause
+                 [:and [:greater mass-sun mass-planet] attracts]
                  [:revolve-around :Planet :Sun]]
                 [:greater [:temperature :Sun] [:temperature :Planet]]
                 [:cause [:gravity mass-sun mass-planet] attracts]]))
@@ -121,7 +131,8 @@
              :rutherford-atom
              [[:greater [:mass :Nucleus] [:mass :Electron]]
               [:revolve-around :Electron :Nucleus]
-              [:cause [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
+              [:cause
+               [:opposite-sign [:charge :Nucleus] [:charge :Electron]]
                [:attracts :Nucleus :Electron]]])
       (mops/infer-hierarchy mm)
       (assoc mm :id :default))]

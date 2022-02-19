@@ -1,10 +1,14 @@
 (ns knowtator.html-util
-  (:require [goog.object :as gobj]
-            [re-frame.core :as rf :refer
-             [->interceptor assoc-coeffect assoc-effect get-coeffect
-              get-effect]]
-            ["rangy/lib/rangy-textrange" :as rangy-txt]
-            [reagent.core :as r]))
+  (:require
+   [goog.object   :as gobj]
+   [re-frame.core :as    rf
+                  :refer [->interceptor
+                          assoc-coeffect
+                          assoc-effect
+                          get-coeffect
+                          get-effect]]
+   ["rangy/lib/rangy-textrange" :as rangy-txt]
+   [reagent.core  :as r]))
 
 (defn win-inner-w [] js/window.innerWidth)
 
@@ -146,7 +150,6 @@
            (.addEventListener js/window
                               "resize"
                               (fn []
-                                (reset! a
-                                        {:width  (.-innerWidth js/window)
-                                         :height (.-innerHeight js/window)})))
+                                (reset! a {:width  (.-innerWidth js/window)
+                                           :height (.-innerHeight js/window)})))
            a))

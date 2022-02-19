@@ -1,7 +1,8 @@
 (ns knowtator.owl.subs
-  (:require [re-frame.core :refer [reg-sub]]
-            [knowtator.hierarchy :as h]
-            [knowtator.util :as util]))
+  (:require
+   [re-frame.core       :refer [reg-sub]]
+   [knowtator.hierarchy :as h]
+   [knowtator.util      :as util]))
 
 (reg-sub ::obj-props (comp :obj-props :ontology))
 
@@ -28,7 +29,7 @@
 (defn make-uri->label-map
   [owl-entities annotation-iri]
   (->> owl-entities
-       (map (fn [{:keys [annotation]
+       (map (fn [{:keys                        [annotation]
                   {:keys [namespace fragment]} :iri}]
               [(str namespace fragment)
                (or (->> annotation

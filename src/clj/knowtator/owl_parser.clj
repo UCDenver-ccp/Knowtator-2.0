@@ -1,8 +1,9 @@
 (ns knowtator.owl-parser
-  (:require [knowtator.util :as util]
-            [tawny.owl :as to]
-            [tawny.protocol :as tp]
-            [tawny.query :as tq]))
+  (:require
+   [knowtator.util :as util]
+   [tawny.owl      :as to]
+   [tawny.protocol :as tp]
+   [tawny.query    :as tq]))
 
 (defn load-ontology
   [f]

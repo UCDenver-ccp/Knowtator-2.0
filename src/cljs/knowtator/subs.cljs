@@ -1,10 +1,12 @@
 (ns knowtator.subs
-  (:require [clojure.string :as str]
-            [knowtator.html-colors :as html-colors]
-            [knowtator.model :as model]
-            [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.util :as util]
-            [knowtator.owl.subs :as owl]))
+  (:require
+   [clojure.string        :as str]
+   [knowtator.html-colors :as html-colors]
+   [knowtator.model       :as model]
+   [re-frame.core         :as    rf
+                          :refer [reg-sub]]
+   [knowtator.util        :as util]
+   [knowtator.owl.subs    :as owl]))
 
 (defn ->db-map
   [k]
@@ -109,8 +111,7 @@
                       (map anns)
                       (map (fn [{:keys [profile concept]}]
                              (get-in profiles
-                                     [profile
-                                       :colors concept]
+                                     [profile :colors concept]
                                      default-color))))]
       (if (apply = colors) (first colors) :grey))))
 
@@ -120,9 +121,7 @@
   :<- [::profile-map]
   :<- [::default-color]
   (fn [[profile-id concept-id profiles default-color]]
-    (let [color (get-in profiles
-                        [profile-id
-                          :colors concept-id])]
+    (let [color (get-in profiles [profile-id :colors concept-id])]
       (if (and color (str/starts-with? color "#"))
         color
         (or (get html-colors/html-colors color) default-color)))))
@@ -135,8 +134,10 @@
 (reg-sub ::spans (comp :spans :text-annotation))
 
 (reg-sub ::available-projects
-  (fn [_ _] ["concepts+assertions" "test_project_using_uris"
-             "test_project_using_uris2" "default"]))
+  (fn [_ _] ["concepts+assertions"
+             "test_project_using_uris"
+             "test_project_using_uris2"
+             "default"]))
 
 (reg-sub ::selected-project (fn [db _] (get-in db [:selection :project])))
 

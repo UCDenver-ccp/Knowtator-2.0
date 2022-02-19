@@ -1,13 +1,15 @@
 (ns knowtator.text-annotation.events
-  (:require [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [day8.re-frame.undo :as undo :refer [undoable]]
-            [knowtator.model :as model]
-            [knowtator.owl.events :as owl-evts]
-            [knowtator.util :as util]
-            [com.rpl.specter :as s]
-            [re-frame.core :refer [reg-event-db reg-event-fx trim-v]]
-            [ajax.core :as ajax]
-            [knowtator.general-events :as ge]))
+  (:require
+   [day8.re-frame.tracing    :refer-macros [fn-traced]]
+   [day8.re-frame.undo       :as    undo
+                             :refer [undoable]]
+   [knowtator.model          :as model]
+   [knowtator.owl.events     :as owl-evts]
+   [knowtator.util           :as util]
+   [com.rpl.specter          :as s]
+   [re-frame.core            :refer [reg-event-db reg-event-fx trim-v]]
+   [ajax.core                :as ajax]
+   [knowtator.general-events :as ge]))
 
 (defn filter-in-doc
   [db coll-id]
@@ -114,7 +116,8 @@
                                     :format (ajax/transit-request-format)
                                     :response-format
                                     (ajax/transit-response-format)
-                                    :on-success [::ge/load-success :doc
+                                    :on-success [::ge/load-success
+                                                 :doc
                                                  ::set-first-doc]
                                     :on-failure [::ge/load-failure :doc]}])))))
 
@@ -129,7 +132,8 @@
 (reg-event-db ::add-doc
   [(undoable "Adding document") trim-v]
   (fn-traced [{{:keys [docs]} :text-annotation
-               :as db} _]
+               :as            db}
+              _]
     (let [doc-id (model/unique-id (util/map-with-key docs :id)
                                   "d"
                                   (count docs))]
@@ -141,9 +145,10 @@
 
 (reg-event-db ::add-ann
   [(undoable "Adding annotation") trim-v]
-  (fn-traced [{{:keys [spans anns]} :text-annotation
+  (fn-traced [{{:keys [spans anns]}                       :text-annotation
                {:keys [profiles concepts docs start end]} :selection
-               :as db} _]
+               :as                                        db}
+              _]
     (let [span-id (model/unique-id (util/map-with-key :id spans)
                                    "s"
                                    (count spans))

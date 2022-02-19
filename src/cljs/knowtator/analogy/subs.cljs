@@ -1,8 +1,10 @@
 (ns knowtator.analogy.subs
-  (:require [re-frame.core :as rf :refer [reg-sub]]
-            [knowtator.model :as model]
-            [com.rpl.specter :as sp]
-            [mops.core :as mops]))
+  (:require
+   [re-frame.core   :as    rf
+                    :refer [reg-sub]]
+   [knowtator.model :as model]
+   [com.rpl.specter :as sp]
+   [mops.core       :as mops]))
 
 (reg-sub ::analogy-graphs :analogy)
 
@@ -31,11 +33,9 @@
 
 (reg-sub ::slots
   (fn [db [_ graph-id]]
-    (sp/select-one [:graph-panels
-                    (sp/filterer #(= (:id %) graph-id))
-                    sp/FIRST
-                    :fillers]
-                   db)))
+    (sp/select-one
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST :fillers]
+     db)))
 
 (reg-sub ::filtered-mop-map
   (fn [[_ graph-id] _] [(rf/subscribe [::selected-mop-map])
@@ -59,23 +59,20 @@
                           ((juxt (partial map :to) (partial map :from)))
                           (apply concat)
                           set)
-          new-graph  (update graph
-                             :nodes
-                             (fn [nodes]
-                               (->> nodes
-                                    (filter (comp edge-nodes :id))
-                                    (sort-by :group))))
+          new-graph  (update graph :nodes
+                       (fn [nodes]
+                         (->> nodes
+                              (filter (comp edge-nodes :id))
+                              (sort-by :group))))
           nodes      (->> new-graph
                           :nodes
                           (map :id)
                           set)
-          new-graph  (update new-graph
-                             :edges
-                             (fn [edges]
-                               (->> edges
-                                    (filter (fn [{:keys [from to]}]
-                                              (and (nodes from)
-                                                   (nodes to)))))))]
+          new-graph  (update new-graph :edges
+                       (fn [edges]
+                         (->> edges
+                              (filter (fn [{:keys [from to]}]
+                                        (and (nodes from) (nodes to)))))))]
       (if (= new-graph graph) new-graph (recur new-graph)))))
 
 (reg-sub ::selected-analogy-graph
@@ -85,10 +82,9 @@
   (fn [[graph node-label edge-label] _]
     (-> graph
         (update :nodes
-                (partial map
-                         #(assoc %
-                                 :label (get % node-label)
-                                 :group (hash (get % :mh)))))
+          (partial
+           map
+           #(assoc % :label (get % node-label) :group (hash (get % :mh)))))
         (update :edges (partial map #(assoc % :label (get % edge-label))))
         (#(or %
               {:nodes []
@@ -97,24 +93,23 @@
 
 (defn all-roles
   [mm]
-  (->> mm
-       :mops
-       vals
-       (reduce
-        (fn [m mop]
-          (->> mop
-               (reduce
-                (fn [m [role fillers]]
-                  (update m
-                          role
-                          (fn [role-m]
-                            (-> role-m
-                                (update :fillers (fnil into #{}) (keys fillers))
-                                (update :mops (fnil conj #{}) mop)
-                                (assoc :mop (mops/get-mop mm role))
-                                (assoc :id role)))))
-                m)))
-        {})))
+  (->>
+   mm
+   :mops
+   vals
+   (reduce
+    (fn [m mop]
+      (->> mop
+           (reduce (fn [m [role fillers]]
+                     (update m role
+                       (fn [role-m]
+                         (-> role-m
+                             (update :fillers (fnil into #{}) (keys fillers))
+                             (update :mops (fnil conj #{}) mop)
+                             (assoc :mop (mops/get-mop mm role))
+                             (assoc :id role)))))
+                   m)))
+    {})))
 
 (reg-sub ::selected-mop-map-roles-map
   :<- [::selected-mop-map]
@@ -146,11 +141,9 @@
 
 (reg-sub ::selected-roles
   (fn [db [_ graph-id]]
-    (sp/select-one [:graph-panels
-                    (sp/filterer #(= (:id %) graph-id))
-                    sp/FIRST
-                    :roles]
-                   db)))
+    (sp/select-one
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST :roles]
+     db)))
 
 (reg-sub ::selected-role?
   (fn [[_ _ graph-id] _] (rf/subscribe [::selected-roles graph-id]))

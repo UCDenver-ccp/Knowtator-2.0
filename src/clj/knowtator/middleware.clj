@@ -1,12 +1,13 @@
 (ns knowtator.middleware
-  (:require [clojure.tools.logging :as log]
-            [knowtator.env :refer [defaults]]
-            [knowtator.layout :refer [error-page]]
-            [knowtator.middleware.formats :as formats]
-            [muuntaja.middleware :refer [wrap-format wrap-params]]
-            [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
-            [ring.middleware.flash :refer [wrap-flash]]))
+  (:require
+   [clojure.tools.logging    :as log]
+   [knowtator.env            :refer [defaults]]
+   [knowtator.layout         :refer [error-page]]
+   [knowtator.middleware.formats :as formats]
+   [muuntaja.middleware      :refer [wrap-format wrap-params]]
+   [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
+   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+   [ring.middleware.flash    :refer [wrap-flash]]))
 
 (defn wrap-internal-error
   [handler]

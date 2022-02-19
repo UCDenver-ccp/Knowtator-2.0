@@ -1,15 +1,18 @@
 (ns knowtator.events
-  (:require [ajax.core :as ajax]
-            [clojure.string :as str]
-            [day8.re-frame.http-fx]
-            [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [day8.re-frame.undo :as undo :refer [undoable]]
-            [knowtator.db :as db]
-            [knowtator.owl.events :as owl]
-            [knowtator.general-events :as ge]
-            [knowtator.text-annotation.events :as txt]
-            [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
-            [re-pressed.core :as rp]))
+  (:require
+   [ajax.core             :as ajax]
+   [clojure.string        :as str]
+   [day8.re-frame.http-fx]
+   [day8.re-frame.tracing :refer-macros [fn-traced]]
+   [day8.re-frame.undo    :as    undo
+                          :refer [undoable]]
+   [knowtator.db          :as db]
+   [knowtator.owl.events  :as owl]
+   [knowtator.general-events :as ge]
+   [knowtator.text-annotation.events :as txt]
+   [re-frame.core         :as    rf
+                          :refer [reg-event-db reg-event-fx]]
+   [re-pressed.core       :as rp]))
 
 (reg-event-fx ::initialize-db
   (fn-traced [_ _]
@@ -55,7 +58,8 @@
                                   :format (ajax/transit-request-format)
                                   :response-format
                                   (ajax/transit-response-format)
-                                  :on-success [::ge/load-success :project
+                                  :on-success [::ge/load-success
+                                               :project
                                                ::set-project]
                                   :on-failure [::ge/load-failure :project]}
                                  #_{:method :get
@@ -63,7 +67,8 @@
                                     :format (ajax/transit-request-format)
                                     :response-format
                                     (ajax/transit-response-format)
-                                    :on-success [::ge/load-success :ontology
+                                    :on-success [::ge/load-success
+                                                 :ontology
                                                  ::owl/set-ontology]
                                     :on-failure [::ge/load-failure
                                                  :ontology]}]))))
@@ -117,15 +122,15 @@
   (fn-traced [{:keys [db]} [_ active-panel]]
     {:db       (assoc db :active-panel active-panel)
      :dispatch [::rp/set-keydown-rules
-                 {:event-keys [[[::set-re-pressed-example "Hello, world!"]
-                                [{:keyCode 72} ;; h
-                                 {:keyCode 69} ;; e
-                                 {:keyCode 76} ;; l
-                                 {:keyCode 76} ;; l
-                                 {:keyCode 79} ;; o
-                                ]]]
-                  :clear-keys [[{:keyCode 27} ;; escape
-                               ]]}]}))
+                {:event-keys [[[::set-re-pressed-example "Hello, world!"]
+                               [{:keyCode 72} ;; h
+                                {:keyCode 69} ;; e
+                                {:keyCode 76} ;; l
+                                {:keyCode 76} ;; l
+                                {:keyCode 79} ;; o
+                               ]]]
+                 :clear-keys [[{:keyCode 27} ;; escape
+                              ]]}]}))
 
 (reg-event-db ::set-re-pressed-example
   (fn [db [_ value]] (assoc db :re-pressed-example value)))
@@ -143,20 +148,21 @@
 
 (reg-event-fx ::record-selection
   (fn-traced [{:keys [db]}
-              [_ {:keys [start end]
-                  :as   text-range}
-                doc-id]]
+              [_
+               {:keys [start end]
+                :as   text-range}
+               doc-id]]
     (cond-> {:db (update db :selection merge text-range)}
       (= start end) (assoc :dispatch [::txt/select-span-by-loc start doc-id]))))
 
 (reg-event-db ::find-in-selected-doc
   (fn [db]
-    (let [doc-id (get-in db [:selection :docs])
-          doc    (get-in db [:docs doc-id :content])
-          text   (get-in db [:search :query])
+    (let [doc-id            (get-in db [:selection :docs])
+          doc               (get-in db [:docs doc-id :content])
+          text              (get-in db [:search :query])
           last-search-start (get-in db [:spans :last-search-span :start])
-          result (or (str/index-of doc text (inc last-search-start))
-                     (str/index-of doc text))]
+          result            (or (str/index-of doc text (inc last-search-start))
+                                (str/index-of doc text))]
       ;; TODO the last-search-span, when overlapped with selected span, causes
       ;; division on overlapped span.
       (-> db
@@ -183,6 +189,9 @@
   (undoable "Setting color for concept")
   (fn [db [_ color]]
     (assoc-in db
-     [:text-annotation :profiles (get-in db [:selection :profiles]) :colors
+     [:text-annotation
+      :profiles
+      (get-in db [:selection :profiles])
+      :colors
       (get-in db [:selection :concepts])]
      color)))

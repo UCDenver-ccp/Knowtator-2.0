@@ -1,10 +1,11 @@
 (ns knowtator.analogy.events
-  (:require [com.rpl.specter :as sp]
-            [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [re-frame.core :refer [reg-event-db trim-v]]
-            [sme-clj.core :as sme]
-            [sme-clj.ruledef :as rules]
-            [mops.core :as mops]))
+  (:require
+   [com.rpl.specter       :as sp]
+   [day8.re-frame.tracing :refer-macros [fn-traced]]
+   [re-frame.core         :refer [reg-event-db trim-v]]
+   [sme-clj.core          :as sme]
+   [sme-clj.ruledef       :as rules]
+   [mops.core             :as mops]))
 
 (reg-event-db ::select-graph-space
   trim-v
@@ -25,7 +26,8 @@
 
 (defn toggle-selection
   [id items]
-  (let [items (or items #{})] (if (items id) (disj items id) (conj items id))))
+  (let [items (or items #{})]
+    (if (items id) (disj items id) (conj items id))))
 
 (reg-event-db ::select-graph
   trim-v
@@ -35,18 +37,18 @@
 (reg-event-db ::select-role
   trim-v
   (fn-traced [db [role graph-id]]
-    (sp/transform [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL
-                   :roles]
-                  (partial toggle-selection role)
-                  db)))
+    (sp/transform
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL :roles]
+     (partial toggle-selection role)
+     db)))
 
 (reg-event-db ::select-filler
   trim-v
   (fn-traced [db [filler role graph-id]]
-    (sp/transform [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL
-                   :fillers role]
-                  (partial toggle-selection filler)
-                  db)))
+    (sp/transform
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/ALL :fillers role]
+     (partial toggle-selection filler)
+     db)))
 
 (reg-event-db ::select-target
   trim-v
@@ -60,7 +62,8 @@
   trim-v
   (fn-traced [db [base-id target-id]]
     (let [id     :default
-          kg     (sp/select-one [:analogy (sp/filterer #(= id (:id %)))
+          kg     (sp/select-one [:analogy
+                                 (sp/filterer #(= id (:id %)))
                                  sp/FIRST]
                                 db)
           result (sme/match kg
@@ -88,7 +91,7 @@
 (reg-event-db ::set-hierarchical
   trim-v
   (fn-traced [db [graph-id val]]
-    (sp/setval [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST
-                :hierarchical?]
-               val
-               db)))
+    (sp/setval
+     [:graph-panels (sp/filterer #(= (:id %) graph-id)) sp/FIRST :hierarchical?]
+     val
+     db)))

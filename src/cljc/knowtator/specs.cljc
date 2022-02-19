@@ -1,8 +1,9 @@
 (ns knowtator.specs
-  (:require [clojure.spec.alpha :as s]
-            [clojure.string :as str]
-            [knowtator.html-colors :as html-colors]
-            [miner.strgen :as sg]))
+  (:require
+   [clojure.spec.alpha    :as s]
+   [clojure.string        :as str]
+   [knowtator.html-colors :as html-colors]
+   [miner.strgen          :as sg]))
 
 (s/def ::id keyword?)
 (s/def :span/start (s/and int? (complement neg?)))

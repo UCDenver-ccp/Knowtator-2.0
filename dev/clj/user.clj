@@ -1,10 +1,11 @@
 (ns user
   "Userspace functions you can run by default in your local REPL."
-  (:require [clojure.pprint :refer [pprint]]
-            [clojure.spec.alpha :as s]
-            [expound.alpha :as expound]
-            [knowtator.core :as knowtator]
-            [mount.core :as mount]))
+  (:require
+   [clojure.pprint     :refer [pprint]]
+   [clojure.spec.alpha :as s]
+   [expound.alpha      :as expound]
+   [knowtator.core     :as knowtator]
+   [mount.core         :as mount]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 

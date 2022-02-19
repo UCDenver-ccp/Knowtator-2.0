@@ -1,12 +1,13 @@
 (ns knowtator.protege.client
-  (:require [aleph.http :as http]
-            [knowtator.owl-parser :as op]
-            [manifold.stream :as s]
-            [ring.middleware.transit :refer [decode]]
-            [tawny.render :as tr]
-            [tawny.owl :as to]
-            [meander.epsilon :as m]
-            [tawny.protocol :as tp]))
+  (:require
+   [aleph.http              :as http]
+   [knowtator.owl-parser    :as op]
+   [manifold.stream         :as s]
+   [ring.middleware.transit :refer [decode]]
+   [tawny.render            :as tr]
+   [tawny.owl               :as to]
+   [meander.epsilon         :as m]
+   [tawny.protocol          :as tp]))
 
 (def host "localhost")
 (def port 10003)
@@ -25,8 +26,8 @@
   (let [{:keys [axiomType]} axiom]
     (case axiomType
       :Declaration (let [[entity-type [iri-type iri]] (:entity axiom)
-                         new-entity {:type entity-type
-                                     :iri  (op/->iri iri)}]
+                         new-entity                   {:type entity-type
+                                                       :iri  (op/->iri iri)}]
                      new-entity
                      #_(update ontology :classes conj new-entity))
       :SubClassOf)))

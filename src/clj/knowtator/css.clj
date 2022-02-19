@@ -1,18 +1,23 @@
 (ns knowtator.css
-  (:require [garden.def :refer [defstyles]]
-            [garden.selectors :as sel]
-            [garden.stylesheet :as s]
-            [clojure.string :as str]))
+  (:require
+   [garden.def        :refer [defstyles]]
+   [garden.selectors  :as sel]
+   [garden.stylesheet :as s]
+   [clojure.string    :as str]))
 
 (defstyles datatable
-  [:div.ui.list [:div.item {:padding ".4em !important"}]
+  [:div.ui.list
+   [:div.item {:padding ".4em !important"}]
    [:div.item.active {:font-weight :bold}]
    [:div.item.hover {:cursor           :pointer
                      :background-color "#eee"}]]
   [:i.start.icon:hover {:text-shadow (str/join " "
-                                       [0 0 "2px" :darkgrey])}]
+                                               [0
+                                                0
+                                                "2px"
+                                                :darkgrey])}]
   [:.muted {:color (str/join " "
-                     [:grey "!important"])}]
+                             [:grey "!important"])}]
   [(sel/> :table.re-frame-datatable :thead)
    [:th.sorted-by:after {:display :inline-block
                          :content "'\\f0dc'"}]
@@ -35,22 +40,29 @@
   (s/at-import "https://fonts.googleapis.com/css?family=Open+Sans")
   [* (* before) (* after) {:box-sizing :border-box}]
   [:.container {:margin-bottom "-25px !important"}]
-  [:.container :.backdrop :textarea :.foredrop
+  [:.container
+   :.backdrop
+   :textarea
+   :.foredrop
    {:width  "100%"
     :height "1000px"}]
-  [:.highlights :textarea
+  [:.highlights
+   :textarea
    {:padding        "10px"
     :font           [(str/join " " ["20px/28px" "'Open Sans'"]) :sans-serif]
     :letter-spacing "1px"}]
   [:.container {:display                  :block
                 :margin                   (str/join " "
-                                            [0 "auto"])
+                                                    [0
+                                                     "auto"])
                 :transform                "translateZ(0)"
                 :-webkit-text-size-adjust :none}]
   [:.backdrop {:position         :absolute
                :z-index          -1
                :border           (str/join " "
-                                   ["2px" "solid" "#685972"])
+                                           ["2px"
+                                            "solid"
+                                            "#685972"])
                :background-color "#fff"
                :overflow         :visible
                :pointer-events   :none
@@ -58,7 +70,9 @@
   [:.foredrop {:position         :absolute
                :z-index          1
                :border           (str/join " "
-                                   ["2px" "solid" "#685972"])
+                                           ["2px"
+                                            "solid"
+                                            "#685972"])
                :background-color :transparent
                :overflow         :visible
                :pointer-events   :none
@@ -71,11 +85,15 @@
               :bottom           0
               :left             0
               :font             [(str/join " "
-                                   ["20px/28px" "'Open Sans'"]) :sans-serif]
+                                           ["20px/28px"
+                                            "'Open Sans'"])
+                                 :sans-serif]
               :z-index          0
               :margin           0
               :border           (str/join " "
-                                  ["2px" "solid" "#74637f"])
+                                          ["2px"
+                                           "solid"
+                                           "#74637f"])
               :border-radius    0
               :color            "#444"
               :background-color :transparent
@@ -85,16 +103,26 @@
   [:mark {:border-radius    "3px"
           :color            :transparent
           :background-color "#b1d5e5"}]
-  [:.perspective :.backdrop
-   {:transform ["perspective(1500px)" "translateX(-125px)" "rotateY(45deg)"
+  [:.perspective
+   :.backdrop
+   {:transform ["perspective(1500px)"
+                "translateX(-125px)"
+                "rotateY(45deg)"
                 "scale(0.9)"]}]
-  [:.perspective :.foredrop
-   {:transform ["perspective(1500px)" "translateX(-125px)" "rotateY(45deg)"
+  [:.perspective
+   :.foredrop
+   {:transform ["perspective(1500px)"
+                "translateX(-125px)"
+                "rotateY(45deg)"
                 "scale(0.9)"]}]
-  [:.perspective :textarea
-   {:transform ["perspective (1500px)" "translateX(155px)" "rotateY(45deg)"
+  [:.perspective
+   :textarea
+   {:transform ["perspective (1500px)"
+                "translateX(155px)"
+                "rotateY(45deg)"
                 "scale(1.1)"]}]
-  [:textarea:focus :button:focus
+  [:textarea:focus
+   :button:focus
    {:outline    :none
     :box-shadow [0 0 0 "2px" "#c6aada"]}]
   [:.popup {:position            :relative
@@ -104,27 +132,27 @@
             ;; :-moz-user-select :none
             #_:user-select
             #_:none}
-    [:.popuptext {:visibility       :hidden
-                  :width            "160px"
-                  :background-color "#555"
-                  :color            "#fff"
-                  :text-align       :center
-                  :border-radius    "6px"
-                  :padding          "8px 0"
-                  :position         :absolute
-                  :z-index          1
-                  :bottom           "125%"
-                  :left             "50%"
-                  :margin-left      "-80px"}
-      [(sel/& sel/after)
-       {:content      "\"\""
-        :position     :absolute
-        :top          "100%"
-        :left         "50%"
-        :margin-left  "-5px"
-        :border-width "5px"
-        :border-style :solid
-        :border-color "#555 transparent transparent transparent"}]]
-    [:.show {:visibility         :visible
-             :-web-kit-animation "fadeIn 1s"
-             :animation          "fadeIn 1s"}]])
+   [:.popuptext {:visibility       :hidden
+                 :width            "160px"
+                 :background-color "#555"
+                 :color            "#fff"
+                 :text-align       :center
+                 :border-radius    "6px"
+                 :padding          "8px 0"
+                 :position         :absolute
+                 :z-index          1
+                 :bottom           "125%"
+                 :left             "50%"
+                 :margin-left      "-80px"}
+    [(sel/& sel/after)
+     {:content      "\"\""
+      :position     :absolute
+      :top          "100%"
+      :left         "50%"
+      :margin-left  "-5px"
+      :border-width "5px"
+      :border-style :solid
+      :border-color "#555 transparent transparent transparent"}]]
+   [:.show {:visibility         :visible
+            :-web-kit-animation "fadeIn 1s"
+            :animation          "fadeIn 1s"}]])

@@ -1,7 +1,8 @@
 (ns knowtator.review.events
-  (:require [cljs.reader :as reader]
-            [clojure.set :as set]
-            [re-frame.core :refer [reg-event-db]]))
+  (:require
+   [cljs.reader   :as reader]
+   [clojure.set   :as set]
+   [re-frame.core :refer [reg-event-db]]))
 
 (reg-event-db ::select-review-type
   (fn [db [_ id]] (assoc-in db [:selection :review-type] id)))

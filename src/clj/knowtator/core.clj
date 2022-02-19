@@ -1,41 +1,41 @@
 (ns knowtator.core
   (:gen-class)
-  (:require [clojure.tools.cli :refer [parse-opts]]
-            [clojure.tools.logging :as log]
-            [knowtator.config :refer [env]]
-            [knowtator.handler :as handler]
-            [knowtator.nrepl :as nrepl]
-            [luminus.http-server :as http]
-            [mount.core :as mount]))
+  (:require
+   [clojure.tools.cli     :refer [parse-opts]]
+   [clojure.tools.logging :as log]
+   [knowtator.config      :refer [env]]
+   [knowtator.handler     :as handler]
+   [knowtator.nrepl       :as nrepl]
+   [luminus.http-server   :as http]
+   [mount.core            :as mount]))
 
 ;; log uncaught exceptions in threads
 (Thread/setDefaultUncaughtExceptionHandler
-  (reify
-    Thread$UncaughtExceptionHandler
-      (uncaughtException [_ thread ex]
-        (log/error
-          {:what      :uncaught-exception
-           :exception ex
-           :where     (str "Uncaught exception on" (.getName thread))}))))
+ (reify
+  Thread$UncaughtExceptionHandler
+    (uncaughtException [_ thread ex]
+      (log/error
+       {:what      :uncaught-exception
+        :exception ex
+        :where     (str "Uncaught exception on" (.getName thread))}))))
 
 (def cli-options
   [["-p" "--port PORT" "Port number" :parse-fn #(Integer/parseInt %)]])
 
 (declare http-server)
 (mount/defstate ^{:on-reload :noop} http-server
-  :start
-    (http/start
-      (-> env
-          (update :io-threads
-                  #(or % (* 2 (.availableProcessors (Runtime/getRuntime)))))
-          (assoc :handler (handler/app))
-          (update :port
-                  #(or (-> env
-                           :options
-                           :port)
-                       %))
-          (select-keys [:handler :host :port])))
-  :stop (http/stop http-server))
+  :start (http/start
+          (-> env
+              (update :io-threads
+                #(or % (* 2 (.availableProcessors (Runtime/getRuntime)))))
+              (assoc :handler (handler/app))
+              (update :port
+                #(or (-> env
+                         :options
+                         :port)
+                     %))
+              (select-keys [:handler :host :port])))
+  :stop  (http/stop http-server))
 
 (declare repl-server)
 (mount/defstate ^{:on-reload :noop} repl-server
@@ -46,7 +46,8 @@
 
 (defn stop-app
   []
-  (doseq [component (:stopped (mount/stop))] (log/info component "stopped"))
+  (doseq [component (:stopped (mount/stop))]
+    (log/info component "stopped"))
   (shutdown-agents))
 
 (defn start-app
