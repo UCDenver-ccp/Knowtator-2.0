@@ -139,7 +139,7 @@
                  :width         "100%"
                  :src           (at)
                  :initial-split 25
-                 :panel-1       [owl/owl-hierarchies]
+                 :panel-1       ["hi" #_owl/owl-hierarchies]
                  :panel-2       [doc-display]]
                [re-com/h-box
                  :children [[tac/span-controls] [search-controls]]]]])

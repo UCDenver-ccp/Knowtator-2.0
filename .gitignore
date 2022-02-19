@@ -23,3 +23,5 @@
 /karma.conf.js
 /resources/public/css/
 /dev-config.edn
+/test_resources/concepts+assertions/
+/test_resources/test_project_using_uris2/

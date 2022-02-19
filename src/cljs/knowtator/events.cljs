@@ -6,6 +6,7 @@
             [day8.re-frame.undo :as undo :refer [undoable]]
             [knowtator.db :as db]
             [knowtator.owl.events :as owl]
+            [knowtator.general-events :as ge]
             [knowtator.text-annotation.events :as txt]
             [re-frame.core :as rf :refer [reg-event-db reg-event-fx]]
             [re-pressed.core :as rp]))
@@ -20,20 +21,19 @@
                               (map-indexed (fn [i ann]
                                              {:id  (keyword (str "n" (inc i)))
                                               :ann (:id ann)}))))
-               (update
-                :graph
-                (fn [{:keys [nodes]
-                      :as   graph}]
-                  (assoc
-                   graph
-                   :edges
-                   (->> (for [source (take 2 (shuffle nodes))
-                              target (take 3 (shuffle nodes))]
-                          {:from (:id source)
-                           :to   (:id target)})
-                        (map-indexed
-                         (fn [i edge]
-                           (assoc edge :id (keyword (str "e" (inc i))))))))))
+               (update :graph
+                 (fn [{:keys [nodes]
+                       :as   graph}]
+                   (assoc
+                    graph
+                    :edges
+                    (->> (for [source (take 2 (shuffle nodes))
+                               target (take 3 (shuffle nodes))]
+                           {:from (:id source)
+                            :to   (:id target)})
+                         (map-indexed
+                          (fn [i edge]
+                            (assoc edge :id (keyword (str "e" (inc i))))))))))
                (assoc-in [:selection :doc]
                          (-> db
                              :text-annotation
@@ -45,78 +45,68 @@
   (fn [{:keys [db]} [_ project]]
     (cond-> {:db db}
       (not= project "default") (assoc
-                                :dispatch-n [[::set-spinny :project true]
-                                             [::set-error :project false]
-                                             [::set-spinny :ontology true]
-                                             [::set-error :ontology false]]
+                                :dispatch-n [[::ge/set-spinny :project true]
+                                             [::ge/set-error :project false]
+                                             [::ge/set-spinny :ontology true]
+                                             [::ge/set-error :ontology false]]
                                 :http-xhrio
                                 [{:method :get
                                   :uri (str "/project/project/" project)
                                   :format (ajax/transit-request-format)
                                   :response-format
                                   (ajax/transit-response-format)
-                                  :on-success [::load-project-success :project
+                                  :on-success [::ge/load-success :project
                                                ::set-project]
-                                  :on-failure [::load-project-failure :project]}
-                                 {:method :get
-                                  :uri (str "/project/ontology/" project)
-                                  :format (ajax/transit-request-format)
-                                  :response-format
-                                  (ajax/transit-response-format)
-                                  :on-success [::load-project-success :ontology
-                                               ::owl/set-ontology]
-                                  :on-failure [::load-project-failure
-                                               :ontology]}]))))
+                                  :on-failure [::ge/load-failure :project]}
+                                 #_{:method :get
+                                    :uri (str "/project/ontology/" project)
+                                    :format (ajax/transit-request-format)
+                                    :response-format
+                                    (ajax/transit-response-format)
+                                    :on-success [::ge/load-success :ontology
+                                                 ::owl/set-ontology]
+                                    :on-failure [::ge/load-failure
+                                                 :ontology]}]))))
 
-(reg-event-fx ::load-project-success
-  (fn [{:keys [db]} [_ place evt project-data]]
-    {:db         db
-     :dispatch-n [[evt project-data] [::set-spinny place false]]}))
 
-(reg-event-fx ::load-project-failure
-  (fn [{:keys [db]} [_ place _]]
-    {:db         db
-     :dispatch-n [[::report-failure] [::set-error place true]
-                  [::set-spinny place false]]}))
-
-(reg-event-db ::set-spinny
-  (fn [db [_ place val]] (assoc-in db [:loading? place] val)))
-
-(reg-event-db ::set-error
-  (fn [db [_ place val]] (assoc-in db [:error? place] val)))
 
 (reg-event-db ::select-project
   (fn [db [_ project]] (assoc-in db [:selection :project] project)))
 
-(reg-event-db ::set-project
-  (fn [db [_ result]]
-    (-> db
-        (assoc :loading-project? false)
-        (assoc :text-annotation result)
-        (assoc-in [:selection :docs]
-                  (->> result
-                       :docs
-                       (sort-by :id)
-                       first
-                       :id))
-        (assoc-in [:selection :profiles]
-                  (->> result
-                       :profiles
-                       (sort-by :id)
-                       first
-                       :id))
-        (assoc-in [:selection :concepts]
-                  (->> result
-                       :anns
-                       (sort-by :id)
-                       first
-                       :concept))
-        (assoc-in [:selection :graphs]
-                  (->> result
-                       :graphs
-                       (sort-by :id)
-                       first
-                       :id)))))
+(reg-event-fx ::set-project
+  (fn [{:keys [db]} [_ result]]
+    {:db         (-> db
+                     (assoc :loading-project? false)
+                     (assoc :text-annotation result)
+                     (update-in [:text-annotation :docs]
+                                (fn [docs]
+                                  (->> docs
+                                       (map (fn [doc]
+                                              (assoc doc :loaded false))))))
+                     (assoc-in [:selection :profiles]
+                               (->> result
+                                    :profiles
+                                    (sort-by :id)
+                                    first
+                                    :id))
+                     (assoc-in [:selection :concepts]
+                               (->> result
+                                    :anns
+                                    (sort-by :id)
+                                    first
+                                    :concept))
+                     (assoc-in [:selection :graphs]
+                               (->> result
+                                    :graphs
+                                    (sort-by :id)
+                                    first
+                                    :id)))
+     :dispatch-n [[::txt/select-doc
+                   (->> result
+                        :docs
+                        (sort-by :id)
+                        first
+                        :id)]]}))
 
 (reg-event-db ::report-failure
   (fn [db [_ result]] (println "Error") (println result) db))
@@ -161,12 +151,12 @@
 
 (reg-event-db ::find-in-selected-doc
   (fn [db]
-    (let [doc-id            (get-in db [:selection :docs])
-          doc               (get-in db [:docs doc-id :content])
-          text              (get-in db [:search :query])
+    (let [doc-id (get-in db [:selection :docs])
+          doc    (get-in db [:docs doc-id :content])
+          text   (get-in db [:search :query])
           last-search-start (get-in db [:spans :last-search-span :start])
-          result            (or (str/index-of doc text (inc last-search-start))
-                                (str/index-of doc text))]
+          result (or (str/index-of doc text (inc last-search-start))
+                     (str/index-of doc text))]
       ;; TODO the last-search-span, when overlapped with selected span, causes
       ;; division on overlapped span.
       (-> db

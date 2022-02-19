@@ -1,0 +1,30 @@
+* Testing startup
+
+** Server
+   #+begin_src emacs-lisp :noweb yes :results silent
+(cider-jack-in-clj '())
+   #+end_src
+
+** Client
+*** Shadow server
+    Run this  to get the server in a separate window.
+
+#+begin_src emacs-lisp :noweb yes
+;; (async-shell-command "kitty -e clj -M:cljs-dev:shadow-cljs server")
+#+end_src
+
+    #+begin_src emacs-lisp :noweb yes :results silent
+(let ((b (get-buffer-create (generate-new-buffer-name "*Client Shadow server (Knowtator)"))))
+  (async-shell-command "clojure -M:cljs-dev:shadow-cljs server" b))
+    #+end_src
+
+*** Cljs REPL
+    #+begin_src emacs-lisp :noweb yes :results silent
+(cider-connect-cljs '(:host "localhost" :port "8777"))
+    #+end_src
+
+*** App
+    #+begin_src emacs-lisp :noweb yes :results silent
+(let ((b (get-buffer-create (generate-new-buffer-name "*Client App (Knowtator)"))))
+  (async-shell-command "chromium --incognito http://localhost:3000" b))
+    #+end_src

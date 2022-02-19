@@ -29,77 +29,39 @@
     ["graph" {:get home-page}] ["about" {:get home-page}]
     ["review" {:get home-page}] ["analogy" {:get home-page}]]])
 
+(def projects (atom {}))
+(def last-loaded-project (atom nil))
+
 (defn project-handler
   [{{{:keys [file-name]} :path} :parameters}]
-  (println)
-  (case file-name
-    "test_project_using_uris"  (let [project-file (io/resource file-name)
-                                     project-xml  (kparser/read-project-xmls
-                                                   project-file)
-                                     articles     (kparser/read-articles
-                                                   project-file)]
-                                 {:status 200
-                                  :body   (kparser/parse-project articles
-                                                                 project-xml)})
-    "test_project_using_uris2" (let [project-file (io/resource file-name)
-                                     project-xml  (kparser/read-project-xmls
-                                                   project-file)
-                                     articles     (kparser/read-articles
-                                                   project-file)]
-                                 {:status 200
-                                  :body   (kparser/parse-project articles
-                                                                 project-xml)})
-    "concepts+assertions"      (let [project-file (io/resource
-                                                   "concepts+assertions")
-                                     project-xml  (kparser/read-project-xmls
-                                                   project-file)
-                                     articles     (kparser/read-articles
-                                                   project-file)
-                                     project      (kparser/parse-project
-                                                   articles
-                                                   project-xml)]
-                                 {:status 200
-                                  :body   project})))
+  (println "reading")
+  (let [project (time
+                 (let [project-file (io/resource file-name)
+                       project-xml  (kparser/read-project-xmls project-file)
+                       articles     (kparser/read-articles project-file)
+                       project      (kparser/parse-project articles
+                                                           project-xml)]
+                   project))]
+    (println "Read in project")
+    (swap! projects assoc file-name project)
+    (reset! last-loaded-project file-name)
+    {:status 200
+     :body   (-> project
+                 (select-keys [:docs :profiles])
+                 (update :docs
+                   (fn [docs] (map (fn [doc] (dissoc doc :content)) docs))))}))
 
 (defn ontology-handler
   [{{{:keys [file-name]} :path} :parameters}]
-  (case file-name
-    "test_project_using_uris"  (let [ontology-file (io/file (io/resource
-                                                             file-name)
-                                                            "Ontologies"
-                                                            "pizza.owl")
-                                     owl-ontology  (oparser/load-ontology
-                                                    ontology-file)
-                                     ontology      (oparser/parse-ontology
-                                                    owl-ontology)]
-                                 {:status 200
-                                  :body   ontology})
-    "test_project_using_uris2" (let [ontology-file (io/file (io/resource
-                                                             file-name)
-                                                            "Ontologies"
-                                                            "pizza.owl")
-                                     owl-ontology  (oparser/load-ontology
-                                                    ontology-file)
-                                     ontology      (oparser/parse-ontology
-                                                    owl-ontology)]
-                                 {:status 200
-                                  :body   ontology})
-    "concepts+assertions"      (let [ontology-file (->>
-                                                    "Ontologies"
-                                                    (io/file
-                                                     (io/resource
-                                                      "concepts+assertions"))
-                                                    file-seq
-                                                    (filter #(str/ends-with?
-                                                              (str %)
-                                                              ".owl"))
-                                                    first)
-                                     owl-ontology  (oparser/load-ontology
-                                                    ontology-file)
-                                     ontology      (oparser/parse-ontology
-                                                    owl-ontology)]
-                                 {:status 200
-                                  :body   ontology})))
+  (let [ontology-file (->> "Ontologies"
+                           (io/file (io/resource file-name))
+                           file-seq
+                           (filter #(str/ends-with? (str %) ".owl"))
+                           first)
+        owl-ontology  (oparser/load-ontology ontology-file)
+        ontology      (oparser/parse-ontology owl-ontology)]
+    {:status 200
+     :body   ontology}))
 
 (defn project-routes
   []
@@ -113,10 +75,12 @@
    ["/doc/:id"
     {:name ::single-doc
      :get  {:coercion   schema/coercion
-            :parameters {:path {:id s/Int}}
+            :parameters {:path {:id        s/Str
+                                :file-name s/Str}}
             :responses  {200 {:body {:content s/Str
                                      :id      s/Int}}}
             :handler    (fn [{{{:keys [id]} :path} :parameters}]
+                          (println "Doc" id)
                           {:status 200
                            :body   {:id      id
                                     :content "hello"}})}}]

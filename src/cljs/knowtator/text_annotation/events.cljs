@@ -1,12 +1,13 @@
 (ns knowtator.text-annotation.events
-  (:require [day8.re-frame.tracing
-              :refer-macros [fn-traced]]
+  (:require [day8.re-frame.tracing :refer-macros [fn-traced]]
             [day8.re-frame.undo :as undo :refer [undoable]]
             [knowtator.model :as model]
             [knowtator.owl.events :as owl-evts]
             [knowtator.util :as util]
             [com.rpl.specter :as s]
-            [re-frame.core :refer [reg-event-db reg-event-fx trim-v]]))
+            [re-frame.core :refer [reg-event-db reg-event-fx trim-v]]
+            [ajax.core :as ajax]
+            [knowtator.general-events :as ge]))
 
 (defn filter-in-doc
   [db coll-id]
@@ -15,26 +16,26 @@
        :text-annotation
        coll-id
        (filter #(model/in-restriction?
-                  %
-                  {:filter-tye    :doc
-                   :filter-values #{(get-in db [:selection :docs])}}))))
+                 %
+                 {:filter-tye    :doc
+                  :filter-values #{(get-in db [:selection :docs])}}))))
 
 (reg-event-fx ::cycle
   trim-v
   (fn-traced [{:keys [db]} [coll-id direction]]
     (let [coll        (->>
-                        (cond (#{:spans :anns} coll-id) (filter-in-doc db
-                                                                       coll-id)
-                              :else                     (-> db
-                                                            :text-annotation
-                                                            coll-id))
-                        (sort-by (juxt :start :end :id)))
+                       (cond (#{:spans :anns} coll-id) (filter-in-doc db
+                                                                      coll-id)
+                             :else                     (-> db
+                                                           :text-annotation
+                                                           coll-id))
+                       (sort-by (juxt :start :end :id)))
           new-item-id (model/cycle-selection db coll coll-id direction)]
       (cond (#{:spans} coll-id) {:db       db
                                  :dispatch [::select-span new-item-id]}
             :else               {:db (assoc-in db
-                                       [:selection coll-id]
-                                       new-item-id)}))))
+                                      [:selection coll-id]
+                                      new-item-id)}))))
 
 (reg-event-fx ::select-span-by-loc
   trim-v
@@ -48,9 +49,9 @@
                        :text-annotation
                        :spans
                        (filter
-                         #(model/in-restriction? %
-                                                 [{:filter-type   :doc
-                                                   :filter-values #{doc-id}}]))
+                        #(model/in-restriction? %
+                                                [{:filter-type   :doc
+                                                  :filter-values #{doc-id}}]))
                        first
                        :id)]
       (cond-> {:db db} span-id (assoc :dispatch [::select-span span-id])))))
@@ -89,9 +90,33 @@
   [(undoable "Growing span end") trim-v]
   #(model/mod-span % :end inc))
 
-(reg-event-db ::select-doc
+(reg-event-fx ::select-doc
   trim-v
-  (fn [db [doc-id]] (assoc-in db [:selection :docs] doc-id)))
+  (fn [{:keys [db]} [doc-id]]
+    (let [doc (->> db
+                   :text-annotation
+                   :docs
+                   (filter (comp #{doc-id} :id))
+                   first)]
+      (cond-> {:db (assoc-in db [:selection :docs] doc-id)}
+        (nil? (:content doc)) (assoc :dispatch [::load-doc doc-id])))))
+
+(reg-event-fx ::load-doc
+  (fn [{:keys [db]} [_ doc-id]]
+    (let [project "any"]
+      (cond-> {:db db}
+        (not= project "default") (assoc
+                                  :dispatch-n [[::ge/set-spinny :doc true]
+                                               [::ge/set-error :doc false]]
+                                  :http-xhrio
+                                  [{:method :get
+                                    :uri (str "/project" "/doc/" doc-id)
+                                    :format (ajax/transit-request-format)
+                                    :response-format
+                                    (ajax/transit-response-format)
+                                    :on-success [::ge/load-success :doc
+                                                 ::set-first-doc]
+                                    :on-failure [::ge/load-failure :doc]}])))))
 
 (reg-event-db ::select-profile
   trim-v
@@ -104,7 +129,7 @@
 (reg-event-db ::add-doc
   [(undoable "Adding document") trim-v]
   (fn-traced [{{:keys [docs]} :text-annotation
-               :as            db} _]
+               :as db} _]
     (let [doc-id (model/unique-id (util/map-with-key docs :id)
                                   "d"
                                   (count docs))]
@@ -116,9 +141,9 @@
 
 (reg-event-db ::add-ann
   [(undoable "Adding annotation") trim-v]
-  (fn-traced [{{:keys [spans anns]}                       :text-annotation
+  (fn-traced [{{:keys [spans anns]} :text-annotation
                {:keys [profiles concepts docs start end]} :selection
-               :as                                        db} _]
+               :as db} _]
     (let [span-id (model/unique-id (util/map-with-key :id spans)
                                    "s"
                                    (count spans))

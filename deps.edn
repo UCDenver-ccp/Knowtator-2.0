@@ -24,7 +24,7 @@
   :shadow-cljs {:main-opts ["-m" "shadow.cljs.devtools.cli"]}
   :test {:extra-paths ["test/cljs" "test/clj" "test_resources"]}}
  :deps {;; Clojure server
-        org.clojure/clojure {:mvn/version "1.10.3"}
+        org.clojure/clojure {:mvn/version "1.11.0-alpha2"}
         metosin/reitit {:mvn/version "0.5.12"}
         metosin/ring-http-response {:mvn/version "0.9.2"}
         cprop/cprop {:mvn/version "0.1.17"}
