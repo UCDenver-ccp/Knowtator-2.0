@@ -1,21 +1,19 @@
 package edu.ucdenver.ccp.knowtator.io.uima;
 
-import edu.ucdenver.ccp.knowtator.io.BasicIOUtil;
-import edu.ucdenver.ccp.knowtator.io.XMLUtil;
 import edu.ucdenver.ccp.knowtator.model.Savable;
-import edu.ucdenver.ccp.knowtator.model.text.TextSource;
-import edu.ucdenver.ccp.knowtator.model.text.TextSourceManager;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Annotation;
-import edu.ucdenver.ccp.knowtator.model.text.annotation.Span;
-import edu.ucdenver.ccp.knowtator.model.text.graph.AnnotationNode;
-import edu.ucdenver.ccp.knowtator.model.text.graph.GraphSpace;
-import edu.ucdenver.ccp.knowtator.model.text.graph.Triple;
-import edu.ucdenver.ccp.nlp.core.uima.annotation.CCPDocumentInformation;
-import edu.ucdenver.ccp.nlp.core.uima.annotation.CCPSpan;
-import edu.ucdenver.ccp.nlp.core.uima.annotation.CCPTextAnnotation;
-import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPGraphSpace;
-import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPTriple;
-import edu.ucdenver.ccp.nlp.core.uima.assertion.CCPVertex;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.Span;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
+import edu.ucdenver.ccp.knowtator.uima.annotation.CCPDocumentInformation;
+import edu.ucdenver.ccp.knowtator.uima.annotation.CCPSpan;
+import edu.ucdenver.ccp.knowtator.uima.annotation.CCPTextAnnotation;
+import edu.ucdenver.ccp.knowtator.uima.assertion.CCPGraphSpace;
+import edu.ucdenver.ccp.knowtator.uima.assertion.CCPTriple;
+import edu.ucdenver.ccp.knowtator.uima.assertion.CCPVertex;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,21 +35,13 @@ import org.apache.uima.util.InvalidXMLException;
 import org.apache.uima.util.XMLInputSource;
 
 /** The type Uimaxmi util. */
-public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
+public class UIMAXMIUtil {
   @SuppressWarnings("unused")
   private static final Logger log = Logger.getLogger(UIMAXMIUtil.class);
 
   // private static final File ANNOTATOR_DESCRIPTOR = new
   // File("E:/Documents/Knowtator-2.0/src/main/resources/KnowtatorToUIMAAnnotatorDescriptor.xml");
 
-  /**
-   * Read.
-   *
-   * @param standaloneSavable the standalone savable
-   * @param file the file
-   */
-  @Override
-  public void read(Savable standaloneSavable, File file) {}
 
   /**
    * Write.
@@ -59,8 +49,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
    * @param standaloneSavable the standalone savable
    * @param file the file
    */
-  @Override
-  public void write(Savable standaloneSavable, File file) {
+  public void startWrite(Savable standaloneSavable, File file) {
     final URL ANNOTATOR_DESCRIPTOR =
         UIMAXMIUtil.class.getResource("/KnowtatorToUIMAAnnotatorDescriptor.xml");
     try {
@@ -69,9 +58,8 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
           UIMAFramework.getXMLParser().parseAnalysisEngineDescription(input);
       AnalysisEngine analysisEngine = UIMAFramework.produceAnalysisEngine(description);
 
-      if (standaloneSavable instanceof TextSourceManager) {
-        ((TextSourceManager) standaloneSavable)
-            .getTextSourceCollection()
+      if (standaloneSavable instanceof TextSourceCollection) {
+        ((TextSourceCollection) standaloneSavable)
             .getCollection()
             .forEach(
                 textSource -> {
@@ -120,8 +108,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
 
   private void convertAnnotationManagerToUIMA(TextSource textSource, CAS textSourceAsCAS) {
     textSource
-        .getAnnotationManager()
-        .getAnnotations()
+        .getConceptAnnotations()
         .forEach(
             annotation -> {
               try {
@@ -131,9 +118,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
               }
             });
     textSource
-        .getGraphSpaceManager()
-        .getGraphSpaceCollection()
-        .getCollection()
+        .getGraphSpaces()
         .forEach(
             graphSpace -> {
               try {
@@ -164,7 +149,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     IntStream.range(0, triples.length)
         .forEach(
             i -> {
-              Triple triple = (Triple) triples[i];
+              RelationAnnotation triple = (RelationAnnotation) triples[i];
               CCPTriple tripleFS = convertTripleToUIMA(triple, textSourceAsCAS);
               triplesFS.set(i, tripleFS);
             });
@@ -175,7 +160,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     textSourceAsCAS.getIndexRepository().addFS(graphSpaceFS);
   }
 
-  private CCPTriple convertTripleToUIMA(Triple triple, CAS textSourceAsCAS) {
+  private CCPTriple convertTripleToUIMA(RelationAnnotation triple, CAS textSourceAsCAS) {
     Type tripleType = textSourceAsCAS.getTypeSystem().getType(CCPTriple._TypeName);
 
     CCPTriple tripleFS = textSourceAsCAS.createFS(tripleType);
@@ -186,7 +171,7 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
     tripleFS.setSubject(
         convertAnnotationNodeToUIMA((AnnotationNode) triple.getSource(), textSourceAsCAS));
     tripleFS.setProperty(triple.getValue().toString());
-    tripleFS.setQuantifier(triple.getQuantifier());
+    tripleFS.setQuantifier(triple.getQuantifier().toString());
     tripleFS.setQuantifierValue(triple.getQuantifierValue());
 
     return tripleFS;
@@ -195,13 +180,13 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
   private CCPVertex convertAnnotationNodeToUIMA(AnnotationNode vertex, CAS textSourceAsCAS) {
     Type annotationNodeType = textSourceAsCAS.getTypeSystem().getType(CCPVertex._TypeName);
     CCPVertex vertexFS = textSourceAsCAS.createFS(annotationNodeType);
-    vertexFS.setAnnotation(vertex.getAnnotation().getId());
+    vertexFS.setAnnotation(vertex.getConceptAnnotation().getId());
     vertexFS.setVertexID(vertex.getId());
 
     return vertexFS;
   }
 
-  private void convertAnnotationToUIMA(Annotation annotation, CAS textSourceAsCAS)
+  private void convertAnnotationToUIMA(ConceptAnnotation annotation, CAS textSourceAsCAS)
       throws CASException {
     Type annotationType = textSourceAsCAS.getTypeSystem().getType(CCPTextAnnotation._TypeName);
 
@@ -209,14 +194,14 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
         (CCPTextAnnotation)
             textSourceAsCAS.createAnnotation(
                 annotationType,
-                annotation.getSpanCollection().getCollection().first().getStart(),
-                annotation.getSpanCollection().getCollection().first().getEnd());
+                annotation.getCollection().first().getStart(),
+                annotation.getCollection().first().getEnd());
     FSArray<CCPSpan> spansFS =
         new FSArray<>(
-            textSourceAsCAS.getJCas(), annotation.getSpanCollection().getCollection().size());
+            textSourceAsCAS.getJCas(), annotation.getCollection().size());
 
-    Iterator<Span> spanIterator = annotation.getSpanCollection().getCollection().iterator();
-    IntStream.range(0, annotation.getSpanCollection().getCollection().size())
+    Iterator<Span> spanIterator = annotation.getCollection().iterator();
+    IntStream.range(0, annotation.getCollection().size())
         .forEach(
             i -> {
               Span span = spanIterator.next();
@@ -224,9 +209,9 @@ public class UIMAXMIUtil extends XMLUtil implements BasicIOUtil {
               spansFS.set(i, spanFS);
             });
 
-    String owlClassID = annotation.getOwlClassID();
+    String owlClassID = annotation.getOwlClass();
     annotationFS.setOwlClass(owlClassID);
-    annotationFS.setNumberOfSpans(annotation.getSpanCollection().getCollection().size());
+    annotationFS.setNumberOfSpans(annotation.getCollection().size());
     annotationFS.setSpans(spansFS);
 
     textSourceAsCAS.getIndexRepository().addFS(annotationFS);

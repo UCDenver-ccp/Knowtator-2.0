@@ -57,7 +57,8 @@ import org.w3c.dom.Node;
 public final class KnowtatorXmlUtil extends XmlUtil {
   private static final Logger log = LoggerFactory.getLogger(KnowtatorXmlUtil.class);
 
-  private Optional<Element> getRootElement(File file) {
+  @Override
+  public Optional<Element> getRootElement(File file) {
     Optional<Document> docOptional = startRead(file);
 
     if (docOptional.isPresent()) {
@@ -72,38 +73,26 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     return Optional.empty();
   }
 
-  /**
-   * Read to text source.
-   *
-   * @param textSource the text source
-   * @param file the file
-   */
+  @Override
   public void readToTextSource(TextSource textSource, File file) {
     Optional<Element> parentOptional = getRootElement(file);
-    parentOptional.ifPresent(
-        parent -> {
-          for (Node documentNode :
-              KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
-            Element documentElement = (Element) documentNode;
-            readToTextSource(
-                textSource,
-                textSource.getConceptAnnotations(),
-                textSource.getGraphSpaces(),
-                documentElement);
-          }
-        });
+    parentOptional.ifPresent(parent ->{
+      for (Node documentNode :
+          asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
+        Element documentElement = (Element) documentNode;
+        readToTextSource(textSource, documentElement);
+      }
+    });
   }
 
-  private void readToTextSource(
-      TextSource textSource,
-      ConceptAnnotationCollection annotations,
-      GraphSpaceCollection graphSpaces,
-      Element parent) {
+  @Override
+  public void readToTextSource(TextSource textSource, Element parent) {
     textSource.getKnowtatorModel().removeModelListener(textSource);
     readToConceptAnnotationCollection(
-        textSource.getKnowtatorModel(), textSource, annotations, parent);
-    readToGraphSpaceCollection(textSource, graphSpaces, parent);
-    textSource.getKnowtatorModel().addModelListener(textSource);
+          textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
+      readToGraphSpaceCollection(textSource, textSource.getGraphSpaces(), parent);
+      textSource.getKnowtatorModel().addModelListener(textSource);
+
   }
 
   /**
@@ -112,12 +101,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param model the model
    * @param file the file
    */
+  @Override
   public void readToTextSourceCollection(KnowtatorModel model, File file) {
     Optional<Element> parentOptional = getRootElement(file);
     parentOptional.ifPresent(
         parent -> {
           for (Node documentNode :
-              KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
+              asList(parent.getElementsByTagName(KnowtatorXmlTags.DOCUMENT))) {
             Element documentElement = (Element) documentNode;
             String textSourceId = documentElement.getAttribute(KnowtatorXmlAttributes.ID);
             String textFileName = documentElement.getAttribute(KnowtatorXmlAttributes.FILE);
@@ -131,20 +121,19 @@ public final class KnowtatorXmlUtil extends XmlUtil {
 
             readToTextSource(
                 newTextSource,
-                newTextSource.getConceptAnnotations(),
-                newTextSource.getGraphSpaces(),
                 documentElement);
           }
         });
   }
 
-  private void readToConceptAnnotationCollection(
+  @Override
+  public void readToConceptAnnotationCollection(
       KnowtatorModel model,
       TextSource textSource,
       ConceptAnnotationCollection conceptAnnotationCollection,
       Element parent) {
 
-    KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.ANNOTATION)).stream()
+    asList(parent.getElementsByTagName(KnowtatorXmlTags.ANNOTATION)).stream()
         .map(node -> (Element) node)
         .map(
             annotationElement -> {
@@ -161,7 +150,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
               Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
 
               Set<String> layers =
-                  KnowtatorXmlUtil.asList(
+                  asList(
                           annotationElement.getElementsByTagName(KnowtatorXmlAttributes.LAYER))
                       .stream()
                       .map(node -> (Element) node)
@@ -201,13 +190,14 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     textSource.getConceptAnnotations().first().ifPresent(textSource::setSelectedConceptAnnotation);
   }
 
-  private void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
+  @Override
+  protected void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
     Element spanElement;
     String spanId;
     int spanStart;
     int spanEnd;
     for (Node spanNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.SPAN))) {
+        asList(parent.getElementsByTagName(KnowtatorXmlTags.SPAN))) {
       if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
         spanElement = (Element) spanNode;
         spanStart = Integer.parseInt(spanElement.getAttribute(KnowtatorXmlAttributes.SPAN_START));
@@ -225,10 +215,11 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     }
   }
 
-  private void readToGraphSpaceCollection(
+  @Override
+  protected void readToGraphSpaceCollection(
       TextSource textSource, GraphSpaceCollection graphSpaceCollection, Element parent) {
     for (Node graphSpaceNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.GRAPH_SPACE))) {
+        asList(parent.getElementsByTagName(KnowtatorXmlTags.GRAPH_SPACE))) {
       Element graphSpaceElem = (Element) graphSpaceNode;
 
       String id = graphSpaceElem.getAttribute(KnowtatorXmlAttributes.ID);
@@ -243,9 +234,10 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     }
   }
 
-  private void readToGraphSpace(GraphSpace graphSpace, Element parent) {
+  @Override
+  public void readToGraphSpace(GraphSpace graphSpace, Element parent) {
     for (Node graphVertexNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.VERTEX))) {
+        asList(parent.getElementsByTagName(KnowtatorXmlTags.VERTEX))) {
       Element graphVertexElem = (Element) graphVertexNode;
 
       String id = graphVertexElem.getAttribute(KnowtatorXmlAttributes.ID);
@@ -266,7 +258,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     }
 
     for (Node tripleNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.TRIPLE))) {
+        asList(parent.getElementsByTagName(KnowtatorXmlTags.TRIPLE))) {
       Element tripleElem = (Element) tripleNode;
 
       String id = tripleElem.getAttribute(KnowtatorXmlAttributes.ID);
@@ -338,12 +330,13 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    * @param model the model
    * @param file the file
    */
+  @Override
   public void readToProfileCollection(KnowtatorModel model, File file) {
     Optional<Element> parentOptional = getRootElement(file);
     parentOptional.ifPresent(
         parent -> {
           for (Node profileNode :
-              KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.PROFILE))) {
+              asList(parent.getElementsByTagName(KnowtatorXmlTags.PROFILE))) {
             Element profileElement = (Element) profileNode;
             String profileID = profileElement.getAttribute(KnowtatorXmlAttributes.ID);
 
@@ -360,7 +353,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
     model.removeModelListener(profile);
 
     for (Node highlighterNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(KnowtatorXmlTags.HIGHLIGHTER))) {
+        asList(parent.getElementsByTagName(KnowtatorXmlTags.HIGHLIGHTER))) {
       Element highlighterElement = (Element) highlighterNode;
 
       String classID = highlighterElement.getAttribute(KnowtatorXmlAttributes.CLASS_ID);
@@ -386,6 +379,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    *
    * @param textSource the text source
    */
+  @Override
   public void writeFromTextSource(TextSource textSource) {
 
     File file = textSource.getSaveLocation();
@@ -520,6 +514,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
    *
    * @param profile the profile
    */
+  @Override
   public void writeFromProfile(Profile profile) {
 
     Optional<Document> domOptional = startWrite(profile.getSaveLocation());
@@ -548,4 +543,6 @@ public final class KnowtatorXmlUtil extends XmlUtil {
           }
         });
   }
+
+
 }

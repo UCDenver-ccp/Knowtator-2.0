@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model;
 
+import edu.ucdenver.ccp.knowtator.io.XmlUtil;
 import edu.ucdenver.ccp.knowtator.io.brat.BratStandoffUtil;
 import edu.ucdenver.ccp.knowtator.io.conll.ConllUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
@@ -101,9 +102,9 @@ public class KnowtatorModel extends OwlModel {
     setLoading(true);
 
     log.info("Loading profiles");
-    KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+    XmlUtil xmlUtil = new KnowtatorXmlUtil();
     ConllUtil conllUtil = new ConllUtil();
-    OldKnowtatorXmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
+    XmlUtil oldXmlUtil = new OldKnowtatorXmlUtil();
 
     try {
       Files.list(BaseModel.getProfilesLocation(projectLocation).toPath())
@@ -160,7 +161,7 @@ public class KnowtatorModel extends OwlModel {
 
     switch (extension) {
       case "xml":
-        KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+        XmlUtil xmlUtil = new KnowtatorXmlUtil();
         xmlUtil.readToTextSourceCollection(this, file);
         break;
       case "ann":

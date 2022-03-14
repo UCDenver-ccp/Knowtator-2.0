@@ -28,6 +28,7 @@ import edu.ucdenver.ccp.knowtator.io.XmlUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /** The type Old knowtator xml util. */
 public class OldKnowtatorXmlUtil extends XmlUtil {
@@ -59,7 +61,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
     HashMap<String, Element> mentionTracker = new HashMap<>();
 
     for (Node classNode :
-        KnowtatorXmlUtil.asList(
+        asList(
             textSourceElement.getElementsByTagName(OldKnowtatorXmlTags.CLASS_MENTION))) {
       if (classNode.getNodeType() == Node.ELEMENT_NODE) {
         Element classElement = (Element) classNode;
@@ -92,7 +94,8 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
     return slotMap;
   }
 
-  private Optional<Element> getRootElement(File file) {
+  @Override
+  public Optional<Element> getRootElement(File file) {
     Optional<Document> docOptional = startRead(file);
     if (docOptional.isPresent()) {
       Document doc = docOptional.get();
@@ -112,6 +115,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
    * @param model the model
    * @param file the file
    */
+  @Override
   public void readToTextSourceCollection(KnowtatorModel model, File file) {
     Optional<Element> parentOptional = getRootElement(file);
     parentOptional.ifPresent(
@@ -127,12 +131,34 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
         });
   }
 
-  private void readToTextSource(TextSource textSource, Element parent) {
+  @Override
+  public void readToTextSource(TextSource textSource, File file) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public void readToProfileCollection(KnowtatorModel model, File file) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public void writeFromTextSource(TextSource textSource) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public void writeFromProfile(Profile profile) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public void readToTextSource(TextSource textSource, Element parent) {
     readToConceptAnnotationCollection(
         textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
   }
 
-  private void readToConceptAnnotationCollection(
+  @Override
+  public void readToConceptAnnotationCollection(
       KnowtatorModel model,
       TextSource textSource,
       ConceptAnnotationCollection conceptAnnotationCollection,
@@ -141,7 +167,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
     Map<String, Element> classMentionToClassIdMap = getClassIDsFromXml(parent);
     Map<ConceptAnnotation, Element> annotationToSlotMap = new HashMap<>();
 
-    KnowtatorXmlUtil.asList(parent.getElementsByTagName(OldKnowtatorXmlTags.ANNOTATION)).stream()
+    asList(parent.getElementsByTagName(OldKnowtatorXmlTags.ANNOTATION)).stream()
         .map(node -> (Element) node)
         .map(
             annotationElement -> {
@@ -207,7 +233,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
               if (newConceptAnnotation.size() == 0) {
                 return Optional.empty();
               } else {
-                KnowtatorXmlUtil.asList(
+                asList(
                     classElement.getElementsByTagName(OldKnowtatorXmlTags.HAS_SLOT_MENTION))
                     .stream()
                     .map(node -> (Element) node)
@@ -242,7 +268,7 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
               oldKnowtatorGraphSpace.getAnnotationNodeForConceptAnnotation(annotation);
 
           for (Node slotMentionValueNode :
-              OldKnowtatorXmlUtil.asList(
+              asList(
                   slot.getElementsByTagName(OldKnowtatorXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
             Element slotMentionValueElement = (Element) slotMentionValueNode;
             String value = slotMentionValueElement.getAttribute(OldKnowtatorXmlAttributes.VALUE);
@@ -265,9 +291,10 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
         });
   }
 
-  private void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
+  @Override
+  public void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
     for (Node spanNode :
-        KnowtatorXmlUtil.asList(parent.getElementsByTagName(OldKnowtatorXmlTags.SPAN))) {
+        asList(parent.getElementsByTagName(OldKnowtatorXmlTags.SPAN))) {
       if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
         Element spanElement = (Element) spanNode;
         int spanStart =
@@ -282,5 +309,15 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
         }
       }
     }
+  }
+
+  @Override
+  protected void readToGraphSpaceCollection(TextSource textSource, GraphSpaceCollection graphSpaceCollection, Element parent) {
+    throw new NotImplementedException();
+  }
+
+  @Override
+  public void readToGraphSpace(GraphSpace graphSpace, Element parent) {
+    throw new NotImplementedException();
   }
 }

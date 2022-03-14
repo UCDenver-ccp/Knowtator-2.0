@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.model.object;
 
+import edu.ucdenver.ccp.knowtator.io.XmlUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
@@ -128,7 +129,7 @@ public class Profile implements ModelObject<Profile>, Savable, ModelListener {
 
   @Override
   public void save() {
-    KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+    XmlUtil xmlUtil = new KnowtatorXmlUtil();
     xmlUtil.writeFromProfile(this);
   }
 

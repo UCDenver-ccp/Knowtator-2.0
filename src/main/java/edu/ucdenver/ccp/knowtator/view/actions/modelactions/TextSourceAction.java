@@ -24,6 +24,7 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 
+import edu.ucdenver.ccp.knowtator.io.XmlUtil;
 import edu.ucdenver.ccp.knowtator.io.knowtator.KnowtatorXmlUtil;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
@@ -72,7 +73,7 @@ public class TextSourceAction extends AbstractKnowtatorCollectionAction<TextSour
   @Override
   protected void cleanUpAdd() {
     if (annotationFile != null) {
-      KnowtatorXmlUtil xmlUtil = new KnowtatorXmlUtil();
+      XmlUtil xmlUtil = new KnowtatorXmlUtil();
       xmlUtil.readToTextSource(object, annotationFile);
     }
   }

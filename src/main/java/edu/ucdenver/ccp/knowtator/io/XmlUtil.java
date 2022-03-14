@@ -24,6 +24,13 @@
 
 package edu.ucdenver.ccp.knowtator.io;
 
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
+import edu.ucdenver.ccp.knowtator.model.object.Profile;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,12 +56,13 @@ import javax.xml.transform.stream.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /** The type Xml util. */
-public class XmlUtil {
+public abstract class XmlUtil {
   private static final Logger log = LoggerFactory.getLogger(XmlUtil.class);
 
   /**
@@ -161,4 +169,34 @@ public class XmlUtil {
       System.out.println(te.getMessage());
     }
   }
+
+  public abstract Optional<Element> getRootElement(File file);
+
+  public abstract void readToProfileCollection(KnowtatorModel model, File file);
+
+  public abstract void readToTextSourceCollection(KnowtatorModel model, File file);
+
+  public abstract void readToTextSource(TextSource textSource, File file);
+
+  public abstract void readToTextSource(TextSource textSource, Element parent);
+
+  public abstract void readToConceptAnnotationCollection(
+      KnowtatorModel model,
+      TextSource textSource,
+      ConceptAnnotationCollection conceptAnnotationCollection,
+      Element parent);
+
+  protected abstract void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent);
+
+  protected abstract void readToGraphSpaceCollection(
+      TextSource textSource, GraphSpaceCollection graphSpaceCollection, Element parent);
+
+  public abstract void readToGraphSpace(GraphSpace graphSpace, Element parent);
+
+  public abstract void writeFromTextSource(TextSource textSource);
+
+  public abstract void writeFromProfile(Profile profile);
+
+
+
 }
