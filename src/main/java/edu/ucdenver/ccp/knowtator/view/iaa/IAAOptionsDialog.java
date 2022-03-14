@@ -177,7 +177,7 @@ public class IAAOptionsDialog extends JDialog implements KnowtatorComponent {
                                           "Merge profiles between projects for IAA?",
                                           "Profile merge?",
                                           JOptionPane.YES_NO_OPTION)
-                                          == JOptionPane.NO_OPTION,
+                                          == JOptionPane.YES_OPTION,
                                       true);
 
                               setModels(newModel);
