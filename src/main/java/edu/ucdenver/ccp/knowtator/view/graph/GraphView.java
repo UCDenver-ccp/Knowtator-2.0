@@ -500,22 +500,21 @@ public class GraphView extends JPanel
                 if (conceptAnnotation
                     .getTextSource()
                     .getGraphSpaces()
-                    .getSelection()
+                    .getOnly()
                     .map(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
                     .orElse(false)) {
                   conceptAnnotation
                       .getTextSource()
                       .getGraphSpaces()
-                      .getSelection()
+                      .getOnly()
                       .ifPresent(
                           graphSpace -> {
                             dialog.setVisible(true);
                             showGraph(graphSpace);
                           });
                 } else {
-                  conceptAnnotation.getTextSource().getGraphSpaces().stream()
+                  conceptAnnotation.getTextSource().getGraphSpaces().getOnly()
                       .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
-                      .findFirst()
                       .ifPresent(
                           graphSpace -> {
                             dialog.setVisible(true);

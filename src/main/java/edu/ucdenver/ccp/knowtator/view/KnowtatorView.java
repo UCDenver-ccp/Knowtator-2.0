@@ -376,7 +376,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                                           String.format("%s_annotations.png", textSource.getId())));
                                   if (fileChooser.showSaveDialog(this)
                                       == JFileChooser.APPROVE_OPTION) {
-                                    textSource.setSelectedConceptAnnotation(null);
+                                    textSource.getConceptAnnotations().clearSelection();
                                     BufferedImage image = textPane.getScreenShot();
                                     try {
                                       ImageIO.write(image, "png", fileChooser.getSelectedFile());
@@ -481,7 +481,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                         model1 ->
                             model1
                                 .getSelectedConceptAnnotation()
-                                .map(SelectableCollection::getSelection))
+                                .map(SelectableCollection::getOnly))
                     .isPresent()) {
                   try {
                     textPane.scrollRectToVisible(textPane.modelToView(0));
@@ -502,7 +502,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                         model1 ->
                             model1
                                 .getSelectedConceptAnnotation()
-                                .map(SelectableCollection::getSelection))
+                                .map(SelectableCollection::getOnly))
                     .isPresent()) {
                   try {
                     textPane.scrollRectToVisible(textPane.modelToView(0));
@@ -676,7 +676,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
                           try {
                             model1.registerAction(
                                 new SpanActions.ModifySpanAction(
@@ -697,7 +697,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
                           try {
                             model1.registerAction(
                                 new SpanActions.ModifySpanAction(
@@ -717,7 +717,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
                           try {
                             model1.registerAction(
                                 new SpanActions.ModifySpanAction(
@@ -737,7 +737,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model1 ->
                         model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getSelection).ifPresent(span -> {
+                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
                           try {
                             model1.registerAction(
                                 new SpanActions.ModifySpanAction(

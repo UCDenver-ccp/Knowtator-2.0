@@ -86,7 +86,7 @@ class ProfileDialogTest {
         expectedProfiles,
         expectedHighlighters);
     controller.undo();
-    controller.getProfiles().setSelection(controller.getDefaultProfile());
+    controller.getProfiles().selectOnly(controller.getDefaultProfile());
     checkDefaultCollectionValues(dialog);
     controller.redo();
     countCollections(

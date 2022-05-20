@@ -277,7 +277,7 @@ class KnowtatorIaaTest {
       throw new FileAlreadyExistsException(outputDir.getAbsolutePath());
     }
 
-    TextSource textSource = model1.getTextSources().getSelection().get();
+    TextSource textSource = model1.getTextSources().getOnly().get();
     ConceptAnnotation conceptAnnotation =
         new ConceptAnnotation(
             textSource,

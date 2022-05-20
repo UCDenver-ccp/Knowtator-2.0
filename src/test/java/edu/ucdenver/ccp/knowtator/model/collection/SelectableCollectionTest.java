@@ -57,9 +57,9 @@ class SelectableCollectionTest {
 
   @Test
   void selectPreviousTest() {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getTextSources().get("document1").get();
-    assert textSource.equals(model.getTextSources().getSelection().get());
+    assert textSource.equals(model.getTextSources().getOnly().get());
     model.selectPreviousTextSource();
     model.selectPreviousTextSource();
     model.selectPreviousTextSource();

@@ -55,14 +55,12 @@ public class ProfileCollection extends KnowtatorCollection<Profile> {
   }
 
   @Override
-  public Optional<Profile> getSelection() {
+  public Optional<Profile> getOnly() {
     // Profile should never be null
-    if (super.getSelection().isPresent()) {
-      return super.getSelection();
-    } else {
-      setSelection(defaultProfile);
-      return Optional.of(defaultProfile);
+    if (!super.getOnly().isPresent()) {
+      selectOnly(defaultProfile);
     }
+    return super.getOnly();
   }
 
   @Override

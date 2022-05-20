@@ -34,7 +34,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -213,22 +212,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    event
-        .getNew()
-        .filter(modelObject -> !(event instanceof SelectionEvent))
-        .filter(modelObject -> modelObject instanceof TextBoundModelObject)
-        .map(modelObject -> (TextBoundModelObject) modelObject)
-        .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
-        .ifPresent(
-            modelObject -> save());
-    event
-        .getOld()
-        .filter(modelObject -> !(event instanceof SelectionEvent))
-        .filter(modelObject -> modelObject instanceof TextBoundModelObject)
-        .map(modelObject -> (TextBoundModelObject) modelObject)
-        .filter(textBoundModelObject -> textBoundModelObject.getTextSource().equals(this))
-        .ifPresent(
-            modelObject -> save());
+
   }
 
   /**
@@ -237,7 +221,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the selected annotation
    */
   public Optional<ConceptAnnotation> getSelectedAnnotation() {
-    return conceptAnnotations.getSelection();
+    return conceptAnnotations.getOnly();
   }
 
   /**
@@ -277,7 +261,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @param conceptAnnotation the concept annotation
    */
   public void setSelectedConceptAnnotation(ConceptAnnotation conceptAnnotation) {
-    conceptAnnotations.setSelection(conceptAnnotation);
+    conceptAnnotations.selectOnly(conceptAnnotation);
   }
 
   /**
@@ -305,7 +289,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @return the selected graph space
    */
   public Optional<GraphSpace> getSelectedGraphSpace() {
-    return graphSpaces.getSelection();
+    return graphSpaces.getOnly();
   }
 
   /**
@@ -351,7 +335,7 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    * @param graphSpace the graph space
    */
   public void setSelectedGraphSpace(GraphSpace graphSpace) {
-    graphSpaces.setSelection(graphSpace);
+    graphSpaces.selectOnly(graphSpace);
   }
 
   /** Select next concept annotation. */

@@ -61,7 +61,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeTextSourceActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TestingHelpers.testKnowtatorAction(
         model,
         new TextSourceAction(model, REMOVE, null, null),
@@ -70,7 +70,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void addConceptAnnotationActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TestingHelpers.testKnowtatorAction(
         model,
         new ConceptAnnotationAction(model, ADD, model.getSelectedTextSource().get()),
@@ -79,7 +79,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeConceptAnnotationActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -90,7 +90,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void addSpanActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
     TestingHelpers.testKnowtatorAction(
@@ -102,13 +102,13 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeSpanActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     // First test remove span if there is only one in the collection. This should be equivalent to
     // just removing the annotation
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);
-    conceptAnnotation.setSelection(conceptAnnotation.first().get());
+    conceptAnnotation.selectOnly(conceptAnnotation.first().get());
     TestingHelpers.testKnowtatorAction(
         model,
         new SpanAction(
@@ -116,10 +116,10 @@ public class KnowtatorCollectionActionsTest {
         TestingHelpers.defaultCounts.copy(0, -1, -1, 0, 0, 0, -1, -1, 0));
 
     // Next test remove span if there are multiple spans. This should only remove the span.
-    conceptAnnotation.setSelection(conceptAnnotation.first().get());
+    conceptAnnotation.selectOnly(conceptAnnotation.first().get());
     textSource.selectNextSpan();
     conceptAnnotation = textSource.getSelectedAnnotation().get();
-    conceptAnnotation.setSelection(conceptAnnotation.first().get());
+    conceptAnnotation.selectOnly(conceptAnnotation.first().get());
     TestingHelpers.testKnowtatorAction(
         model,
         new SpanAction(
@@ -137,7 +137,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeProfileActionTest() throws ActionUnperformable {
-    model.getProfiles().setSelection(model.getProfile("profile1").get());
+    model.getProfiles().selectOnly(model.getProfile("profile1").get());
     TestingHelpers.testKnowtatorAction(
         model,
         new ProfileAction(model, REMOVE, null),
@@ -149,7 +149,7 @@ public class KnowtatorCollectionActionsTest {
   @SuppressWarnings("unused")
   void removeDefaultProfileActionTest() throws ActionUnperformable {
     // It should not be possible to remove the default profile
-    model.getProfiles().setSelection(model.getDefaultProfile());
+    model.getProfiles().selectOnly(model.getDefaultProfile());
     new ProfileAction(model, REMOVE, null).execute();
   }
 
@@ -164,7 +164,7 @@ public class KnowtatorCollectionActionsTest {
 
   @Test
   public void removeGraphSpaceActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     textSource.selectNextGraphSpace();
     TestingHelpers.testKnowtatorAction(

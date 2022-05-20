@@ -47,7 +47,7 @@ public class ProfileList extends KnowtatorList<Profile> {
     // java.lang.ArrayIndexOutOfBoundsException: null
     Optional<Profile> profileOptional = Optional.ofNullable(getSelectedValue());
     profileOptional.ifPresent(
-        profile -> view.getModel().ifPresent(model -> model.getProfiles().setSelection(profile)));
+        profile -> view.getModel().ifPresent(model -> model.getProfiles().selectOnly(profile)));
   }
 
   @Override

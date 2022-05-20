@@ -184,7 +184,7 @@ public class GraphSpace extends mxGraph
     getModel().beginUpdate();
     try {
       addCell(cell);
-      knowtatorModel.fireModelEvent(new ChangeEvent<>(knowtatorModel, null, this));
+      knowtatorModel.fireModelEvent(new ChangeEvent<>(this));
     } finally {
       //      reDrawGraph();
       getModel().endUpdate();
@@ -250,7 +250,7 @@ public class GraphSpace extends mxGraph
               }
             });
     if (cells.length != 0) {
-      knowtatorModel.fireModelEvent(new ChangeEvent<>(knowtatorModel, null, this));
+      knowtatorModel.fireModelEvent(new ChangeEvent<>(this));
     }
     return cells;
   }

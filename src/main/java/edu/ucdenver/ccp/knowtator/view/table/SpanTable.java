@@ -58,9 +58,9 @@ public class SpanTable extends KnowtatorTable<Span> {
     spanOptional.ifPresent(
         span -> {
           view.getModel()
-              .ifPresent(model -> model.getTextSources().setSelection(span.getTextSource()));
+              .ifPresent(model -> model.getTextSources().selectOnly(span.getTextSource()));
           span.getTextSource().setSelectedConceptAnnotation(span.getConceptAnnotation());
-          span.getConceptAnnotation().setSelection(span);
+          span.getConceptAnnotation().selectOnly(span);
         });
   }
 
@@ -77,8 +77,7 @@ public class SpanTable extends KnowtatorTable<Span> {
     return view.getModel()
         .flatMap(BaseModel::getSelectedTextSource)
         .flatMap(TextSource::getSelectedAnnotation)
-        .flatMap(ConceptAnnotation::getSelection)
-        .map(span -> span);
+        .map(ConceptAnnotation::getOnly);
   }
 
   @Override

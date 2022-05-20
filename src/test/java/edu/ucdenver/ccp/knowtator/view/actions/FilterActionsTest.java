@@ -57,7 +57,7 @@ class FilterActionsTest {
     TestingHelpers.testKnowtatorAction(model, new FilterAction(model, PROFILE, false),
         TestingHelpers.defaultCounts);
 
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);

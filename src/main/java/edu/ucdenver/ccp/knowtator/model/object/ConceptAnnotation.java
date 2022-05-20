@@ -176,7 +176,7 @@ public class ConceptAnnotation extends SpanCollection
    */
   public void setOwlClass(String owlClass) {
     this.owlClass = owlClass;
-    model.fireModelEvent(new ChangeEvent<>(model, null, this));
+    model.fireModelEvent(new ChangeEvent<>(this));
   }
 
   /**
@@ -296,7 +296,7 @@ public class ConceptAnnotation extends SpanCollection
   public void setMotivation(String motivation) {
     this.motivation = motivation;
     // TODO: Potentially could make typing very slow
-    model.fireModelEvent(new ChangeEvent<>(model, null, this));
+    model.fireModelEvent(new ChangeEvent<>(this));
   }
 
   /**

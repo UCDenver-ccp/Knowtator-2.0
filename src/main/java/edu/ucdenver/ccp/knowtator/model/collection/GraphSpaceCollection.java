@@ -43,9 +43,9 @@ public class GraphSpaceCollection extends KnowtatorCollection<GraphSpace> {
   }
 
   @Override
-  public void setSelection(GraphSpace graphSpace) {
+  public void selectOnly(GraphSpace graphSpace) {
     if (graphSpace != null) {
-      super.setSelection(graphSpace);
+      super.selectOnly(graphSpace);
     }
   }
 

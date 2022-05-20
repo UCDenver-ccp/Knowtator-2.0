@@ -66,7 +66,7 @@ public abstract class ListenableCollection<K extends ModelObject, C extends Coll
     collection.add(objectToAdd);
 
     if (model != null) {
-      model.fireModelEvent(new ChangeEvent<>(model, null, objectToAdd));
+      model.fireModelEvent(new ChangeEvent<>(objectToAdd));
     }
   }
 
@@ -78,7 +78,7 @@ public abstract class ListenableCollection<K extends ModelObject, C extends Coll
   void remove(K objectToRemove) {
     collection.remove(objectToRemove);
     if (model != null) {
-      model.fireModelEvent(new ChangeEvent<>(model, null, objectToRemove));
+      model.fireModelEvent(new ChangeEvent<>(objectToRemove));
     }
   }
 

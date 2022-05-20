@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.event;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import java.util.Optional;
 
 /**
@@ -34,32 +33,18 @@ import java.util.Optional;
  */
 public class ChangeEvent<O> {
 
-  private final O oldObject;
   private final O newObject;
-  private final BaseModel model;
 
   /**
    * Instantiates a new Change event.
    *
-   * @param model the model
-   * @param oldObject the old object
    * @param newObject the new object
    */
-  public ChangeEvent(BaseModel model, O oldObject, O newObject) {
-    this.model = model;
+  public ChangeEvent(O newObject) {
 
-    this.oldObject = oldObject;
     this.newObject = newObject;
   }
 
-  /**
-   * Gets old.
-   *
-   * @return the old
-   */
-  public Optional<O> getOld() {
-    return Optional.ofNullable(oldObject);
-  }
 
   /**
    * Gets new.
@@ -68,14 +53,5 @@ public class ChangeEvent<O> {
    */
   public Optional<O> getNew() {
     return Optional.ofNullable(newObject);
-  }
-
-  /**
-   * Gets model.
-   *
-   * @return the model
-   */
-  public BaseModel getModel() {
-    return model;
   }
 }

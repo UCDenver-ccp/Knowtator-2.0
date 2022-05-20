@@ -55,7 +55,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
         e -> {
           JComboBox comboBox = (JComboBox) e.getSource();
           if (comboBox.getSelectedItem() != null) {
-            this.collection.setSelection(getItemAt(getSelectedIndex()));
+            this.collection.selectOnly(getItemAt(getSelectedIndex()));
           }
         };
   }
@@ -94,7 +94,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
         .ifPresent(
             model -> {
               removeActionListener(al);
-              collection.getSelection().ifPresent(this::setSelectedItem);
+              collection.getOnly().ifPresent(this::setSelectedItem);
               addActionListener(al);
             });
   }

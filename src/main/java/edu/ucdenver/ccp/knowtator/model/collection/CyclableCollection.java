@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.TreeSet;
 
@@ -54,20 +53,10 @@ public abstract class CyclableCollection<K extends ModelObject>
    * @param current the current
    * @return the previous
    */
-  K getPrevious(K current) {
-
-    K previous;
-    try {
-      previous =
-          getCollection().contains(current) ? getCollection().lower(current) : getCollection().floor(current);
-    } catch (NullPointerException npe) {
-      previous = null;
-    }
-    if (previous == null) {
-      previous = getCollection().last();
-    }
-
-    return previous;
+  Optional<K> getPrevious(K current) {
+    return Optional.ofNullable(collection.contains(current) ? collection.lower(current) : collection.floor(current))
+        .map(Optional::of)
+        .orElse(last());
   }
 
   /**
@@ -76,31 +65,17 @@ public abstract class CyclableCollection<K extends ModelObject>
    * @param current the current
    * @return the next
    */
-  K getNext(K current) {
-    K next;
-    try {
-      next =
-          getCollection().contains(current) ? getCollection().higher(current) : getCollection().ceiling(current);
-    } catch (NullPointerException npe) {
-      next = null;
-    }
-    if (next == null) {
-      next = getCollection().first();
-    }
-
-    return next;
+  Optional<K> getNext(K current) {
+    return Optional.ofNullable(collection.contains(current) ? collection.higher(current) : collection.ceiling(current))
+        .map(Optional::of)
+        .orElse(first());
   }
 
-  /**
-   * First optional.
-   *
-   * @return the optional
-   */
+  public Optional<K> last() {
+      return Optional.ofNullable(collection.isEmpty() ? null : collection.last());
+  }
+
   public Optional<K> first() {
-    try {
-      return Optional.ofNullable(getCollection().first());
-    } catch (NoSuchElementException e) {
-      return Optional.empty();
-    }
+    return Optional.ofNullable(collection.isEmpty() ? null : collection.first());
   }
 }

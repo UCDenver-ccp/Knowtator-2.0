@@ -62,7 +62,7 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
                         .getSelectedTextSource()
                         .map(textSource -> textSource.equals(conceptAnnotation.getTextSource()))
                         .orElse(false)) {
-                      model.getTextSources().setSelection(conceptAnnotation.getTextSource());
+                      model.getTextSources().selectOnly(conceptAnnotation.getTextSource());
                     }
                   });
           conceptAnnotation.getTextSource().setSelectedConceptAnnotation(conceptAnnotation);

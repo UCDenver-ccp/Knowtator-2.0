@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.model.collection;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.TreeSet;
 
@@ -37,71 +38,75 @@ import java.util.TreeSet;
  */
 public abstract class SelectableCollection<K extends ModelObject> extends CyclableCollection<K> {
 
-  private K selection;
+  private final ArrayList<K> selection;
 
   /**
    * Instantiates a new Selectable collection.
    *
-   * @param model the model
+   * @param model      the model
    * @param collection the collection
    */
   SelectableCollection(BaseModel model, TreeSet<K> collection) {
     super(model, collection);
-    selection = null;
+    selection = new ArrayList<>();
+  }
+
+  public Optional<K> getOnly() {
+    if (selection.size() == 1) {
+      return Optional.of(selection.get(0));
+    } else {
+      return Optional.empty();
+    }
   }
 
   /**
-   * Gets selection.
-   *
-   * @return the selection
+   * Select next.
    */
-  public Optional<K> getSelection() {
-    return Optional.ofNullable(selection);
-  }
-
-  /** Select next. */
   public void selectNext() {
-    if (getSelection().isPresent()) {
-      getSelection().ifPresent(selection -> setSelection(getNext(selection)));
+    if (selection.isEmpty()) {
+      first().ifPresent(this::selectOnly);
     } else {
-      first().ifPresent(this::setSelection);
-    }
-  }
-
-  /** Select previous. */
-  public void selectPrevious() {
-    if (getSelection().isPresent()) {
-      getSelection().ifPresent(selection -> setSelection(getPrevious(selection)));
-    } else {
-      first().ifPresent(this::setSelection);
+      getNext(selection.get(0)).ifPresent(this::selectOnly);
     }
   }
 
   /**
-   * Sets selection.
-   *
-   * @param newSelection the new selection
+   * Select previous.
    */
-  public void setSelection(K newSelection) {
+  public void selectPrevious() {
+    if (selection.isEmpty()) {
+      first().ifPresent(this::selectOnly);
+    } else {
+      getPrevious(selection.get(0)).ifPresent(this::selectOnly);
+    }
+  }
+
+  public void selectOnly(K item) {
     SelectionEvent<ModelObject> selectionEvent =
-        new SelectionEvent<>(model, selection, newSelection);
-    this.selection = newSelection;
+        new SelectionEvent<>(item);
+
+    clearSelection();
+    selection.add(item);
     if (model != null) {
       model.fireModelEvent(selectionEvent);
     }
   }
 
+  public void clearSelection() {
+    selection.clear();
+  }
+
   @Override
   public void add(K item) {
-    setSelection(item);
+    selectOnly(item);
     super.add(item);
   }
 
   @Override
   public void remove(K item) {
     super.remove(item);
-    this.getSelection()
+    getOnly()
         .filter(selection -> selection.equals(item))
-        .ifPresent(selection -> setSelection(null));
+        .ifPresent(selection -> clearSelection());
   }
 }

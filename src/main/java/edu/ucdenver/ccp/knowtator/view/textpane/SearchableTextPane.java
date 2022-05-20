@@ -123,7 +123,7 @@ public abstract class SearchableTextPane extends JTextPane
           }
         }
       }
-      view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> textSource.setSelectedConceptAnnotation(null));
+      view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> textSource.getConceptAnnotations().clearSelection());
       select(matchStart, matchEnd);
       refreshHighlights();
       isSearching = false;
@@ -185,7 +185,7 @@ public abstract class SearchableTextPane extends JTextPane
         .flatMap(BaseModel::getSelectedTextSource)
         .flatMap(textSource -> textSource
         .getSelectedAnnotation()
-        .flatMap(SelectableCollection::getSelection))
+        .flatMap(SelectableCollection::getOnly))
         .filter(span -> shouldUpdateSearchTextFieldCondition())
         .ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event

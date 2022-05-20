@@ -150,7 +150,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
 
   /** Select first text source. */
   public void selectFirstTextSource() {
-    textSources.first().ifPresent(textSources::setSelection);
+    textSources.first().ifPresent(textSources::selectOnly);
   }
 
   /**
@@ -196,7 +196,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @return the selected profile
    */
   public Optional<Profile> getSelectedProfile() {
-    return profiles.getSelection();
+    return profiles.getOnly();
   }
 
   /**
@@ -310,7 +310,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @return the selected text source
    */
   public Optional<TextSource> getSelectedTextSource() {
-    return textSources.getSelection();
+    return textSources.getOnly();
   }
 
   public Optional<ConceptAnnotation> getSelectedConceptAnnotation() {

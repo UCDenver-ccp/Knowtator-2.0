@@ -149,7 +149,7 @@ public class RelationAnnotation extends mxCell
   void setProperty(String owlObjectProperty) {
     property = owlObjectProperty;
     setLabel();
-    model.fireModelEvent(new ChangeEvent<>(model, null, this));
+    model.fireModelEvent(new ChangeEvent<>(this));
   }
 
   /** Sets label. */

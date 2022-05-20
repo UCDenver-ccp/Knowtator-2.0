@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.event;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 
 /**
@@ -36,11 +35,9 @@ public class SelectionEvent<K extends ModelObject> extends ChangeEvent<K> {
   /**
    * Instantiates a new Selection event.
    *
-   * @param model the model
-   * @param oldObject the old object
    * @param newObject the new object
    */
-  public SelectionEvent(BaseModel model, K oldObject, K newObject) {
-    super(model, oldObject, newObject);
+  public SelectionEvent(K newObject) {
+    super(newObject);
   }
 }

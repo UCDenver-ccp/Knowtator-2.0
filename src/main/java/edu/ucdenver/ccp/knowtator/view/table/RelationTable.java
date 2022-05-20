@@ -136,7 +136,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
         relationAnnotation -> {
           view.getModel()
               .ifPresent(
-                  model -> model.getTextSources().setSelection(relationAnnotation.getTextSource()));
+                  model -> model.getTextSources().selectOnly(relationAnnotation.getTextSource()));
           relationAnnotation
               .getTextSource()
               .setSelectedGraphSpace(relationAnnotation.getGraphSpace());

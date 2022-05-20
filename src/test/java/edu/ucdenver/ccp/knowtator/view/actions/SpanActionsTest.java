@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.actions;
 
-import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import edu.ucdenver.ccp.knowtator.TestingHelpers;
@@ -71,12 +70,12 @@ class SpanActionsTest {
 
   @Test
   void modifySpanActionTest() throws ActionUnperformable {
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getSelectedTextSource().get();
     ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
     textSource.setSelectedConceptAnnotation(conceptAnnotation);
     Span span = conceptAnnotation.first().get();
-    conceptAnnotation.setSelection(span);
+    conceptAnnotation.selectOnly(span);
 
     checkSpanModificationsTest(
         new SpanActions.ModifySpanAction(model, SpanActions.START, SpanActions.SHRINK, span),
@@ -86,7 +85,7 @@ class SpanActionsTest {
     checkSpanModificationsTest(
         new SpanActions.ModifySpanAction(model, SpanActions.START, SpanActions.GROW, span),
         span,
-        max(initialStart - 1, 0),
+        0,
         initialEnd);
     checkSpanModificationsTest(
         new SpanActions.ModifySpanAction(model, SpanActions.END, SpanActions.SHRINK, span),

@@ -184,7 +184,7 @@ class OwlModelTest {
     assert !isSubClassTest(class1, class2);
     assert isSubClassTest(class3, class2);
 
-    model.getTextSources().setSelection(model.getTextSources().get("document1").get());
+    model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     ConceptAnnotation conceptAnnotation =
         model.getSelectedTextSource().get().getSelectedAnnotation().get();
     assert conceptAnnotation.getOwlClass().equals(class2.toStringID());

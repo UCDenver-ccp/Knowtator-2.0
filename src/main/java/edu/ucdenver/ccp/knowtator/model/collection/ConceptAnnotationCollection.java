@@ -52,7 +52,9 @@ import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.util.OWLEntityCollector;
 
-/** The type Concept annotation collection. */
+/**
+ * The type Concept annotation collection.
+ */
 public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnnotation>
     implements OWLOntologyChangeListener, ModelListener {
 
@@ -66,7 +68,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
   /**
    * Instantiates a new Concept annotation collection.
    *
-   * @param model the model
+   * @param model      the model
    * @param textSource the text source
    */
   public ConceptAnnotationCollection(KnowtatorModel model, TextSource textSource) {
@@ -138,10 +140,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
             conceptAnnotation ->
                 !filterByProfile
                     || activeProfile
-                        .map(
-                            activeProfile1 ->
-                                conceptAnnotation.getAnnotator().equals(activeProfile1))
-                        .orElse(false));
+                    .map(
+                        activeProfile1 ->
+                            conceptAnnotation.getAnnotator().equals(activeProfile1))
+                    .orElse(false));
   }
 
   @Override
@@ -150,23 +152,31 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     return stream().iterator();
   }
 
-  /** Select next span. */
+  /**
+   * Select next span.
+   */
   public void selectNextSpan() {
-    getSelection().flatMap(conceptAnnotation -> conceptAnnotation
-        .getSelection()
-        .map(span -> getSpans(null).getNext(span))).ifPresent(nextSpan -> {
-      setSelection(nextSpan.getConceptAnnotation());
-      nextSpan.getConceptAnnotation().setSelection(nextSpan);
-    });
+    getOnly()
+        .flatMap(SelectableCollection::getOnly)
+        .flatMap(span -> getSpans(null).getNext(span))
+        .ifPresent(span -> {
+          ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
+          selectOnly(conceptAnnotation);
+          conceptAnnotation.selectOnly(span);
+        });
   }
 
-  /** Select previous span. */
+  /**
+   * Select previous span.
+   */
   public void selectPreviousSpan() {
-    getSelection().flatMap(conceptAnnotation -> conceptAnnotation
-        .getSelection()
-        .map(span -> getSpans(null).getPrevious(span))).ifPresent(nextSpan -> {
-      setSelection(nextSpan.getConceptAnnotation());
-      nextSpan.getConceptAnnotation().setSelection(nextSpan);
+    getOnly()
+        .flatMap(SelectableCollection::getOnly)
+        .flatMap(span -> getSpans(null).getPrevious(span))
+        .ifPresent(span -> {
+      ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
+      selectOnly(conceptAnnotation);
+      conceptAnnotation.selectOnly(span);
     });
   }
 
@@ -175,29 +185,23 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
    */
 
   @Override
-  public void setSelection(ConceptAnnotation selection) {
-    super.setSelection(selection);
+  public void selectOnly(ConceptAnnotation selection) {
+    super.selectOnly(selection);
 
-    getSelection()
-        .ifPresent(
-            conceptAnnotation -> {
-              if (!textSource.getSelectedGraphSpace().isPresent()) {
-                textSource.getGraphSpaces().stream()
-                    .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
-                    .findFirst()
-                    .ifPresent(textSource::setSelectedGraphSpace);
-              }
-              textSource
-                  .getSelectedGraphSpace()
-                  .ifPresent(
-                      graphSpace ->
-                          graphSpace.setSelectionCells(
-                              graphSpace.getAnnotationNodes(conceptAnnotation).toArray()));
-            });
-
-    getSelection()
-        .ifPresent(
-            conceptAnnotation -> model.setSelectedOwlClass(conceptAnnotation.getOwlClass()));
+    getOnly().ifPresent(conceptAnnotation -> {
+      if (!textSource.getSelectedGraphSpace().isPresent()) {
+        textSource.getGraphSpaces().getOnly()
+            .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+            .ifPresent(textSource::setSelectedGraphSpace);
+      }
+      textSource
+          .getSelectedGraphSpace()
+          .ifPresent(
+              graphSpace ->
+                  graphSpace.setSelectionCells(
+                      graphSpace.getAnnotationNodes(conceptAnnotation).toArray()));
+      model.setSelectedOwlClass(conceptAnnotation.getOwlClass());
+    });
   }
 
   @Override
@@ -264,24 +268,20 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
   @Override
   public void filterChangedEvent() {
-    getSelection()
-        .filter(conceptAnnotation -> model.isFilter(FilterType.PROFILE))
-        .filter(
-            conceptAnnotation ->
-                model
-                    .getSelectedProfile()
-                    .map(profile -> !conceptAnnotation.getAnnotator().equals(profile))
-                    .orElse(false))
-        .ifPresent(conceptAnnotation -> setSelection(null));
-    getSelection()
-        .filter(conceptAnnotation -> model.isFilter(FilterType.OWLCLASS))
-        .filter(
-            conceptAnnotation ->
-                model
-                    .getSelectedOwlClass()
-                    .map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
-                    .orElse(false))
-        .ifPresent(conceptAnnotation -> setSelection(null));
+    getOnly().ifPresent(conceptAnnotation -> {
+      if (model.isFilter(FilterType.PROFILE) && model
+          .getSelectedProfile()
+          .map(profile -> !conceptAnnotation.getAnnotator().equals(profile))
+          .orElse(false)) {
+        clearSelection();
+      }
+      if (model.isFilter(FilterType.OWLCLASS) && model
+          .getSelectedOwlClass()
+          .map(owlClass1 -> !owlClass1.equals(conceptAnnotation.getOwlClass()))
+          .orElse(false)) {
+        clearSelection();
+      }
+    });
   }
 
   @Override
@@ -294,6 +294,6 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         .filter(modelObject -> modelObject instanceof Span)
         .map(modelObject -> (Span) modelObject)
         .filter(span -> span.getTextSource().equals(textSource))
-        .ifPresent(span -> setSelection(span.getConceptAnnotation()));
+        .ifPresent(span -> selectOnly(span.getConceptAnnotation()));
   }
 }

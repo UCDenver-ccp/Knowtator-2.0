@@ -58,13 +58,13 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
   }
 
   @Override
-  public void setSelection(TextSource textSource) {
-    super.setSelection(textSource);
+  public void selectOnly(TextSource textSource) {
+    super.selectOnly(textSource);
   }
 
   @Override
   public void remove(TextSource textSource) {
-    getSelection()
+    getOnly()
         .filter(textSource1 -> textSource1.equals(textSource))
         .ifPresent(textSource1 -> selectPrevious());
     super.remove(textSource);
@@ -82,6 +82,6 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
         .getNew()
         .filter(modelObject -> modelObject instanceof TextBoundModelObject)
         .ifPresent(
-            modelObject -> setSelection(((TextBoundModelObject) modelObject).getTextSource()));
+            modelObject -> selectOnly(((TextBoundModelObject) modelObject).getTextSource()));
   }
 }

@@ -243,7 +243,7 @@ public class Span implements ConceptAnnotationBoundModelObject<Span> {
       end = limit;
     }
 
-    model.fireModelEvent(new ChangeEvent<>(model, null, this));
+    model.fireModelEvent(new ChangeEvent<>(this));
   }
 
   @Override

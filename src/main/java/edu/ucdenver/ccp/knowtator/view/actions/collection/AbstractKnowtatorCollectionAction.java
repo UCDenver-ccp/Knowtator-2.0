@@ -191,7 +191,22 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
    */
   public void prepareRemove() throws ActionUnperformable {
     if (!getObject().isPresent()) {
-      collection.getSelection().ifPresent(this::setObject);
+      collection.getOnly().ifPresent(this::setObject);
+//      Iterator<K> iterator = collection.getSelection().iterator();
+//      if (iterator.hasNext()) {
+//        setObject(iterator.next());
+//      }
+//      while (iterator.hasNext()){
+//        K item = iterator.next();
+//        try {
+//          AbstractKnowtatorCollectionAction<K> newAction = (AbstractKnowtatorCollectionAction<K>) this.clone();
+//          newAction.setObject(item);
+//          model.registerAction(newAction);
+//        } catch (CloneNotSupportedException e) {
+//          throw new ActionUnperformable(e.getMessage());
+//        }
+//      }
+
     }
   }
 
@@ -212,12 +227,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
    */
   @SuppressWarnings("EmptyMethod")
   protected abstract void cleanUpAdd();
-
-  /**
-   * Sets object.
-   *
-   * @param object the object
-   */
+  
   public void setObject(K object) {
     this.object = object;
   }

@@ -138,8 +138,8 @@ public class KnowtatorModel extends OwlModel {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    super.profiles.first().ifPresent(super.profiles::setSelection);
-    super.textSources.first().ifPresent(super.textSources::setSelection);
+    super.profiles.first().ifPresent(super.profiles::selectOnly);
+    super.textSources.first().ifPresent(super.textSources::selectOnly);
 
     Set<String> owlClasses = new HashSet<>();
     super.textSources.forEach(textSource -> textSource.getConceptAnnotations().forEach(conceptAnnotation -> owlClasses.add(conceptAnnotation.getOwlClass())));
