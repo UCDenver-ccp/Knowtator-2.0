@@ -73,7 +73,9 @@ import javax.swing.text.View;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-/** A text pane that can be annotated. */
+/**
+ * A text pane that can be annotated.
+ */
 public abstract class AnnotatableTextPane extends SearchableTextPane
     implements KnowtatorComponent, ModelListener {
   @SuppressWarnings("unused")
@@ -157,7 +159,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     addMouseListener(mouseListener);
   }
 
-  /** Sets the text to the text sources content. */
+  /**
+   * Sets the text to the text sources content.
+   */
   public void showTextSource() {
     view.getModel()
         .map(BaseModel::getTextSources)
@@ -170,8 +174,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   /**
    * Does things when mouse is released.
    *
-   * @param e MouseEvent
-   * @param pressOffset Mouse position at press
+   * @param e             MouseEvent
+   * @param pressOffset   Mouse position at press
    * @param releaseOffset Mouse position at release
    */
   private void handleMouseRelease(MouseEvent e, int pressOffset, int releaseOffset) {
@@ -207,7 +211,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             });
   }
 
-  /** Repaints the highlights. */
+  /**
+   * Repaints the highlights.
+   */
   @Override
   protected void refreshHighlights() {
     view.getModel()
@@ -219,8 +225,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                   .map(BaseModel::getTextSources)
                   .flatMap(TextSourceCollection::getOnlySelected)
                   .map(TextSource::getConceptAnnotations)
-                  .flatMap(ConceptAnnotationCollection::getOnlySelected)
-                  .flatMap(ConceptAnnotation::getOnlySelected)
+                  .map(ConceptAnnotationCollection::getSelection)
+                  .filter(list -> list.stream().anyMatch(conceptAnnotation -> conceptAnnotation.getOnlySelected().isPresent()))
                   .isPresent()) {
                 highlightSelectedAnnotation();
               } else {
@@ -229,7 +235,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               }
 
               // Highlight overlaps firstConceptAnnotation, then spans.
-              // Overlaps must be highlighted firstConceptAnnotation
+              // Overlaps must be highlighted first
               // because the highlights are displayed
               // in order of placement
               model
@@ -281,7 +287,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                             } catch (BadLocationException e) {
                               e.printStackTrace();
                             } catch (NullPointerException
-                                | ArrayIndexOutOfBoundsException ignored) {
+                                     | ArrayIndexOutOfBoundsException ignored) {
                               // It's fine if either of these are thrown
                             }
                           });
@@ -331,8 +337,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   /**
    * Highlights a region using the given highlighter.
    *
-   * @param start Start of highlight
-   * @param end End of highlight
+   * @param start       Start of highlight
+   * @param end         End of highlight
    * @param highlighter Highlighter to use to draw the highlight
    */
   private void highlightRegion(
@@ -344,25 +350,27 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     }
   }
 
-  /** Highlights the spans for the selected annotation. */
+  /**
+   * Highlights the spans for the selected annotation.
+   */
   private void highlightSelectedAnnotation() {
     view.getModel()
         .map(BaseModel::getTextSources)
         .flatMap(TextSourceCollection::getOnlySelected)
         .map(TextSource::getConceptAnnotations)
-        .flatMap(ConceptAnnotationCollection::getOnlySelected)
-        .ifPresent(
-            conceptAnnotation ->
-                conceptAnnotation.forEach(
-                    span ->
-                        highlightRegion(
-                            span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK))));
+        .map(ConceptAnnotationCollection::getSelection)
+        .ifPresent(conceptAnnotations -> {
+          conceptAnnotations
+              .forEach(conceptAnnotation -> conceptAnnotation
+                  .forEach(span -> highlightRegion(
+                      span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK))));
+        });
   }
 
   /**
    * Snaps selection to word limits.
    *
-   * @param pressOffset Mouse position at press
+   * @param pressOffset   Mouse position at press
    * @param releaseOffset Mouse position at release
    */
   private void setSelectionAtWordLimits(int pressOffset, int releaseOffset) {
@@ -397,7 +405,7 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
    * Alters the selection.
    *
    * @param startModification Value to modify the start selection by
-   * @param endModification Value to modify the end selection by
+   * @param endModification   Value to modify the end selection by
    */
   public void modifySelection(int startModification, int endModification) {
     select(getSelectionStart() + startModification, getSelectionEnd() + endModification);
@@ -438,7 +446,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     view.getModel().ifPresent(model -> model.removeModelListener(this));
   }
 
-  /** The type Rectangle painter. */
+  /**
+   * The type Rectangle painter.
+   */
   static class RectanglePainter extends DefaultHighlighter.DefaultHighlightPainter {
 
     /**
@@ -454,12 +464,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     /**
      * Paints a portion of a highlight.
      *
-     * @param g the graphics context
-     * @param offs0 the starting model offset >= 0
-     * @param offs1 the ending model offset >= offs1
+     * @param g      the graphics context
+     * @param offs0  the starting model offset >= 0
+     * @param offs1  the ending model offset >= offs1
      * @param bounds the bounding box of the view, which is not necessarily the region to paint.
-     * @param c the editor
-     * @param view View painting for
+     * @param c      the editor
+     * @param view   View painting for
      * @return region drawing occurred in
      */
     public Shape paintLayer(
@@ -520,7 +530,9 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
     }
   }
 
-  /** The type Annotation popup menu. */
+  /**
+   * The type Annotation popup menu.
+   */
   class AnnotationPopupMenu extends JPopupMenu {
     private final MouseEvent mouseEvent;
 
@@ -619,13 +631,13 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             .map(TextSource::getConceptAnnotations)
             .flatMap(ConceptAnnotationCollection::getOnlySelected)
             .ifPresent(conceptAnnotation ->
-            conceptAnnotation
-                .getOnlySelected()
-                .filter(
-                    span ->
-                        span.getStart() <= releaseOffset
-                            && releaseOffset <= span.getEnd())
-                .ifPresent(span -> clickedInsideSpan(conceptAnnotation)));
+                conceptAnnotation
+                    .getOnlySelected()
+                    .filter(
+                        span ->
+                            span.getStart() <= releaseOffset
+                                && releaseOffset <= span.getEnd())
+                    .ifPresent(span -> clickedInsideSpan(conceptAnnotation)));
       }
     }
 

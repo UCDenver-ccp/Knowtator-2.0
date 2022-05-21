@@ -115,7 +115,12 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
   }
 
   public void setSelection(List<K> conceptAnnotations) {
+    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(conceptAnnotations.stream().findFirst().orElse(null));
+
     clearSelection();
     selection.addAll(conceptAnnotations);
+    if (model != null) {
+      model.fireModelEvent(selectionEvent);
+    }
   }
 }

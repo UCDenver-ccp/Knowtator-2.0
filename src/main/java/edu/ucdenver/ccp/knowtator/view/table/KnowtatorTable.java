@@ -72,11 +72,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
           }
         });
 
-    getSelectionModel().addListSelectionListener(
-        listSelectionEvent -> {
-          reactToSelection();
-        }
-    );
+    getSelectionModel().addListSelectionListener(listSelectionEvent -> reactToSelection());
   }
 
   public abstract void reactToRightClick();
