@@ -34,7 +34,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/AbstractKnowtatorAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/AbstractKnowtatorAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/collection/AbstractKnowtatorCollectionAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/collection/AbstractKnowtatorCollectionAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/KnowtatorTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/KnowtatorTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/RelationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/RelationTable.java" afterDir="false" />
@@ -138,7 +140,7 @@
       <recent name="edu.ucdenver.ccp.knowtator.view.profile" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.All in knowtator">
+  <component name="RunManager" selected="Application.Run Protege">
     <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
       <setting name="replType" value="NREPL" />
       <setting name="execution" value="LEININGEN" />
@@ -689,7 +691,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/collection/AbstractKnowtatorCollectionAction.java</url>
-          <line>276</line>
+          <line>283</line>
           <option name="timeStamp" value="166" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -699,7 +701,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java</url>
-          <line>121</line>
+          <line>122</line>
           <option name="timeStamp" value="170" />
         </line-breakpoint>
       </breakpoints>

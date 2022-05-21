@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.table;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -36,9 +37,9 @@ import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
+import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -161,6 +162,26 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
                     .forEach(this::addValue));
   }
 
+  static void executeManyConceptAnnotationActions(KnowtatorModel model, List<ConceptAnnotation> objects, CollectionActionType actionType) {
+    List<ConceptAnnotationAction> list = (objects.stream()
+        .map(conceptAnnotation -> {
+          ConceptAnnotationAction action = new ConceptAnnotationAction(model, actionType, conceptAnnotation.getTextSource());
+          action.setObject(conceptAnnotation);
+          return action;
+        })
+        .peek(action -> {
+          try {
+            action.execute();
+          } catch (ActionUnperformable e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .collect(Collectors.toList()));
+    ConceptAnnotationAction last = list.get(list.size() - 1);
+    list.subList(0, list.size() - 1).forEach(last::addKnowtatorEdit);
+    model.addEdit(last);
+  }
+
   /**
    * The type Annotation popup menu.
    */
@@ -180,23 +201,7 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
       JMenuItem removeAnnotationMenuItem =
           new JMenuItem("Delete selected annotations");
       removeAnnotationMenuItem.addActionListener(actionEvent -> view.getModel()
-          .ifPresent(model -> {
-            ArrayList<ConceptAnnotationAction> actions = new ArrayList<>();
-            for (ConceptAnnotation conceptAnnotation : getSelectedValues()) {
-              ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, conceptAnnotation.getTextSource());
-              action.setObject(conceptAnnotation);
-              try {
-                action.setSignificant(false);
-                model.registerAction(action);
-                actions.add(action);
-              } catch (ActionUnperformable e) {
-                throw new RuntimeException(e);
-              }
-            }
-            ConceptAnnotationAction firstAction = actions.get(0);
-            firstAction.setSignificant(true);
-            reset();
-          }));
+          .ifPresent(model -> executeManyConceptAnnotationActions(model, getSelectedValues(), REMOVE)));
 
       return removeAnnotationMenuItem;
     }
