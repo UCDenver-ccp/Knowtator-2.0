@@ -55,9 +55,18 @@ public class SpanTable extends KnowtatorTable<Span> {
   }
 
   @Override
+  public void reactToRightClick() {
+
+  }
+
+  @Override
+  public void reactToSelection() {
+
+  }
+
+  @Override
   public void reactToClick() {
-    Optional<Span> spanOptional = getSelectedValue();
-    spanOptional.ifPresent(
+    getSelectedValues().forEach(
         span -> {
           view.getModel()
               .ifPresent(model -> model.getTextSources().selectOnly(span.getTextSource()));
@@ -90,8 +99,8 @@ public class SpanTable extends KnowtatorTable<Span> {
   }
 
   @Override
-  Optional<Span> getSelectedValue() {
-    return Optional.empty();
+  List<Span> getSelectedValues() {
+    return new ArrayList<>();
   }
 
   @Override

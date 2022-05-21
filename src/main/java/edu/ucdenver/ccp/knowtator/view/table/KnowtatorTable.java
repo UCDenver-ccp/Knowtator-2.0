@@ -61,14 +61,27 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
         new MouseInputAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 1) {
-              if (table.getSelectedRow() != -1) {
+            if (e.getClickCount() == 1) {
+              if (SwingUtilities.isLeftMouseButton(e)) {
                 reactToClick();
+              }
+              if (SwingUtilities.isRightMouseButton(e)) {
+                reactToRightClick();
               }
             }
           }
         });
+
+    getSelectionModel().addListSelectionListener(
+        listSelectionEvent -> {
+          reactToSelection();
+        }
+    );
   }
+
+  public abstract void reactToRightClick();
+
+  public abstract void reactToSelection();
 
   /** React to click. */
   public abstract void reactToClick();
@@ -85,7 +98,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
    *
    * @return the selected value
    */
-  abstract Optional<M> getSelectedValue();
+  abstract List<M> getSelectedValues();
 
   /**
    * Add value.

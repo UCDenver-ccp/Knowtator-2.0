@@ -30,16 +30,19 @@ import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 
-/** The type Annotation table. */
+/**
+ * The type Annotation table.
+ */
 public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 
   /**
    * Instantiates a new Annotation table.
-   *
    */
   AnnotationTable(KnowtatorView view) {
     super(view);
@@ -54,27 +57,47 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   }
 
   @Override
-  public void reactToClick() {
-    Optional<ConceptAnnotation> conceptAnnotationOptional = getSelectedValue();
-    conceptAnnotationOptional.ifPresent(
-        conceptAnnotation -> {
-          view.getModel()
-              .ifPresent(
-                  model -> {
-                    if (!model
-                        .getTextSources()
-                        .getOnlySelected()
-                        .map(textSource -> textSource.equals(conceptAnnotation.getTextSource()))
-                        .orElse(false)) {
-                      model.getTextSources().selectOnly(conceptAnnotation.getTextSource());
-                    }
-                  });
-          conceptAnnotation.getTextSource().getConceptAnnotations().selectOnly(conceptAnnotation);
-        });
+  public void reactToRightClick() {
+
   }
 
   @Override
-  public void reactToModelEvent() {}
+  public void reactToSelection() {
+    view.getModel()
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .ifPresent(textSource -> {
+          List<ConceptAnnotation> currentTextSourceSelected = getSelectedValues().stream()
+              .filter(conceptAnnotation -> conceptAnnotation.getTextSource().equals(textSource))
+              .collect(Collectors.toList());
+          textSource.getConceptAnnotations().setSelection(currentTextSourceSelected);
+        });
+
+  }
+
+  @Override
+  public void reactToClick() {
+    List<ConceptAnnotation> selected = getSelectedValues();
+    if (selected.size() == 1) {
+      ConceptAnnotation conceptAnnotation = getSelectedValues().get(0);
+      view.getModel()
+          .ifPresent(
+              model -> {
+                if (!model
+                    .getTextSources()
+                    .getOnlySelected()
+                    .map(textSource -> textSource.equals(conceptAnnotation.getTextSource()))
+                    .orElse(false)) {
+                  model.getTextSources().selectOnly(conceptAnnotation.getTextSource());
+                }
+              });
+      conceptAnnotation.getTextSource().getConceptAnnotations().selectOnly(conceptAnnotation);
+    }
+  }
+
+  @Override
+  public void reactToModelEvent() {
+  }
 
   @Override
   protected Optional<List<ConceptAnnotation>> getSelectedFromModel() {
@@ -86,8 +109,10 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   }
 
   @Override
-  Optional<ConceptAnnotation> getSelectedValue() {
-    return Optional.ofNullable((ConceptAnnotation) getValueAt(getSelectedRow(), 0));
+  List<ConceptAnnotation> getSelectedValues() {
+    return Arrays.stream(getSelectedRows())
+        .mapToObj(row -> (ConceptAnnotation) getValueAt(row, 0))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -95,7 +120,7 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
     ((DefaultTableModel) getModel())
         .addRow(
             new Object[] {
-              modelObject, modelObject.getOwlClassRendering(), modelObject.getTextSource()
+                modelObject, modelObject.getOwlClassRendering(), modelObject.getTextSource()
             });
   }
 

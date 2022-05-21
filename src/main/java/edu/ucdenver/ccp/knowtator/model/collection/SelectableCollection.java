@@ -28,6 +28,7 @@ import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 
@@ -111,5 +112,10 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
 
   public ArrayList<K> getSelection() {
     return selection;
+  }
+
+  public void setSelection(List<K> conceptAnnotations) {
+    clearSelection();
+    selection.addAll(conceptAnnotations);
   }
 }

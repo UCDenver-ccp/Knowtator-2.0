@@ -35,11 +35,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
-/** The type Relation table. */
+/**
+ * The type Relation table.
+ */
 public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   private final Set<String> activeOwlPropertyDescendants;
   private final JCheckBox includePropertyDescendantsCheckBox;
@@ -49,7 +52,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
    * Instantiates a new Relation table.
    *
    * @param includePropertyDescendantsCheckBox the include property descendants check box
-   * @param owlPropertyLabel the owl property label
+   * @param owlPropertyLabel                   the owl property label
    */
   public RelationTable(
       KnowtatorView view, JCheckBox includePropertyDescendantsCheckBox, JLabel owlPropertyLabel) {
@@ -58,12 +61,12 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
         new DefaultTableModel(
             new Object[][] {},
             new String[] {
-              "Subject Text",
-              "Subject OWL Class",
-              "Property",
-              "Object Text",
-              "Object OWL Class",
-              "Text Source"
+                "Subject Text",
+                "Subject OWL Class",
+                "Property",
+                "Object Text",
+                "Object OWL Class",
+                "Text Source"
             }) {
           @Override
           public boolean isCellEditable(int row, int col) {
@@ -85,7 +88,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
         .flatMap(textSource -> textSource.getGraphSpaces().getOnlySelected())
         .map(mxGraph::getSelectionCells);
     if (cells.isPresent() && Arrays.stream(cells.get())
-          .allMatch(cell -> cell instanceof  RelationAnnotation)) {
+        .allMatch(cell -> cell instanceof RelationAnnotation)) {
       return cells.map(cells2 -> (List<RelationAnnotation>) Arrays.stream(cells2).map(cell -> (RelationAnnotation) cell));
     } else {
       return Optional.empty();
@@ -93,8 +96,10 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  Optional<RelationAnnotation> getSelectedValue() {
-    return Optional.ofNullable((RelationAnnotation) getValueAt(getSelectedRow(), 2));
+  List<RelationAnnotation> getSelectedValues() {
+    return Arrays.stream(getSelectedRows())
+        .mapToObj(row -> (RelationAnnotation) getValueAt(row, 2))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -102,16 +107,16 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
     ((DefaultTableModel) getModel())
         .addRow(
             new Object[] {
-              ((AnnotationNode) modelObject.getSource()).getConceptAnnotation(),
-              ((AnnotationNode) modelObject.getSource())
-                  .getConceptAnnotation()
-                  .getOwlClassRendering(),
-              modelObject,
-              ((AnnotationNode) modelObject.getTarget()).getConceptAnnotation(),
-              ((AnnotationNode) modelObject.getTarget())
-                  .getConceptAnnotation()
-                  .getOwlClassRendering(),
-              modelObject.getTextSource()
+                ((AnnotationNode) modelObject.getSource()).getConceptAnnotation(),
+                ((AnnotationNode) modelObject.getSource())
+                    .getConceptAnnotation()
+                    .getOwlClassRendering(),
+                modelObject,
+                ((AnnotationNode) modelObject.getTarget()).getConceptAnnotation(),
+                ((AnnotationNode) modelObject.getTarget())
+                    .getConceptAnnotation()
+                    .getOwlClassRendering(),
+                modelObject.getTextSource()
             });
   }
 
@@ -137,10 +142,18 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  public void reactToClick() {
-    Optional<RelationAnnotation> relationAnnotationOptional = getSelectedValue();
+  public void reactToRightClick() {
 
-    relationAnnotationOptional.ifPresent(
+  }
+
+  @Override
+  public void reactToSelection() {
+
+  }
+
+  @Override
+  public void reactToClick() {
+    getSelectedValues().forEach(
         relationAnnotation -> {
           view.getModel()
               .ifPresent(
@@ -154,7 +167,8 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  public void reactToModelEvent() {}
+  public void reactToModelEvent() {
+  }
 
   @Override
   public void reset() {
