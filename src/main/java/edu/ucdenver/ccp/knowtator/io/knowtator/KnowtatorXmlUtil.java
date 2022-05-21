@@ -187,7 +187,8 @@ public final class KnowtatorXmlUtil extends XmlUtil {
                 conceptAnnotationOptional
                     .map(o -> (ConceptAnnotation) o)
                     .ifPresent(conceptAnnotationCollection::add));
-    textSource.getConceptAnnotations().first().ifPresent(textSource::setSelectedConceptAnnotation);
+    conceptAnnotationCollection.first()
+        .ifPresent(conceptAnnotationCollection::selectOnly);
   }
 
   @Override
@@ -249,7 +250,7 @@ public final class KnowtatorXmlUtil extends XmlUtil {
       double y = ystring.equals("") ? 20 : Double.parseDouble(ystring);
 
       Optional<ConceptAnnotation> conceptAnnotation =
-          graphSpace.getTextSource().getAnnotation(annotationID);
+          graphSpace.getTextSource().getConceptAnnotations().get(annotationID);
       if (conceptAnnotation.isPresent()) {
         graphSpace.addAnnotationNode(id, conceptAnnotation.get(), x, y);
       } else {

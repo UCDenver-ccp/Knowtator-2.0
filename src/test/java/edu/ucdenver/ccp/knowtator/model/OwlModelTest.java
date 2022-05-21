@@ -107,7 +107,7 @@ class OwlModelTest {
     TestingHelpers.testOwlAction(model, renamer.changeIRI(entityToIriMap), TestingHelpers.defaultCounts);
 
     ConceptAnnotation conceptAnnotation =
-        model.getSelectedTextSource().get().getSelectedAnnotation().get();
+        model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get();
 
     assert !ontology.containsClassInSignature(class2.getIRI());
     assert ontology.containsClassInSignature(IRI.create(conceptAnnotation.getOwlClass()));
@@ -128,7 +128,7 @@ class OwlModelTest {
 
     TestingHelpers.testOwlAction(model, renamer.changeIRI(entityToIriMap), TestingHelpers.defaultCounts);
 
-    GraphSpace graphSpace = model.getSelectedTextSource().get().getSelectedGraphSpace().get();
+    GraphSpace graphSpace = model.getTextSources().getOnlySelected().get().getGraphSpaces().getOnlySelected().get();
     RelationAnnotation relationAnnotation =
         (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
 
@@ -186,7 +186,7 @@ class OwlModelTest {
 
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     ConceptAnnotation conceptAnnotation =
-        model.getSelectedTextSource().get().getSelectedAnnotation().get();
+        model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get();
     assert conceptAnnotation.getOwlClass().equals(class2.toStringID());
   }
 
@@ -231,7 +231,7 @@ class OwlModelTest {
     assert isSubObjectPropertyTest(property3, property2);
 
     GraphSpace graphSpace =
-        model.getTextSources().get("document1").get().getSelectedGraphSpace().get();
+        model.getTextSources().get("document1").get().getGraphSpaces().getOnlySelected().get();
     RelationAnnotation relationAnnotation =
         (RelationAnnotation) graphSpace.getChildEdges(graphSpace.getDefaultParent())[0];
     assert relationAnnotation.getProperty().equals(property2.toStringID());

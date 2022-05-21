@@ -94,7 +94,7 @@ public abstract class KnowtatorChooser<K extends ModelObject> extends JComboBox<
         .ifPresent(
             model -> {
               removeActionListener(al);
-              collection.getOnly().ifPresent(this::setSelectedItem);
+              collection.getOnlySelected().ifPresent(this::setSelectedItem);
               addActionListener(al);
             });
   }

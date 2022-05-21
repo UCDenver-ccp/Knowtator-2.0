@@ -25,6 +25,8 @@
 package edu.ucdenver.ccp.knowtator.model;
 
 import com.mxgraph.view.mxGraph;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -177,8 +179,10 @@ public abstract class OwlModel extends BaseModel implements Serializable {
           .filter(owlEntity -> owlEntity instanceof OWLObjectProperty)
           .map(OWLEntity::toStringID);
     } else {
-      return getSelectedTextSource()
-          .flatMap(TextSource::getSelectedGraphSpace)
+      return getTextSources()
+          .getOnlySelected()
+          .map(TextSource::getGraphSpaces)
+          .flatMap(GraphSpaceCollection::getOnlySelected)
           .map(mxGraph::getSelectionCell)
           .filter(o -> o instanceof RelationAnnotation)
           .map(o -> (RelationAnnotation) o)
@@ -200,8 +204,10 @@ public abstract class OwlModel extends BaseModel implements Serializable {
           .map(owlWorkspace -> (OWLClass) owlWorkspace.getOWLSelectionModel().getSelectedEntity())
           .map(OWLEntity::toStringID);
     } else {
-      return getSelectedTextSource()
-          .flatMap(TextSource::getSelectedAnnotation)
+      return getTextSources()
+          .getOnlySelected()
+          .map(TextSource::getConceptAnnotations)
+          .flatMap(ConceptAnnotationCollection::getOnlySelected)
           .map(ConceptAnnotation::getOwlClass);
     }
   }

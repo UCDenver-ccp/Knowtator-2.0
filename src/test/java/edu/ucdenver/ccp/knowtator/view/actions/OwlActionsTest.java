@@ -52,12 +52,12 @@ class OwlActionsTest {
   @Test
   void reassignOwlClassActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
-    textSource.setSelectedConceptAnnotation(conceptAnnotation);
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    ConceptAnnotation conceptAnnotation =textSource.getConceptAnnotations().first().get();
+    textSource.getConceptAnnotations().selectOnly(conceptAnnotation);
 
     String owlClass = model.getOwlClassById("Pizza").get().toStringID();
-    assert model.getSelectedTextSource().get().getSelectedAnnotation().get().getOwlClass().equals(owlClass);
+    assert model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get().getOwlClass().equals(owlClass);
 
     model.registerAction(
         new ReassignOwlClassAction(model, conceptAnnotation, model.getSelectedOwlClass().get()));
@@ -74,13 +74,13 @@ class OwlActionsTest {
   @Test
   void changeColorActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
-    textSource.setSelectedConceptAnnotation(conceptAnnotation);
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    ConceptAnnotation conceptAnnotation =textSource.getConceptAnnotations().first().get();
+    textSource.getConceptAnnotations().selectOnly(conceptAnnotation);
     Profile profile = model.getSelectedProfile().get();
     assert profile.getColor(conceptAnnotation.getOwlClass()).equals(Color.RED);
 
-    model.getSelectedTextSource().get().selectNextConceptAnnotation();
+    model.getTextSources().getOnlySelected().get().getConceptAnnotations().selectNext();
     Set<String> owlClassSet = new HashSet<>();
     owlClassSet.add(model.getSelectedOwlClass().get());
 

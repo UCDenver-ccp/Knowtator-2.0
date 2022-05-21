@@ -36,6 +36,8 @@ import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.StructureModeListener;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -143,144 +145,153 @@ public class GraphView extends JPanel
     exportToImagePngButton.addActionListener(
         e ->
             view.getModel()
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .flatMap(GraphSpaceCollection::getOnlySelected)
                 .ifPresent(
-                    model ->
-                        model
-                            .getSelectedGraphSpace()
-                            .ifPresent(
-                                graphSpace -> {
-                                  JFileChooser fileChooser = new JFileChooser();
-                                  fileChooser.setCurrentDirectory(model.getSaveLocation());
-                                  FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
-                                  fileChooser.setFileFilter(fileFilter);
-                                  fileChooser.setSelectedFile(
-                                      new File(
-                                          String.format(
-                                              "%s_%s.png",
-                                              graphSpace.getTextSource().getId(),
-                                              graphSpace.getId())));
-                                  if (fileChooser.showSaveDialog(view)
-                                      == JFileChooser.APPROVE_OPTION) {
-                                    BufferedImage image =
-                                        mxCellRenderer.createBufferedImage(
-                                            graphSpace, null, 1, Color.WHITE, true, null);
-                                    try {
-                                      ImageIO.write(
-                                          image,
-                                          "PNG",
-                                          new File(
-                                              fileChooser.getSelectedFile().getAbsolutePath()));
-                                    } catch (IOException e1) {
-                                      e1.printStackTrace();
-                                    }
-                                  }
-                                })));
+                    graphSpace -> {
+                      JFileChooser fileChooser = new JFileChooser();
+                      fileChooser.setCurrentDirectory(view.getModel().get().getSaveLocation());
+                      FileFilter fileFilter = new FileNameExtensionFilter("PNG", "png");
+                      fileChooser.setFileFilter(fileFilter);
+                      fileChooser.setSelectedFile(
+                          new File(
+                              String.format(
+                                  "%s_%s.png",
+                                  graphSpace.getTextSource().getId(),
+                                  graphSpace.getId())));
+                      if (fileChooser.showSaveDialog(view)
+                          == JFileChooser.APPROVE_OPTION) {
+                        BufferedImage image =
+                            mxCellRenderer.createBufferedImage(
+                                graphSpace, null, 1, Color.WHITE, true, null);
+                        try {
+                          ImageIO.write(
+                              image,
+                              "PNG",
+                              new File(
+                                  fileChooser.getSelectedFile().getAbsolutePath()));
+                        } catch (IOException e1) {
+                          e1.printStackTrace();
+                        }
+                      }
+                    }));
 
     zoomSlider.addChangeListener(e -> graphComponent.zoomTo(zoomSlider.getValue() / 50.0, false));
     renameButton.addActionListener(
         e ->
             view.getModel()
-                .flatMap(BaseModel::getSelectedGraphSpace)
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .flatMap(GraphSpaceCollection::getOnlySelected)
                 .ifPresent(
                     graphSpace ->
                         getGraphNameInput(view, graphSpace.getTextSource(), null)
                             .ifPresent(graphSpace::setId)));
     addGraphSpaceButton.addActionListener(
-        e -> view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(this::makeGraph));
+        e -> view.getModel()
+            .map(BaseModel::getTextSources)
+            .flatMap(TextSourceCollection::getOnlySelected)
+            .ifPresent(this::makeGraph));
     removeGraphSpaceButton.addActionListener(
         e -> {
           if (JOptionPane.showConfirmDialog(view, "Are you sure you want to delete this graph?")
               == JOptionPane.YES_OPTION) {
             view.getModel()
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
                 .ifPresent(
-                    model ->
-                        model
-                            .getSelectedTextSource()
-                            .ifPresent(
-                                textSource -> {
-                                  try {
-                                    model.registerAction(
-                                        new GraphSpaceAction(model, REMOVE, null, textSource));
-                                  } catch (ActionUnperformable e1) {
-                                    JOptionPane.showMessageDialog(view, e1.getMessage());
-                                  }
-                                }));
+                    textSource -> {
+                      try {
+                        view.getModel().get().registerAction(
+                            new GraphSpaceAction(view.getModel().get(), REMOVE, null, textSource));
+                      } catch (ActionUnperformable e1) {
+                        JOptionPane.showMessageDialog(view, e1.getMessage());
+                      }
+                    });
           }
         });
     previousGraphSpaceButton.addActionListener(
         e ->
             view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(TextSource::selectPreviousGraphSpace));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .ifPresent(GraphSpaceCollection::selectPrevious));
     nextGraphSpaceButton.addActionListener(
         e ->
             view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(TextSource::selectNextGraphSpace));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .ifPresent(GraphSpaceCollection::selectNext));
     removeCellButton.addActionListener(
         e ->
             view.getModel()
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .flatMap(GraphSpaceCollection::getOnlySelected)
                 .ifPresent(
-                    model ->
-                        model
-                            .getSelectedGraphSpace()
-                            .ifPresent(
-                                graphSpace -> {
-                                  try {
-                                    model.registerAction(
-                                        new GraphActions.RemoveCellsAction(model, graphSpace));
-                                  } catch (ActionUnperformable e1) {
-                                    JOptionPane.showMessageDialog(view, e1.getMessage());
-                                  }
-                                })));
+                    graphSpace -> {
+                      try {
+                        view.getModel().get().registerAction(
+                            new GraphActions.RemoveCellsAction(view.getModel().get(), graphSpace));
+                      } catch (ActionUnperformable e1) {
+                        JOptionPane.showMessageDialog(view, e1.getMessage());
+                      }
+                    }));
 
     addAnnotationNodeButton.addActionListener(
         e ->
             view.getModel()
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .flatMap(GraphSpaceCollection::getOnlySelected)
                 .ifPresent(
-                    model ->
-                        model
-                            .getSelectedGraphSpace()
+                    graphSpace ->
+                        graphSpace
+                            .getTextSource()
+                            .getConceptAnnotations()
+                            .getOnlySelected()
                             .ifPresent(
-                                graphSpace ->
-                                    graphSpace
-                                        .getTextSource()
-                                        .getSelectedAnnotation()
-                                        .ifPresent(
-                                            conceptAnnotation -> {
-                                              try {
-                                                model.registerAction(
-                                                    new GraphActions.AddAnnotationNodeAction(
-                                                        view,
-                                                        model,
-                                                        graphSpace,
-                                                        conceptAnnotation));
-                                              } catch (ActionUnperformable e1) {
-                                                JOptionPane.showMessageDialog(
-                                                    view, e1.getMessage());
-                                              }
-                                            }))));
+                                conceptAnnotation -> {
+                                  try {
+                                    view.getModel().get().registerAction(
+                                        new GraphActions.AddAnnotationNodeAction(
+                                            view,
+                                            view.getModel().get(),
+                                            graphSpace,
+                                            conceptAnnotation));
+                                  } catch (ActionUnperformable e1) {
+                                    JOptionPane.showMessageDialog(
+                                        view, e1.getMessage());
+                                  }
+                                })));
 
     applyLayoutButton.addActionListener(
         e ->
             view.getModel()
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .flatMap(GraphSpaceCollection::getOnlySelected)
                 .ifPresent(
-                    model ->
-                        model
-                            .getSelectedGraphSpace()
-                            .ifPresent(
-                                graphSpace -> {
-                                  try {
-                                    model.registerAction(
-                                        new GraphActions.ApplyLayoutAction(
-                                            view,
-                                            model,
-                                            graphSpace,
-                                            horizontalRadioButton.isSelected()));
-                                  } catch (ActionUnperformable e1) {
-                                    JOptionPane.showMessageDialog(view, e1.getMessage());
-                                  }
-                                })));
+                    graphSpace -> {
+                      try {
+                        view.getModel().get().registerAction(
+                            new GraphActions.ApplyLayoutAction(
+                                view,
+                                view.getModel().get(),
+                                graphSpace,
+                                horizontalRadioButton.isSelected()));
+                      } catch (ActionUnperformable e1) {
+                        JOptionPane.showMessageDialog(view, e1.getMessage());
+                      }
+                    }));
 
     graphSpaceButtons =
         Arrays.asList(
@@ -325,7 +336,12 @@ public class GraphView extends JPanel
   public void setVisible(boolean visible) {
     super.setVisible(visible);
     if (visible) {
-      view.getModel().flatMap(BaseModel::getSelectedGraphSpace).ifPresent(this::showGraph);
+      view.getModel()
+          .map(BaseModel::getTextSources)
+          .flatMap(TextSourceCollection::getOnlySelected)
+          .map(TextSource::getGraphSpaces)
+          .flatMap(GraphSpaceCollection::getOnlySelected)
+          .ifPresent(this::showGraph);
     }
   }
 
@@ -392,7 +408,7 @@ public class GraphView extends JPanel
         "Graph Title", field1,
     };
     field1.addAncestorListener(new RequestFocusListener());
-    field1.setText(String.format("Graph Space %d", textSource.getNumberOfGraphSpaces()));
+    field1.setText(String.format("Graph Space %d", textSource.getGraphSpaces().size()));
     int option =
         JOptionPane.showConfirmDialog(
             view, message, "Enter a name for this graph", JOptionPane.OK_CANCEL_OPTION);
@@ -456,10 +472,11 @@ public class GraphView extends JPanel
         .ifPresent(
             model -> {
               model
-                  .getSelectedTextSource()
+                  .getTextSources()
+                  .getOnlySelected()
                   .ifPresent(
                       textSource -> {
-                        if (textSource.getNumberOfGraphSpaces() == 0) {
+                        if (textSource.getGraphSpaces().size() == 0) {
                           graphSpaceButtons.forEach(c -> c.setEnabled(false));
                           addGraphSpaceButton.setEnabled(true);
                         } else {
@@ -476,8 +493,11 @@ public class GraphView extends JPanel
                   .getNew()
                   .filter(modelObject -> modelObject instanceof TextSource)
                   .map(modelObject -> (TextSource) modelObject).flatMap(textSource -> textSource
-                  .getKnowtatorModel()
-                  .getSelectedGraphSpace()).ifPresent(GraphView.this::showGraph);
+                      .getKnowtatorModel()
+                      .getTextSources().getOnlySelected())
+                  .map(TextSource::getGraphSpaces)
+                  .flatMap(GraphSpaceCollection::getOnlySelected)
+                  .ifPresent(GraphView.this::showGraph);
               event
                   .getNew()
                   .filter(modelObject -> modelObject instanceof AnnotationNode)
@@ -500,25 +520,25 @@ public class GraphView extends JPanel
                 if (conceptAnnotation
                     .getTextSource()
                     .getGraphSpaces()
-                    .getOnly()
+                    .getOnlySelected()
                     .map(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
                     .orElse(false)) {
                   conceptAnnotation
                       .getTextSource()
                       .getGraphSpaces()
-                      .getOnly()
+                      .getOnlySelected()
                       .ifPresent(
                           graphSpace -> {
                             dialog.setVisible(true);
                             showGraph(graphSpace);
                           });
                 } else {
-                  conceptAnnotation.getTextSource().getGraphSpaces().getOnly()
+                  conceptAnnotation.getTextSource().getGraphSpaces().getOnlySelected()
                       .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
                       .ifPresent(
                           graphSpace -> {
                             dialog.setVisible(true);
-                            conceptAnnotation.getTextSource().setSelectedGraphSpace(graphSpace);
+                            conceptAnnotation.getTextSource().getGraphSpaces().selectOnly(graphSpace);
                           });
                 }
               });
@@ -544,10 +564,10 @@ public class GraphView extends JPanel
                           if (vertex instanceof AnnotationNode) {
                             String colorString =
                                 Integer.toHexString(
-                                    ((AnnotationNode) vertex)
-                                        .getConceptAnnotation()
-                                        .getColor()
-                                        .getRGB())
+                                        ((AnnotationNode) vertex)
+                                            .getConceptAnnotation()
+                                            .getColor()
+                                            .getRGB())
                                     .substring(2);
                             graphSpace.setCellStyles(
                                 mxConstants.STYLE_FILLCOLOR, colorString, new Object[] {vertex});
@@ -571,7 +591,12 @@ public class GraphView extends JPanel
 
   @Override
   public void structureModeChanged() {
-    view.getModel().flatMap(BaseModel::getSelectedGraphSpace).ifPresent(this::showGraph);
+    view.getModel()
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getGraphSpaces)
+        .flatMap(GraphSpaceCollection::getOnlySelected)
+        .ifPresent(this::showGraph);
   }
 
   public KnowtatorView getView() {

@@ -25,9 +25,12 @@
 package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.util.List;
 import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
 
@@ -59,13 +62,14 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
               .ifPresent(
                   model -> {
                     if (!model
-                        .getSelectedTextSource()
+                        .getTextSources()
+                        .getOnlySelected()
                         .map(textSource -> textSource.equals(conceptAnnotation.getTextSource()))
                         .orElse(false)) {
                       model.getTextSources().selectOnly(conceptAnnotation.getTextSource());
                     }
                   });
-          conceptAnnotation.getTextSource().setSelectedConceptAnnotation(conceptAnnotation);
+          conceptAnnotation.getTextSource().getConceptAnnotations().selectOnly(conceptAnnotation);
         });
   }
 
@@ -73,11 +77,12 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   public void reactToModelEvent() {}
 
   @Override
-  protected Optional<Object> getSelectedFromModel() {
+  protected Optional<List<ConceptAnnotation>> getSelectedFromModel() {
     return view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedAnnotation)
-        .map(conceptAnnotation -> conceptAnnotation);
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getConceptAnnotations)
+        .map(ConceptAnnotationCollection::getSelection);
   }
 
   @Override

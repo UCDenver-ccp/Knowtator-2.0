@@ -25,6 +25,8 @@
 package edu.ucdenver.ccp.knowtator.view.list;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
@@ -47,28 +49,34 @@ public class GraphSpaceList extends KnowtatorList<GraphSpace> {
     graphSpaceOptional.ifPresent(
         graphSpace ->
             view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(textSource -> textSource.setSelectedGraphSpace(graphSpace)));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getGraphSpaces)
+                .ifPresent(graphSpaces -> graphSpaces.selectOnly(graphSpace)));
   }
 
   @Override
   protected Optional<GraphSpace> getSelectedFromModel() {
     return view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedGraphSpace);
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getGraphSpaces)
+        .flatMap(GraphSpaceCollection::getOnlySelected);
   }
 
   @Override
   protected void addElementsFromModel() {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
         .ifPresent(
             textSource ->
                 textSource.getGraphSpaces().stream()
                     .filter(
                         graphSpace ->
                             textSource
-                                .getSelectedAnnotation()
+                                .getConceptAnnotations()
+                                .getOnlySelected()
                                 .map(graphSpace::containsAnnotation)
                                 .orElse(false))
                     .forEach(graphSpace -> getDefaultListModel().addElement(graphSpace)));

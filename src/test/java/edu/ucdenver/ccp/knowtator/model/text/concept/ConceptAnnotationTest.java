@@ -45,21 +45,21 @@ class ConceptAnnotationTest {
   @Test
   void getSizeTest() {
     TextSource textSource = model.getTextSources().get("document1").get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().getOnlySelected().get();
     assert conceptAnnotation.getSize() == 4;
   }
 
   @Test
   void getSpannedTextTest() {
     TextSource textSource = model.getTextSources().get("document1").get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().getOnlySelected().get();
     assert conceptAnnotation.getSpannedText().equals("This");
   }
 
   @Test
   void containsTest() {
     TextSource textSource = model.getTextSources().get("document1").get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().getOnlySelected().get();
     assert conceptAnnotation.contains(0);
     assert conceptAnnotation.contains(2);
     assert conceptAnnotation.contains(3);

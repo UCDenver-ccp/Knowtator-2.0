@@ -32,6 +32,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Optional;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -77,7 +78,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
    *
    * @return the selected from model
    */
-  protected abstract Optional<Object> getSelectedFromModel();
+  protected abstract Optional<List<M>> getSelectedFromModel();
 
   /**
    * Gets selected value.
@@ -96,11 +97,11 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   private void setSelected() {
     getSelectedFromModel()
         .ifPresent(
-            cell -> {
+            selection -> {
               for (int i = 0; i < getModel().getRowCount(); i++) {
                 Object element = getModel().getValueAt(i, 0);
 
-                if (element == cell) {
+                if (selection.contains(element)) {
                   setRowSelectionInterval(i, i);
                   this.scrollRectToVisible(getCellRect(i, 0, true));
                   return;

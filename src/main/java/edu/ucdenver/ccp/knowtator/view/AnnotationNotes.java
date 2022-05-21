@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
@@ -32,6 +31,7 @@ import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Optional;
 import javax.swing.JTextArea;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -99,11 +99,12 @@ public class AnnotationNotes extends JTextArea implements KnowtatorComponent, Mo
 
   private void react() {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
+        .flatMap(model -> model.getTextSources().getOnlySelected())
         .ifPresent(
             textSource -> {
-              if (textSource.getSelectedAnnotation().isPresent()) {
-                conceptAnnotation = textSource.getSelectedAnnotation().get();
+              Optional<ConceptAnnotation> selected = textSource.getConceptAnnotations().getOnlySelected();
+              if (selected.isPresent()) {
+                conceptAnnotation = selected.get();
                 setEnabled(true);
                 setText(conceptAnnotation.getMotivation());
               } else {

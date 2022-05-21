@@ -26,7 +26,6 @@ package edu.ucdenver.ccp.knowtator;
 
 import com.google.common.io.Files;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
@@ -169,7 +168,7 @@ public class TestingHelpers {
         model.getTextSources().stream()
             .mapToInt(
                 textSource ->
-                    Math.toIntExact(textSource.getSpans(null).stream()
+                    Math.toIntExact(textSource.getConceptAnnotations().getSpans(null).stream()
                         .filter(
                             span -> !span.getConceptAnnotation().getLayers().contains("Structures"))
                         .count()))
@@ -178,7 +177,7 @@ public class TestingHelpers {
     int actualHighlighters =
         model.getProfiles().stream().mapToInt(profile -> profile.getColors().size()).sum();
     int actualGraphSpaces =
-        model.getTextSources().stream().mapToInt(TextSource::getNumberOfGraphSpaces).sum();
+        model.getTextSources().stream().mapToInt(textSource -> textSource.getGraphSpaces().size()).sum();
     int actualAnnotationNodes =
         model.getTextSources().stream()
             .mapToInt(

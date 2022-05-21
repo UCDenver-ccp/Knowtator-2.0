@@ -71,9 +71,9 @@ class SpanActionsTest {
   @Test
   void modifySpanActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
-    textSource.setSelectedConceptAnnotation(conceptAnnotation);
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().first().get();
+    textSource.getConceptAnnotations().selectOnly(conceptAnnotation);
     Span span = conceptAnnotation.first().get();
     conceptAnnotation.selectOnly(span);
 

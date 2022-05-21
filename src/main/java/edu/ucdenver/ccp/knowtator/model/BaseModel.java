@@ -27,12 +27,9 @@ package edu.ucdenver.ccp.knowtator.model;
 import edu.ucdenver.ccp.knowtator.model.collection.ProfileCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
-import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.actions.AbstractKnowtatorAction;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import java.io.File;
@@ -196,7 +193,7 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    * @return the selected profile
    */
   public Optional<Profile> getSelectedProfile() {
-    return profiles.getOnly();
+    return profiles.getOnlySelected();
   }
 
   /**
@@ -302,23 +299,6 @@ public abstract class BaseModel extends UndoManager implements CaretListener, Sa
    */
   public static File getArticlesLocation(File projectLocation) {
     return new File(projectLocation, "Articles");
-  }
-
-  /**
-   * Gets selected text source.
-   *
-   * @return the selected text source
-   */
-  public Optional<TextSource> getSelectedTextSource() {
-    return textSources.getOnly();
-  }
-
-  public Optional<ConceptAnnotation> getSelectedConceptAnnotation() {
-    return getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation);
-  }
-
-  public Optional<GraphSpace> getSelectedGraphSpace() {
-    return getSelectedTextSource().flatMap(TextSource::getSelectedGraphSpace);
   }
 
   /**

@@ -26,8 +26,11 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
@@ -123,7 +126,11 @@ public abstract class SearchableTextPane extends JTextPane
           }
         }
       }
-      view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> textSource.getConceptAnnotations().clearSelection());
+      view.getModel()
+          .map(BaseModel::getTextSources)
+          .flatMap(TextSourceCollection::getOnlySelected)
+          .map(TextSource::getConceptAnnotations)
+          .ifPresent(SelectableCollection::clearSelection);
       select(matchStart, matchEnd);
       refreshHighlights();
       isSearching = false;
@@ -182,10 +189,11 @@ public abstract class SearchableTextPane extends JTextPane
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(textSource -> textSource
-        .getSelectedAnnotation()
-        .flatMap(SelectableCollection::getOnly))
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getConceptAnnotations)
+        .flatMap(ConceptAnnotationCollection::getOnlySelected)
+        .flatMap(ConceptAnnotation::getOnlySelected)
         .filter(span -> shouldUpdateSearchTextFieldCondition())
         .ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event

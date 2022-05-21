@@ -36,8 +36,11 @@ import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.FilterType;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
@@ -364,7 +367,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                 .ifPresent(
                     model ->
                         model
-                            .getSelectedTextSource()
+                            .getTextSources()
+                            .getOnlySelected()
                             .ifPresent(
                                 textSource -> {
                                   JFileChooser fileChooser =
@@ -452,18 +456,21 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
               selectedOwlClass.ifPresent(
                   owlClass ->
                       model
-                          .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation -> {
-                        try {
-                          model.registerAction(
-                              new ReassignOwlClassAction(
-                                  model,
-                                  conceptAnnotation,
-                                  owlClass));
-                        } catch (ActionUnperformable e1) {
-                          JOptionPane.showMessageDialog(
-                              this, e1.getMessage());
-                        }
-                      }));
+                          .getTextSources()
+                          .getOnlySelected()
+                          .flatMap(textSource -> textSource.getConceptAnnotations().getOnlySelected())
+                          .ifPresent(conceptAnnotation -> {
+                            try {
+                              model.registerAction(
+                                  new ReassignOwlClassAction(
+                                      model,
+                                      conceptAnnotation,
+                                      owlClass));
+                            } catch (ActionUnperformable e1) {
+                              JOptionPane.showMessageDialog(
+                                  this, e1.getMessage());
+                            }
+                          }));
             }));
 
     makeSpanButtons();
@@ -480,8 +487,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     .flatMap(
                         model1 ->
                             model1
-                                .getSelectedConceptAnnotation()
-                                .map(SelectableCollection::getOnly))
+                                .getTextSources()
+                                .getOnlySelected()
+                                .map(TextSource::getConceptAnnotations)
+                                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                                .map(SelectableCollection::getOnlySelected))
                     .isPresent()) {
                   try {
                     textPane.scrollRectToVisible(textPane.modelToView(0));
@@ -501,8 +511,11 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                     .flatMap(
                         model1 ->
                             model1
-                                .getSelectedConceptAnnotation()
-                                .map(SelectableCollection::getOnly))
+                                .getTextSources()
+                                .getOnlySelected()
+                                .map(TextSource::getConceptAnnotations)
+                                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                                .map(SelectableCollection::getOnlySelected))
                     .isPresent()) {
                   try {
                     textPane.scrollRectToVisible(textPane.modelToView(0));
@@ -661,95 +674,107 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     nextSpanButton.addActionListener(
         e ->
             getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(TextSource::selectNextSpan));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .ifPresent(ConceptAnnotationCollection::selectNextSpan));
     previousSpanButton.addActionListener(
         e ->
             getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .ifPresent(TextSource::selectPreviousSpan));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .ifPresent(ConceptAnnotationCollection::selectPreviousSpan));
 
     spanSizeButtons.put(
         shrinkEndButton,
         e ->
             getModel()
-                .ifPresent(
-                    model1 ->
-                        model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
-                          try {
-                            model1.registerAction(
-                                new SpanActions.ModifySpanAction(
-                                    model1,
-                                    SpanActions.END,
-                                    SpanActions.SHRINK,
-                                    span));
-                          } catch (ActionUnperformable e1) {
-                            JOptionPane.showMessageDialog(
-                                this, e1.getMessage());
-                          }
-                        })));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                .flatMap(ConceptAnnotation::getOnlySelected)
+                .ifPresent(span -> {
+                  try {
+                    getModel().get().registerAction(
+                        new SpanActions.ModifySpanAction(
+                            getModel().get(),
+                            SpanActions.END,
+                            SpanActions.SHRINK,
+                            span));
+                  } catch (ActionUnperformable e1) {
+                    JOptionPane.showMessageDialog(
+                        this, e1.getMessage());
+                  }
+                }));
 
     spanSizeButtons.put(
         shrinkStartButton,
         e ->
             getModel()
-                .ifPresent(
-                    model1 ->
-                        model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
-                          try {
-                            model1.registerAction(
-                                new SpanActions.ModifySpanAction(
-                                    model1,
-                                    SpanActions.START,
-                                    SpanActions.SHRINK,
-                                    span));
-                          } catch (ActionUnperformable e1) {
-                            JOptionPane.showMessageDialog(
-                                this, e1.getMessage());
-                          }
-                        })));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                .flatMap(ConceptAnnotation::getOnlySelected)
+                .ifPresent(span -> {
+                  try {
+                    getModel().get().registerAction(
+                        new SpanActions.ModifySpanAction(
+                            getModel().get(),
+                            SpanActions.START,
+                            SpanActions.SHRINK,
+                            span));
+                  } catch (ActionUnperformable e1) {
+                    JOptionPane.showMessageDialog(
+                        this, e1.getMessage());
+                  }
+                }));
     spanSizeButtons.put(
         growEndButton,
         e ->
             getModel()
-                .ifPresent(
-                    model1 ->
-                        model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
-                          try {
-                            model1.registerAction(
-                                new SpanActions.ModifySpanAction(
-                                    model1,
-                                    SpanActions.END,
-                                    SpanActions.GROW,
-                                    span));
-                          } catch (ActionUnperformable e1) {
-                            JOptionPane.showMessageDialog(
-                                this, e1.getMessage());
-                          }
-                        })));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                .flatMap(ConceptAnnotation::getOnlySelected)
+                .ifPresent(span -> {
+                  try {
+                    getModel().get().registerAction(
+                        new SpanActions.ModifySpanAction(
+                            getModel().get(),
+                            SpanActions.END,
+                            SpanActions.GROW,
+                            span));
+                  } catch (ActionUnperformable e1) {
+                    JOptionPane.showMessageDialog(
+                        this, e1.getMessage());
+                  }
+                }));
     spanSizeButtons.put(
         growStartButton,
         e ->
             getModel()
-                .ifPresent(
-                    model1 ->
-                        model1
-                            .getSelectedConceptAnnotation().flatMap(SelectableCollection::getOnly).ifPresent(span -> {
-                          try {
-                            model1.registerAction(
-                                new SpanActions.ModifySpanAction(
-                                    model1,
-                                    SpanActions.START,
-                                    SpanActions.GROW,
-                                    span));
-                          } catch (ActionUnperformable e1) {
-                            JOptionPane.showMessageDialog(
-                                this, e1.getMessage());
-                          }
-                        })));
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                .flatMap(ConceptAnnotation::getOnlySelected)
+                .ifPresent(span -> {
+                  try {
+                    getModel().get().registerAction(
+                        new SpanActions.ModifySpanAction(
+                            getModel().get(),
+                            SpanActions.START,
+                            SpanActions.GROW,
+                            span));
+                  } catch (ActionUnperformable e1) {
+                    JOptionPane.showMessageDialog(
+                        this, e1.getMessage());
+                  }
+                }));
 
     selectionSizeButtons.put(
         shrinkEndButton,
@@ -942,8 +967,10 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     getModel()
         .ifPresent(
             model1 -> {
-              Optional optional =
-                  model1.getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation);
+              Optional<ConceptAnnotation> optional =
+                  model1.getTextSources().getOnlySelected()
+                      .map(TextSource::getConceptAnnotations)
+                      .flatMap(ConceptAnnotationCollection::getOnlySelected);
               if (optional.isPresent()) {
                 spanSizeButtons
                     .keySet()

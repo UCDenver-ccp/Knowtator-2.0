@@ -26,11 +26,13 @@ package edu.ucdenver.ccp.knowtator.view.table;
 
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.swing.JCheckBox;
@@ -75,13 +77,19 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  protected Optional<Object> getSelectedFromModel() {
-    return view.getModel()
+  protected Optional<List<RelationAnnotation>> getSelectedFromModel() {
+    Optional<Object[]> cells = view.getModel()
         .filter(BaseModel::isNotLoading)
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedGraphSpace)
-        .map(mxGraph::getSelectionCell)
-        .filter(cell -> cell instanceof RelationAnnotation);
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .flatMap(textSource -> textSource.getGraphSpaces().getOnlySelected())
+        .map(mxGraph::getSelectionCells);
+    if (cells.isPresent() && Arrays.stream(cells.get())
+          .allMatch(cell -> cell instanceof  RelationAnnotation)) {
+      return cells.map(cells2 -> (List<RelationAnnotation>) Arrays.stream(cells2).map(cell -> (RelationAnnotation) cell));
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Override
@@ -139,7 +147,8 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
                   model -> model.getTextSources().selectOnly(relationAnnotation.getTextSource()));
           relationAnnotation
               .getTextSource()
-              .setSelectedGraphSpace(relationAnnotation.getGraphSpace());
+              .getGraphSpaces()
+              .selectOnly(relationAnnotation.getGraphSpace());
           relationAnnotation.getGraphSpace().setSelectionCell(relationAnnotation);
         });
   }

@@ -73,57 +73,57 @@ public class KnowtatorCollectionActionsTest {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TestingHelpers.testKnowtatorAction(
         model,
-        new ConceptAnnotationAction(model, ADD, model.getSelectedTextSource().get()),
+        new ConceptAnnotationAction(model, ADD, model.getTextSources().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, 1, 1, 0, 0, 0,0, 0, 0));
   }
 
   @Test
   public void removeConceptAnnotationActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    textSource.getConceptAnnotations().selectOnly(textSource.getConceptAnnotations().first().get());
     TestingHelpers.testKnowtatorAction(
         model,
-        new ConceptAnnotationAction(model, REMOVE, model.getSelectedTextSource().get()),
+        new ConceptAnnotationAction(model, REMOVE, model.getTextSources().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, -1, -1, 0,0, 0, -1, -1, 0));
   }
 
   @Test
   public void addSpanActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    textSource.setSelectedConceptAnnotation(textSource.firstConceptAnnotation().get());
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    textSource.getConceptAnnotations().selectOnly(textSource.getConceptAnnotations().first().get());
     TestingHelpers.testKnowtatorAction(
         model,
         new SpanAction(
-            model, ADD, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
+            model, ADD, model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, 0, 1, 0, 0, 0, 0, 0, 0));
   }
 
   @Test
   public void removeSpanActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
     // First test remove span if there is only one in the collection. This should be equivalent to
     // just removing the annotation
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
-    textSource.setSelectedConceptAnnotation(conceptAnnotation);
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().first().get();
+    textSource.getConceptAnnotations().selectOnly(conceptAnnotation);
     conceptAnnotation.selectOnly(conceptAnnotation.first().get());
     TestingHelpers.testKnowtatorAction(
         model,
         new SpanAction(
-            model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
+            model, REMOVE, model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, -1, -1, 0, 0, 0, -1, -1, 0));
 
     // Next test remove span if there are multiple spans. This should only remove the span.
     conceptAnnotation.selectOnly(conceptAnnotation.first().get());
-    textSource.selectNextSpan();
-    conceptAnnotation = textSource.getSelectedAnnotation().get();
+    textSource.getConceptAnnotations().selectNextSpan();
+    conceptAnnotation = textSource.getConceptAnnotations().getOnlySelected().get();
     conceptAnnotation.selectOnly(conceptAnnotation.first().get());
     TestingHelpers.testKnowtatorAction(
         model,
         new SpanAction(
-            model, REMOVE, model.getSelectedTextSource().get().getSelectedAnnotation().get()),
+            model, REMOVE, model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, 0, -1, 0, 0, 0, 0, 0, 0));
   }
 
@@ -157,7 +157,7 @@ public class KnowtatorCollectionActionsTest {
   public void addGraphSpaceActionTest() throws ActionUnperformable {
     TestingHelpers.testKnowtatorAction(
         model,
-        new GraphSpaceAction(model, ADD, "new_graph_space", model.getSelectedTextSource().get()),
+        new GraphSpaceAction(model, ADD, "new_graph_space", model.getTextSources().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, 0, 0, 1, 0, 0, 0, 0, 0)
     );
   }
@@ -165,11 +165,11 @@ public class KnowtatorCollectionActionsTest {
   @Test
   public void removeGraphSpaceActionTest() throws ActionUnperformable {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    textSource.selectNextGraphSpace();
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    textSource.getGraphSpaces().selectNext();
     TestingHelpers.testKnowtatorAction(
         model,
-        new GraphSpaceAction(model, REMOVE, null, model.getSelectedTextSource().get()),
+        new GraphSpaceAction(model, REMOVE, null, model.getTextSources().getOnlySelected().get()),
         TestingHelpers.defaultCounts.copy(0, 0, 0, -1, 0, 0, -2, -1, 0));
   }
 

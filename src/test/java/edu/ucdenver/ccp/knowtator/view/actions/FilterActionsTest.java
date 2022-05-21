@@ -58,9 +58,9 @@ class FilterActionsTest {
         TestingHelpers.defaultCounts);
 
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
-    TextSource textSource = model.getSelectedTextSource().get();
-    ConceptAnnotation conceptAnnotation = textSource.firstConceptAnnotation().get();
-    textSource.setSelectedConceptAnnotation(conceptAnnotation);
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().first().get();
+    textSource.getConceptAnnotations().selectOnly(conceptAnnotation);
     model.registerAction(
         new ReassignOwlClassAction(model, conceptAnnotation, model.getSelectedOwlClass().get()));
 

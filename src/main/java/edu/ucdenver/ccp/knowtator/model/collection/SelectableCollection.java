@@ -51,7 +51,7 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
     selection = new ArrayList<>();
   }
 
-  public Optional<K> getOnly() {
+  public Optional<K> getOnlySelected() {
     if (selection.size() == 1) {
       return Optional.of(selection.get(0));
     } else {
@@ -66,7 +66,7 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
     if (selection.isEmpty()) {
       first().ifPresent(this::selectOnly);
     } else {
-      getNext(selection.get(0)).ifPresent(this::selectOnly);
+      getOnlySelected().flatMap(this::getNext).ifPresent(this::selectOnly);
     }
   }
 
@@ -77,13 +77,12 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
     if (selection.isEmpty()) {
       first().ifPresent(this::selectOnly);
     } else {
-      getPrevious(selection.get(0)).ifPresent(this::selectOnly);
+      getOnlySelected().flatMap(this::getPrevious).ifPresent(this::selectOnly);
     }
   }
 
   public void selectOnly(K item) {
-    SelectionEvent<ModelObject> selectionEvent =
-        new SelectionEvent<>(item);
+    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(item);
 
     clearSelection();
     selection.add(item);
@@ -105,8 +104,12 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
   @Override
   public void remove(K item) {
     super.remove(item);
-    getOnly()
+    getOnlySelected()
         .filter(selection -> selection.equals(item))
         .ifPresent(selection -> clearSelection());
+  }
+
+  public ArrayList<K> getSelection() {
+    return selection;
   }
 }

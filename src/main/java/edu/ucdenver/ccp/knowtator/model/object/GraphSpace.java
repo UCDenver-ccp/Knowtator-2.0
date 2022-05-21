@@ -139,11 +139,12 @@ public class GraphSpace extends mxGraph
                     ConceptAnnotation conceptAnnotation =
                         ((AnnotationNode) cell).getConceptAnnotation();
                     getTextSource()
-                        .getSelectedAnnotation()
+                        .getConceptAnnotations()
+                        .getOnlySelected()
                         .filter(conceptAnnotation1 -> !conceptAnnotation.equals(conceptAnnotation1))
                         .ifPresent(
                             conceptAnnotation1 ->
-                                getTextSource().setSelectedConceptAnnotation(conceptAnnotation));
+                                getTextSource().getConceptAnnotations().selectOnly(conceptAnnotation));
 
                   } else if (cell instanceof RelationAnnotation) {
                     knowtatorModel.setSelectedOwlObjectProperty(

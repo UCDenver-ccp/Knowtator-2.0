@@ -34,8 +34,10 @@ import static java.lang.Math.min;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.CyclableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
@@ -110,8 +112,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             highlightRegion(pressOffset, pressOffset, new RectanglePainter(Color.BLACK));
 
             view.getModel()
-                .flatMap(BaseModel::getSelectedTextSource)
-                .flatMap(TextSource::getSelectedAnnotation)
+                .map(BaseModel::getTextSources)
+                .flatMap(TextSourceCollection::getOnlySelected)
+                .map(TextSource::getConceptAnnotations)
+                .flatMap(ConceptAnnotationCollection::getOnlySelected)
                 .ifPresent(SelectableCollection::clearSelection);
           }
 
@@ -156,7 +160,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   /** Sets the text to the text sources content. */
   public void showTextSource() {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
         .filter(textSource -> !textSource.getContent().equals(getText()))
         .ifPresent(textSource -> setText(textSource.getContent()));
     refreshHighlights();
@@ -172,10 +177,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   private void handleMouseRelease(MouseEvent e, int pressOffset, int releaseOffset) {
     AnnotationPopupMenu popupMenu = new AnnotationPopupMenu(e);
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getConceptAnnotations)
         .ifPresent(
-            textSource -> {
-              Set<Span> spansContainingLocation = textSource.getSpans(pressOffset).getCollection();
+            conceptAnnotations -> {
+              Set<Span> spansContainingLocation = conceptAnnotations.getSpans(pressOffset).getCollection();
 
               if (SwingUtilities.isRightMouseButton(e)) {
                 if (spansContainingLocation.size() == 1) {
@@ -209,9 +216,11 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
             model -> {
               getHighlighter().removeAllHighlights();
               if (view.getModel()
-                  .flatMap(BaseModel::getSelectedTextSource)
-                  .flatMap(TextSource::getSelectedAnnotation)
-                  .flatMap(ConceptAnnotation::getOnly)
+                  .map(BaseModel::getTextSources)
+                  .flatMap(TextSourceCollection::getOnlySelected)
+                  .map(TextSource::getConceptAnnotations)
+                  .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                  .flatMap(ConceptAnnotation::getOnlySelected)
                   .isPresent()) {
                 highlightSelectedAnnotation();
               } else {
@@ -224,10 +233,12 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
               // because the highlights are displayed
               // in order of placement
               model
-                  .getSelectedTextSource()
+                  .getTextSources()
+                  .getOnlySelected()
+                  .map(TextSource::getConceptAnnotations)
                   .ifPresent(
-                      textSource -> {
-                        Set<Span> spans = textSource.getSpans(null).getCollection();
+                      conceptAnnotations -> {
+                        Set<Span> spans = conceptAnnotations.getSpans(null).getCollection();
                         highlightOverlaps(spans);
                         highlightSpans(spans);
                       });
@@ -237,21 +248,27 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
 
               Optional<Span> span;
               if (!model
-                  .getSelectedTextSource()
-                  .flatMap(TextSource::getSelectedAnnotation)
-                  .flatMap(SelectableCollection::getOnly)
+                  .getTextSources()
+                  .getOnlySelected()
+                  .map(TextSource::getConceptAnnotations)
+                  .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                  .flatMap(SelectableCollection::getOnlySelected)
                   .isPresent()) {
                 span =
                     model
-                        .getSelectedTextSource()
-                        .flatMap(TextSource::getSelectedAnnotation)
+                        .getTextSources()
+                        .getOnlySelected()
+                        .map(TextSource::getConceptAnnotations)
+                        .flatMap(ConceptAnnotationCollection::getOnlySelected)
                         .flatMap(CyclableCollection::first);
               } else {
                 span =
                     model
-                        .getSelectedTextSource()
-                        .flatMap(TextSource::getSelectedAnnotation)
-                        .flatMap(SelectableCollection::getOnly);
+                        .getTextSources()
+                        .getOnlySelected()
+                        .map(TextSource::getConceptAnnotations)
+                        .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                        .flatMap(SelectableCollection::getOnlySelected);
               }
               Optional<Span> finalSpan = span;
               SwingUtilities.invokeLater(
@@ -330,8 +347,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
   /** Highlights the spans for the selected annotation. */
   private void highlightSelectedAnnotation() {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedAnnotation)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getConceptAnnotations)
+        .flatMap(ConceptAnnotationCollection::getOnlySelected)
         .ifPresent(
             conceptAnnotation ->
                 conceptAnnotation.forEach(
@@ -550,7 +569,8 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                 selectAnnotationMenuItem.addActionListener(
                     e3 ->
                         model
-                            .getSelectedTextSource()
+                            .getTextSources()
+                            .getOnlySelected()
                             .ifPresent(
                                 textSource -> span.getConceptAnnotation().selectOnly(span)));
                 return selectAnnotationMenuItem;
@@ -594,9 +614,13 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
         show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
       } else {
         view.getModel()
-            .flatMap(BaseModel::getSelectedTextSource).flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+            .map(BaseModel::getTextSources)
+            .flatMap(TextSourceCollection::getOnlySelected)
+            .map(TextSource::getConceptAnnotations)
+            .flatMap(ConceptAnnotationCollection::getOnlySelected)
+            .ifPresent(conceptAnnotation ->
             conceptAnnotation
-                .getOnly()
+                .getOnlySelected()
                 .filter(
                     span ->
                         span.getStart() <= releaseOffset

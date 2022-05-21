@@ -156,8 +156,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
    * Select next span.
    */
   public void selectNextSpan() {
-    getOnly()
-        .flatMap(SelectableCollection::getOnly)
+    getOnlySelected()
+        .flatMap(SelectableCollection::getOnlySelected)
         .flatMap(span -> getSpans(null).getNext(span))
         .ifPresent(span -> {
           ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
@@ -170,8 +170,8 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
    * Select previous span.
    */
   public void selectPreviousSpan() {
-    getOnly()
-        .flatMap(SelectableCollection::getOnly)
+    getOnlySelected()
+        .flatMap(SelectableCollection::getOnlySelected)
         .flatMap(span -> getSpans(null).getPrevious(span))
         .ifPresent(span -> {
       ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
@@ -188,14 +188,17 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
   public void selectOnly(ConceptAnnotation selection) {
     super.selectOnly(selection);
 
-    getOnly().ifPresent(conceptAnnotation -> {
-      if (!textSource.getSelectedGraphSpace().isPresent()) {
-        textSource.getGraphSpaces().getOnly()
+    getOnlySelected().ifPresent(conceptAnnotation -> {
+      GraphSpaceCollection graphSpaces = textSource.getGraphSpaces();
+      if (!graphSpaces.getOnlySelected().isPresent()) {
+        graphSpaces.getCollection()
+            .stream()
             .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
-            .ifPresent(textSource::setSelectedGraphSpace);
+            .findFirst()
+            .ifPresent(graphSpaces::selectOnly);
       }
-      textSource
-          .getSelectedGraphSpace()
+      graphSpaces
+          .getOnlySelected()
           .ifPresent(
               graphSpace ->
                   graphSpace.setSelectionCells(
@@ -268,7 +271,7 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
 
   @Override
   public void filterChangedEvent() {
-    getOnly().ifPresent(conceptAnnotation -> {
+    getOnlySelected().ifPresent(conceptAnnotation -> {
       if (model.isFilter(FilterType.PROFILE) && model
           .getSelectedProfile()
           .map(profile -> !conceptAnnotation.getAnnotator().equals(profile))

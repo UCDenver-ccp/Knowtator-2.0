@@ -48,24 +48,24 @@ class SelectableCollectionTest {
     model.selectNextTextSource();
     model.selectNextTextSource();
     model.selectNextTextSource();
-    assert !textSource.equals(model.getSelectedTextSource().get());
+    assert !textSource.equals(model.getTextSources().getOnlySelected().get());
     model.selectNextTextSource();
     model.selectNextTextSource();
     model.selectNextTextSource();
-    assert textSource.equals(model.getSelectedTextSource().get());
+    assert textSource.equals(model.getTextSources().getOnlySelected().get());
   }
 
   @Test
   void selectPreviousTest() {
     model.getTextSources().selectOnly(model.getTextSources().get("document1").get());
     TextSource textSource = model.getTextSources().get("document1").get();
-    assert textSource.equals(model.getTextSources().getOnly().get());
+    assert textSource.equals(model.getTextSources().getOnlySelected().get());
     model.selectPreviousTextSource();
     model.selectPreviousTextSource();
     model.selectPreviousTextSource();
-    assert !textSource.equals(model.getSelectedTextSource().get());
+    assert !textSource.equals(model.getTextSources().getOnlySelected().get());
     model.selectPreviousTextSource();
     model.selectPreviousTextSource();
-    assert textSource.equals(model.getSelectedTextSource().get());
+    assert textSource.equals(model.getTextSources().getOnlySelected().get());
   }
 }

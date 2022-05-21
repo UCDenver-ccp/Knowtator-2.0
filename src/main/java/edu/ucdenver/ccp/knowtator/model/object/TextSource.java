@@ -32,13 +32,11 @@ import edu.ucdenver.ccp.knowtator.model.ModelListener;
 import edu.ucdenver.ccp.knowtator.model.Savable;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.GraphSpaceCollection;
-import edu.ucdenver.ccp.knowtator.model.collection.SpanCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
 import javax.swing.JFileChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -212,56 +210,6 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-
-  }
-
-  /**
-   * Gets selected annotation.
-   *
-   * @return the selected annotation
-   */
-  public Optional<ConceptAnnotation> getSelectedAnnotation() {
-    return conceptAnnotations.getOnly();
-  }
-
-  /**
-   * Gets spans.
-   *
-   * @param loc the loc
-   * @return the spans
-   */
-  public SpanCollection getSpans(Integer loc) {
-    return conceptAnnotations.getSpans(loc);
-  }
-
-  /** Select next span. */
-  public void selectNextSpan() {
-    conceptAnnotations.selectNextSpan();
-  }
-
-  /** Select previous span. */
-  public void selectPreviousSpan() {
-    conceptAnnotations.selectPreviousSpan();
-  }
-
-  /**
-   * Gets annotation.
-   *
-   * @param annotationID the annotation id
-   * @return the annotation
-   */
-  public Optional<ConceptAnnotation> getAnnotation(String annotationID) {
-    return conceptAnnotations.get(annotationID);
-
-  }
-
-  /**
-   * Sets selected concept annotation.
-   *
-   * @param conceptAnnotation the concept annotation
-   */
-  public void setSelectedConceptAnnotation(ConceptAnnotation conceptAnnotation) {
-    conceptAnnotations.selectOnly(conceptAnnotation);
   }
 
   /**
@@ -271,25 +219,6 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
    */
   public void add(GraphSpace graphSpace) {
     graphSpaces.add(graphSpace);
-  }
-
-  /** Select previous graph space. */
-  public void selectPreviousGraphSpace() {
-    graphSpaces.selectPrevious();
-  }
-
-  /** Select next graph space. */
-  public void selectNextGraphSpace() {
-    graphSpaces.selectNext();
-  }
-
-  /**
-   * Gets selected graph space.
-   *
-   * @return the selected graph space
-   */
-  public Optional<GraphSpace> getSelectedGraphSpace() {
-    return graphSpaces.getOnly();
   }
 
   /**
@@ -302,44 +231,4 @@ public class TextSource implements ModelObject<TextSource>, Savable, ModelListen
     return graphSpaces.containsID(id);
   }
 
-  /**
-   * First concept annotation optional.
-   *
-   * @return the optional
-   */
-  public Optional<ConceptAnnotation> firstConceptAnnotation() {
-    return conceptAnnotations.first();
-  }
-
-  /**
-   * Gets number of graph spaces.
-   *
-   * @return the number of graph spaces
-   */
-  public int getNumberOfGraphSpaces() {
-    return graphSpaces.size();
-  }
-
-  /**
-   * Gets number of concept annotations.
-   *
-   * @return the number of concept annotations
-   */
-  public int getNumberOfConceptAnnotations() {
-    return conceptAnnotations.size();
-  }
-
-  /**
-   * Sets selected graph space.
-   *
-   * @param graphSpace the graph space
-   */
-  public void setSelectedGraphSpace(GraphSpace graphSpace) {
-    graphSpaces.selectOnly(graphSpace);
-  }
-
-  /** Select next concept annotation. */
-  public void selectNextConceptAnnotation() {
-    conceptAnnotations.selectNext();
-  }
 }

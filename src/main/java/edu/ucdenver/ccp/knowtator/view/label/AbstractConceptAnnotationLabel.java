@@ -45,12 +45,12 @@ public abstract class AbstractConceptAnnotationLabel extends KnowtatorLabel {
     view.getModel()
         .ifPresent(
             model -> {
-              Optional<TextSource> textSourceOptional = model.getSelectedTextSource();
+              Optional<TextSource> textSourceOptional = model.getTextSources().getOnlySelected();
               if (textSourceOptional.isPresent()) {
                 textSourceOptional.ifPresent(
                     textSource -> {
                       Optional<ConceptAnnotation> conceptAnnotationOpt =
-                          textSource.getSelectedAnnotation();
+                          textSource.getConceptAnnotations().getOnlySelected();
                       if (conceptAnnotationOpt.isPresent()) {
                         conceptAnnotationOpt.ifPresent(this::displayConceptAnnotation);
                       } else {

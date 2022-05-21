@@ -314,7 +314,8 @@ public class BratStandoffUtil {
 
               graphSpace
                   .getTextSource()
-                  .getAnnotation(subjectAnnotationID)
+                  .getConceptAnnotations()
+                  .get(subjectAnnotationID)
                   .ifPresent(
                       subjectConceptAnnotation -> {
                         AnnotationNode source =
@@ -323,7 +324,8 @@ public class BratStandoffUtil {
 
                         graphSpace
                             .getTextSource()
-                            .getAnnotation(objectAnnotationID)
+                            .getConceptAnnotations()
+                            .get(objectAnnotationID)
                             .ifPresent(
                                 objectConceptAnnotation -> {
                                   AnnotationNode target =

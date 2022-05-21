@@ -24,7 +24,6 @@
 
 package edu.ucdenver.ccp.knowtator.view.chooser;
 
-import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 
@@ -43,7 +42,9 @@ public class GraphSpaceChooser extends KnowtatorChooser<GraphSpace> {
    * React to click.
    * */
   public void react() {
-    view.getModel().flatMap(BaseModel::getSelectedTextSource).ifPresent(textSource -> setCollection(textSource.getGraphSpaces()));
+    view.getModel()
+        .flatMap(model -> model.getTextSources().getOnlySelected())
+        .ifPresent(textSource -> setCollection(textSource.getGraphSpaces()));
     setSelected();
   }
 }

@@ -26,6 +26,7 @@ package edu.ucdenver.ccp.knowtator.view.actions.collection;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.KnowtatorCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -191,7 +192,7 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
    */
   public void prepareRemove() throws ActionUnperformable {
     if (!getObject().isPresent()) {
-      collection.getOnly().ifPresent(this::setObject);
+      collection.getOnlySelected().ifPresent(this::setObject);
 //      Iterator<K> iterator = collection.getSelection().iterator();
 //      if (iterator.hasNext()) {
 //        setObject(iterator.next());
@@ -256,7 +257,8 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                         switch (collectionType) {
                           case ANNOTATION:
                             model
-                                .getSelectedTextSource()
+                                .getTextSources()
+                                .getOnlySelected()
                                 .ifPresent(
                                     textSource ->
                                         actions.add(
@@ -265,7 +267,11 @@ public abstract class AbstractKnowtatorCollectionAction<K extends ModelObject>
                             break;
                           case SPAN:
                             model
-                                .getSelectedTextSource().flatMap(TextSource::getSelectedAnnotation).ifPresent(conceptAnnotation ->
+                                .getTextSources()
+                                .getOnlySelected()
+                                .map(TextSource::getConceptAnnotations)
+                                .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                                .ifPresent(conceptAnnotation ->
                                 actions.add(
                                     new SpanAction(
                                         model,

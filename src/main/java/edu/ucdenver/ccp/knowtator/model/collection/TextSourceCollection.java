@@ -64,7 +64,7 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
 
   @Override
   public void remove(TextSource textSource) {
-    getOnly()
+    getOnlySelected()
         .filter(textSource1 -> textSource1.equals(textSource))
         .ifPresent(textSource1 -> selectPrevious());
     super.remove(textSource);

@@ -26,6 +26,8 @@ package edu.ucdenver.ccp.knowtator.view.textpane;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.ModelListener;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorComponent;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.image.BufferedImage;
@@ -92,11 +94,13 @@ public class KnowtatorTextPane extends AnnotatableTextPane
   @Override
   protected boolean keepSearchingCondition(Matcher matcher) {
     return view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .map(TextSource::getConceptAnnotations)
         .map(
-            textSource ->
+            conceptAnnotations ->
                 (!onlyInAnnotationsCheckBox.isSelected()
-                    || !(textSource.getSpans(matcher.start()).size() == 0)))
+                    || !(conceptAnnotations.getSpans(matcher.start()).size() == 0)))
         .orElse(false);
   }
 

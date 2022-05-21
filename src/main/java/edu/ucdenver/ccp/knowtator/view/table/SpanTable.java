@@ -25,10 +25,12 @@
 package edu.ucdenver.ccp.knowtator.view.table;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
-import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.swing.table.DefaultTableModel;
 
@@ -59,7 +61,7 @@ public class SpanTable extends KnowtatorTable<Span> {
         span -> {
           view.getModel()
               .ifPresent(model -> model.getTextSources().selectOnly(span.getTextSource()));
-          span.getTextSource().setSelectedConceptAnnotation(span.getConceptAnnotation());
+          span.getTextSource().getConceptAnnotations().selectOnly(span.getConceptAnnotation());
           span.getConceptAnnotation().selectOnly(span);
         });
   }
@@ -67,17 +69,24 @@ public class SpanTable extends KnowtatorTable<Span> {
   @Override
   public void addElementsFromModel() {
     view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedAnnotation)
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .flatMap(textSource -> textSource.getConceptAnnotations().getOnlySelected())
         .ifPresent(conceptAnnotation -> conceptAnnotation.forEach(this::addValue));
   }
 
   @Override
-  protected Optional<Object> getSelectedFromModel() {
+  protected Optional<List<Span>> getSelectedFromModel() {
     return view.getModel()
-        .flatMap(BaseModel::getSelectedTextSource)
-        .flatMap(TextSource::getSelectedAnnotation)
-        .map(ConceptAnnotation::getOnly);
+        .map(BaseModel::getTextSources)
+        .flatMap(TextSourceCollection::getOnlySelected)
+        .flatMap(textSource -> textSource.getConceptAnnotations().getOnlySelected())
+        .flatMap(ConceptAnnotation::getOnlySelected)
+        .map(span -> {
+          ArrayList<Span> l = new ArrayList<>();
+          l.add(span);
+          return l;
+        });
   }
 
   @Override

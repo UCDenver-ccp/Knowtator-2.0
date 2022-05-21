@@ -51,9 +51,9 @@ class GraphActionsTest {
 
   @Test
   void removeSelectedAnnotationNodeTest() throws ActionUnperformable {
-    TextSource textSource = model.getSelectedTextSource().get();
-    textSource.selectNextGraphSpace();
-    GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
+    TextSource textSource = model.getTextSources().getOnlySelected().get();
+    textSource.getGraphSpaces().selectNext();
+    GraphSpace graphSpace = textSource.getGraphSpaces().getOnlySelected().get();
     Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 0);
     graphSpace.setSelectionCell(cell);
     TestingHelpers.testKnowtatorAction(
@@ -65,8 +65,8 @@ class GraphActionsTest {
   @Test
   void removeSelectedTripleTest() throws ActionUnperformable {
     TextSource textSource = model.getTextSources().get("document1").get();
-    textSource.selectNextGraphSpace();
-    GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
+    textSource.getGraphSpaces().selectNext();
+    GraphSpace graphSpace = textSource.getGraphSpaces().getOnlySelected().get();
     Object cell = graphSpace.getModel().getChildAt(graphSpace.getDefaultParent(), 2);
     graphSpace.setSelectionCell(cell);
     TestingHelpers.testKnowtatorAction(
@@ -78,10 +78,10 @@ class GraphActionsTest {
   @Test
   void addAnnotationNodeTest() throws ActionUnperformable {
     TextSource textSource = model.getTextSources().get("document1").get();
-    textSource.selectNextGraphSpace();
-    textSource.selectNextGraphSpace();
-    GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
-    ConceptAnnotation conceptAnnotation = textSource.getSelectedAnnotation().get();
+    textSource.getGraphSpaces().selectNext();
+    textSource.getGraphSpaces().selectNext();
+    GraphSpace graphSpace = textSource.getGraphSpaces().getOnlySelected().get();
+    ConceptAnnotation conceptAnnotation = textSource.getConceptAnnotations().getOnlySelected().get();
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.AddAnnotationNodeAction(null, model, graphSpace, conceptAnnotation),
@@ -91,9 +91,9 @@ class GraphActionsTest {
   @Test
   void addTripleTest() throws ActionUnperformable {
     TextSource textSource = model.getTextSources().get("document1").get();
-    textSource.selectNextGraphSpace();
-    textSource.selectNextGraphSpace();
-    GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
+    textSource.getGraphSpaces().selectNext();
+    textSource.getGraphSpaces().selectNext();
+    GraphSpace graphSpace = textSource.getGraphSpaces().getOnlySelected().get();
     AnnotationNode source =
         (AnnotationNode) graphSpace.getChildVertices(graphSpace.getDefaultParent())[0];
     AnnotationNode target =
@@ -111,8 +111,8 @@ class GraphActionsTest {
     // TODO: This test only makes sure that the layout application doesn't change to graph space
     // model. It needs to check the positions
     TextSource textSource = model.getTextSources().get("document1").get();
-    textSource.selectNextGraphSpace();
-    GraphSpace graphSpace = textSource.getSelectedGraphSpace().get();
+    textSource.getGraphSpaces().selectNext();
+    GraphSpace graphSpace = textSource.getGraphSpaces().getOnlySelected().get();
     TestingHelpers.testKnowtatorAction(
         model,
         new GraphActions.ApplyLayoutAction(null, model, graphSpace, false),

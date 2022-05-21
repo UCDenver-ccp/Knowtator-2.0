@@ -27,6 +27,7 @@ package edu.ucdenver.ccp.knowtator.view.actions.modelactions;
 import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
 
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -102,12 +103,11 @@ public class ProfileAction extends AbstractKnowtatorCollectionAction<Profile> {
               if (!objectOptional.isPresent()) {
                 objectOptional =
                     model1
-                        .getSelectedTextSource()
-                        .flatMap(
-                            textSource ->
-                                textSource
-                                    .getSelectedAnnotation()
-                                    .map(ConceptAnnotation::getOwlClass));
+                        .getTextSources()
+                        .getOnlySelected()
+                        .map(TextSource::getConceptAnnotations)
+                        .flatMap(ConceptAnnotationCollection::getOnlySelected)
+                        .map(ConceptAnnotation::getOwlClass);
               }
               objectOptional.ifPresent(
                   owlClass1 -> {
