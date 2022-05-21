@@ -28,6 +28,7 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.KnowtatorModel;
+import edu.ucdenver.ccp.knowtator.model.OwlModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
@@ -39,6 +40,7 @@ import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ReassignOwlClassAction;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
@@ -182,6 +184,18 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
     model.addEdit(last);
   }
 
+  static void executeManyReassignOwlClassActions(KnowtatorModel model, List<ConceptAnnotation> objects, String owlClass) {
+    List<ReassignOwlClassAction> list = (objects.stream()
+        .map(conceptAnnotation -> {
+          return new ReassignOwlClassAction(model, conceptAnnotation, owlClass);
+        })
+        .peek(ReassignOwlClassAction::execute)
+        .collect(Collectors.toList()));
+    ReassignOwlClassAction last = list.get(list.size() - 1);
+    list.subList(0, list.size() - 1).forEach(last::addKnowtatorEdit);
+    model.addEdit(last);
+  }
+
   /**
    * The type Annotation popup menu.
    */
@@ -206,7 +220,19 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
       return removeAnnotationMenuItem;
     }
 
+    private JMenuItem reassignOWLClassCommand(String owlClass) {
+      JMenuItem removeAnnotationMenuItem =
+          new JMenuItem(String.format("Reassign OWL class to: %s", owlClass));
+      removeAnnotationMenuItem.addActionListener(actionEvent -> view.getModel()
+          .ifPresent(model -> executeManyReassignOwlClassActions(model, getSelectedValues(), owlClass)));
+
+      return removeAnnotationMenuItem;
+    }
+
     void showPopUpMenu() {
+      view.getModel()
+          .flatMap(OwlModel::getSelectedOwlClass)
+          .ifPresent(owlClass -> add(reassignOWLClassCommand(owlClass)));
       add(removeAnnotationsCommand());
       show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
 

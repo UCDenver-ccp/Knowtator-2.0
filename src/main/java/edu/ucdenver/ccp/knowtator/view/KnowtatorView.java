@@ -452,8 +452,8 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
     reassignButton.addActionListener(e -> getModel()
         .ifPresent(
             model -> {
-              Optional<String> selectedOwlClass = model.getSelectedOwlClass();
-              selectedOwlClass.ifPresent(
+              model.getSelectedOwlClass()
+                  .ifPresent(
                   owlClass ->
                       model
                           .getTextSources()
