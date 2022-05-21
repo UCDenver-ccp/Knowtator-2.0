@@ -119,8 +119,9 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 
   @Override
   List<ConceptAnnotation> getSelectedValues() {
+    int column = getTableHeader().getColumnModel().getColumnIndex("Spanned Text");
     return Arrays.stream(getSelectedRows())
-        .mapToObj(row -> (ConceptAnnotation) getValueAt(row, 0))
+        .mapToObj(row -> (ConceptAnnotation) getValueAt(row, column))
         .collect(Collectors.toList());
   }
 
