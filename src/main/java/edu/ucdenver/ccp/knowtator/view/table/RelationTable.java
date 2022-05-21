@@ -27,7 +27,9 @@ package edu.ucdenver.ccp.knowtator.view.table;
 import com.mxgraph.view.mxGraph;
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import java.awt.event.MouseEvent;
@@ -168,7 +170,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  public void reactToModelEvent() {
+  public void reactToModelEvent(Optional<ChangeEvent<ModelObject>> event) {
   }
 
   @Override

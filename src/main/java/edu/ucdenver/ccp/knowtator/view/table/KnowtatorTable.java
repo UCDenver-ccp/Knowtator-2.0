@@ -55,8 +55,6 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
     getTableHeader().setFont(new Font(getFont().getName(), Font.BOLD, 16));
     setAutoCreateRowSorter(true);
 
-    KnowtatorTable<M> table = this;
-
     addMouseListener(
         new MouseInputAdapter() {
           @Override
@@ -103,7 +101,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
    */
   abstract void addValue(M modelObject);
 
-  private void setSelected() {
+  void setSelected() {
     getSelectedFromModel()
         .ifPresent(
             selection -> {
@@ -138,7 +136,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
   }
 
   /** React to model event. */
-  public void reactToModelEvent() {
+  public void reactToModelEvent(Optional<ChangeEvent<ModelObject>> event) {
     ((DefaultTableModel) getModel()).setRowCount(0);
     addElementsFromModel();
     setSelected();
@@ -146,16 +144,16 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
 
   @Override
   public void filterChangedEvent() {
-    reactToModelEvent();
+    reactToModelEvent(Optional.empty());
   }
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    reactToModelEvent();
+    reactToModelEvent(Optional.of(event));
   }
 
   @Override
   public void colorChangedEvent(Profile profile) {
-    reactToModelEvent();
+    reactToModelEvent(Optional.empty());
   }
 }

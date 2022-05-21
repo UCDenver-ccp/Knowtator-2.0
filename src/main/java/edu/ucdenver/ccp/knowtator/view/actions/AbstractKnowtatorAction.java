@@ -46,6 +46,8 @@ public abstract class AbstractKnowtatorAction extends AbstractUndoableEdit
   private final mxUndoManager mxUndoManager;
   private final UndoManager undoManager;
 
+  private boolean significant;
+
   /**
    * Instantiates a new Abstract knowtator action.
    *
@@ -58,6 +60,7 @@ public abstract class AbstractKnowtatorAction extends AbstractUndoableEdit
     mxUndoManager = new mxUndoManager();
     undoManager = new UndoManager();
     this.presentationName = presentationName;
+    this.significant = true;
   }
 
   /**
@@ -126,7 +129,16 @@ public abstract class AbstractKnowtatorAction extends AbstractUndoableEdit
    *
    * @param edit the edit
    */
-  protected void addKnowtatorEdit(UndoableEdit edit) {
+  public void addKnowtatorEdit(UndoableEdit edit) {
     undoManager.addEdit(edit);
+  }
+
+  @Override
+  public boolean isSignificant() {
+    return significant;
+  }
+
+  public void setSignificant(boolean significant) {
+    this.significant = significant;
   }
 }

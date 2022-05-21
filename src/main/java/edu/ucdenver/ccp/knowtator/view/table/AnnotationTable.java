@@ -29,14 +29,17 @@ import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActio
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
+import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
+import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
 import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
 import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -105,7 +108,18 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   }
 
   @Override
-  public void reactToModelEvent() {
+  public void reactToModelEvent(Optional<ChangeEvent<ModelObject>> event) {
+    event
+        .filter(event1 -> !(event1 instanceof SelectionEvent))
+        .map(ChangeEvent::getNew)
+        .flatMap(modelObjects -> modelObjects.stream()
+            .filter(modelObject -> modelObject instanceof ConceptAnnotation)
+            .findAny()).ifPresent(modelObject -> {
+          clearSelection();
+          ((DefaultTableModel) getModel()).setRowCount(0);
+          addElementsFromModel();
+          setSelected();
+        });
   }
 
   @Override
@@ -167,29 +181,21 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
           new JMenuItem("Delete selected annotations");
       removeAnnotationMenuItem.addActionListener(actionEvent -> view.getModel()
           .ifPresent(model -> {
-            Iterator<ConceptAnnotation> selected = getSelectedValues().iterator();
-            if (selected.hasNext()) {
-              ConceptAnnotation first = selected.next();
-              ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, first.getTextSource());
-              action.setObject(first);
-              while (selected.hasNext()) {
-                ConceptAnnotation conceptAnnotation = selected.next();
-                ConceptAnnotationAction subAction = new ConceptAnnotationAction(model, REMOVE,
-                    conceptAnnotation.getTextSource());
-                subAction.setObject(conceptAnnotation);
-                try {
-                  model.registerAction(subAction);
-                } catch (ActionUnperformable e) {
-                  e.printStackTrace();
-                }
-//                action.addEdit(subAction);
-              }
+            ArrayList<ConceptAnnotationAction> actions = new ArrayList<>();
+            for (ConceptAnnotation conceptAnnotation : getSelectedValues()) {
+              ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, conceptAnnotation.getTextSource());
+              action.setObject(conceptAnnotation);
               try {
+                action.setSignificant(false);
                 model.registerAction(action);
+                actions.add(action);
               } catch (ActionUnperformable e) {
                 throw new RuntimeException(e);
               }
             }
+            ConceptAnnotationAction firstAction = actions.get(0);
+            firstAction.setSignificant(true);
+            reset();
           }));
 
       return removeAnnotationMenuItem;
