@@ -98,11 +98,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.uima</groupId>
-            <artifactId>uimaj-core</artifactId>
-            <version>3.2.0</version>
-        </dependency>
     </dependencies>
 
     <repositories>
@@ -231,10 +226,6 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <excludes>
-                        <exclude>edu/ucdenver/ccp/knowtator/uima/**</exclude>
-                        <exclude>edu/ucdenver/ccp/knowtator/io/uima/**</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

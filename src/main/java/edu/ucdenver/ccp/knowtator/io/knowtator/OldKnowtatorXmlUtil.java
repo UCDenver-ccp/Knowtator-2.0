@@ -47,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /** The type Old knowtator xml util. */
 public class OldKnowtatorXmlUtil extends XmlUtil {
@@ -133,191 +132,185 @@ public class OldKnowtatorXmlUtil extends XmlUtil {
 
   @Override
   public void readToTextSource(TextSource textSource, File file) {
-    throw new NotImplementedException();
   }
 
   @Override
   public void readToProfileCollection(KnowtatorModel model, File file) {
-    throw new NotImplementedException();
   }
 
   @Override
   public void writeFromTextSource(TextSource textSource) {
-    throw new NotImplementedException();
   }
 
-  @Override
-  public void writeFromProfile(Profile profile) {
-    throw new NotImplementedException();
-  }
-
-  @Override
-  public void readToTextSource(TextSource textSource, Element parent) {
-    readToConceptAnnotationCollection(
-        textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
-  }
-
-  @Override
-  public void readToConceptAnnotationCollection(
-      KnowtatorModel model,
-      TextSource textSource,
-      ConceptAnnotationCollection conceptAnnotationCollection,
-      Element parent) {
-    Map<String, Element> slotToClassIdMap = getSlotsFromXml(parent);
-    Map<String, Element> classMentionToClassIdMap = getClassIDsFromXml(parent);
-    Map<ConceptAnnotation, Element> annotationToSlotMap = new HashMap<>();
-
-    asList(parent.getElementsByTagName(OldKnowtatorXmlTags.ANNOTATION)).stream()
-        .map(node -> (Element) node)
-        .map(
-            annotationElement -> {
-              String annotationID =
-                  ((Element)
-                          annotationElement
-                              .getElementsByTagName(OldKnowtatorXmlTags.MENTION)
-                              .item(0))
-                      .getAttribute(OldKnowtatorXmlAttributes.ID);
-              Element classElement = classMentionToClassIdMap.get(annotationID);
-
-              String owlClassID =
-                  ((Element)
-                          classElement
-                              .getElementsByTagName(OldKnowtatorXmlTags.MENTION_CLASS)
-                              .item(0))
-                      .getAttribute(OldKnowtatorXmlAttributes.ID);
-
-              String profileID = null;
-              try {
-                profileID =
-                    annotationElement
-                        .getElementsByTagName(OldKnowtatorXmlTags.ANNOTATOR)
-                        .item(0)
-                        .getTextContent();
-                model.addProfile(new Profile(model, profileID));
-              } catch (NullPointerException npe) {
-                try {
-                  profileID = annotationElement.getAttribute(OldKnowtatorXmlAttributes.ANNOTATOR);
-                  model.addProfile(new Profile(model, profileID));
-                } catch (NullPointerException ignored) {
-                  // Ok if element doesn't have attribute
-                }
-              }
-              Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
-
-              Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
-
-              if (owlClass.isPresent()) {
-                owlClassID = owlClass.get().toStringID();
-              } else {
-                log.warn(
-                    String.format(
-                        "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
-                model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
-              }
-
-              ConceptAnnotation newConceptAnnotation =
-                  new ConceptAnnotation(
-                      textSource,
-                      annotationID,
-                      owlClassID,
-                      profile,
-                      "identity",
-                      "",
-                      BaseModel.DEFAULT_LAYERS);
-              if (conceptAnnotationCollection.containsID(annotationID)) {
-                newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
-              }
-              readToConceptAnnotation(newConceptAnnotation, annotationElement);
-
-              // No need to keep annotations with no allSpanCollection
-              if (newConceptAnnotation.size() == 0) {
-                return Optional.empty();
-              } else {
-                asList(
-                    classElement.getElementsByTagName(OldKnowtatorXmlTags.HAS_SLOT_MENTION))
-                    .stream()
-                    .map(node -> (Element) node)
-                    .forEach(
-                        slotMentionElement -> {
-                          String slotMentionID =
-                              slotMentionElement.getAttribute(OldKnowtatorXmlAttributes.ID);
-                          Element slotElement = slotToClassIdMap.get(slotMentionID);
-                          if (slotElement != null) {
-                            annotationToSlotMap.put(newConceptAnnotation, slotElement);
-                          }
-                        });
-                return Optional.of(newConceptAnnotation);
-              }
-            })
-        .forEach(
-            conceptAnnotationOptional ->
-                conceptAnnotationOptional
-                    .map(o -> (ConceptAnnotation) o)
-                    .ifPresent(conceptAnnotationCollection::add));
-
-    GraphSpace oldKnowtatorGraphSpace = new GraphSpace(textSource, "Old Knowtator Relations");
-    textSource.add(oldKnowtatorGraphSpace);
-
-    annotationToSlotMap.forEach(
-        (annotation, slot) -> {
-          String propertyID =
-              ((Element) slot.getElementsByTagName(OldKnowtatorXmlTags.MENTION_SLOT).item(0))
-                  .getAttribute(OldKnowtatorXmlAttributes.ID);
-
-          AnnotationNode source =
-              oldKnowtatorGraphSpace.getAnnotationNodeForConceptAnnotation(annotation);
-
-          for (Node slotMentionValueNode :
-              asList(
-                  slot.getElementsByTagName(OldKnowtatorXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
-            Element slotMentionValueElement = (Element) slotMentionValueNode;
-            String value = slotMentionValueElement.getAttribute(OldKnowtatorXmlAttributes.VALUE);
-            conceptAnnotationCollection
-                .get(value)
-                .map(oldKnowtatorGraphSpace::getAnnotationNodeForConceptAnnotation)
-                .ifPresent(
-                    target ->
-                        oldKnowtatorGraphSpace.addTriple(
-                            source,
-                            target,
-                            null,
-                            model.getDefaultProfile(),
-                            propertyID,
-                            Quantifier.some,
-                            "",
-                            false,
-                            ""));
-          }
-        });
-  }
-
-  @Override
-  public void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
-    for (Node spanNode :
-        asList(parent.getElementsByTagName(OldKnowtatorXmlTags.SPAN))) {
-      if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
-        Element spanElement = (Element) spanNode;
-        int spanStart =
-            Integer.parseInt(spanElement.getAttribute(OldKnowtatorXmlAttributes.SPAN_START));
-        int spanEnd =
-            Integer.parseInt(spanElement.getAttribute(OldKnowtatorXmlAttributes.SPAN_END));
-        try{
-          Span span = new Span(conceptAnnotation, null, spanStart, spanEnd);
-          conceptAnnotation.add(span);
-        } catch (IndexOutOfBoundsException e) {
-          log.warn(e.getMessage());
-        }
-      }
+    @Override
+    public void writeFromProfile(Profile profile) {
     }
-  }
 
-  @Override
-  protected void readToGraphSpaceCollection(TextSource textSource, GraphSpaceCollection graphSpaceCollection, Element parent) {
-    throw new NotImplementedException();
-  }
+    @Override
+    public void readToTextSource(TextSource textSource, Element parent) {
+        readToConceptAnnotationCollection(
+                                          textSource.getKnowtatorModel(), textSource, textSource.getConceptAnnotations(), parent);
+    }
 
-  @Override
-  public void readToGraphSpace(GraphSpace graphSpace, Element parent) {
-    throw new NotImplementedException();
-  }
+    @Override
+    public void readToConceptAnnotationCollection(
+                                                  KnowtatorModel model,
+                                                  TextSource textSource,
+                                                  ConceptAnnotationCollection conceptAnnotationCollection,
+                                                  Element parent) {
+        Map<String, Element> slotToClassIdMap = getSlotsFromXml(parent);
+        Map<String, Element> classMentionToClassIdMap = getClassIDsFromXml(parent);
+        Map<ConceptAnnotation, Element> annotationToSlotMap = new HashMap<>();
+
+        asList(parent.getElementsByTagName(OldKnowtatorXmlTags.ANNOTATION)).stream()
+            .map(node -> (Element) node)
+            .map(
+                 annotationElement -> {
+                     String annotationID =
+                         ((Element)
+                          annotationElement
+                          .getElementsByTagName(OldKnowtatorXmlTags.MENTION)
+                          .item(0))
+                         .getAttribute(OldKnowtatorXmlAttributes.ID);
+                     Element classElement = classMentionToClassIdMap.get(annotationID);
+
+                     String owlClassID =
+                         ((Element)
+                          classElement
+                          .getElementsByTagName(OldKnowtatorXmlTags.MENTION_CLASS)
+                          .item(0))
+                         .getAttribute(OldKnowtatorXmlAttributes.ID);
+
+                     String profileID = null;
+                     try {
+                         profileID =
+                             annotationElement
+                             .getElementsByTagName(OldKnowtatorXmlTags.ANNOTATOR)
+                             .item(0)
+                             .getTextContent();
+                         model.addProfile(new Profile(model, profileID));
+                     } catch (NullPointerException npe) {
+                         try {
+                             profileID = annotationElement.getAttribute(OldKnowtatorXmlAttributes.ANNOTATOR);
+                             model.addProfile(new Profile(model, profileID));
+                         } catch (NullPointerException ignored) {
+                             // Ok if element doesn't have attribute
+                         }
+                     }
+                     Profile profile = model.getProfile(profileID).orElse(model.getDefaultProfile());
+
+                     Optional<OWLClass> owlClass = model.getOwlClassById(owlClassID);
+
+                     if (owlClass.isPresent()) {
+                         owlClassID = owlClass.get().toStringID();
+                     } else {
+                         log.warn(
+                                  String.format(
+                                                "OWL Class: %s not found for concept: %s", owlClassID, annotationID));
+                         model.addOWLClassNotFoundAnnotations(annotationID, owlClassID);
+                     }
+
+                     ConceptAnnotation newConceptAnnotation =
+                         new ConceptAnnotation(
+                                               textSource,
+                                               annotationID,
+                                               owlClassID,
+                                               profile,
+                                               "identity",
+                                               "",
+                                               BaseModel.DEFAULT_LAYERS);
+                     if (conceptAnnotationCollection.containsID(annotationID)) {
+                         newConceptAnnotation.setId(model.verifyId(null, newConceptAnnotation, false));
+                     }
+                     readToConceptAnnotation(newConceptAnnotation, annotationElement);
+
+                     // No need to keep annotations with no allSpanCollection
+                     if (newConceptAnnotation.size() == 0) {
+                         return Optional.empty();
+                     } else {
+                         asList(
+                                classElement.getElementsByTagName(OldKnowtatorXmlTags.HAS_SLOT_MENTION))
+                             .stream()
+                             .map(node -> (Element) node)
+                             .forEach(
+                                      slotMentionElement -> {
+                                          String slotMentionID =
+                                              slotMentionElement.getAttribute(OldKnowtatorXmlAttributes.ID);
+                                          Element slotElement = slotToClassIdMap.get(slotMentionID);
+                                          if (slotElement != null) {
+                                              annotationToSlotMap.put(newConceptAnnotation, slotElement);
+                                          }
+                                      });
+                         return Optional.of(newConceptAnnotation);
+                     }
+                 })
+            .forEach(
+                     conceptAnnotationOptional ->
+                     conceptAnnotationOptional
+                     .map(o -> (ConceptAnnotation) o)
+                     .ifPresent(conceptAnnotationCollection::add));
+
+        GraphSpace oldKnowtatorGraphSpace = new GraphSpace(textSource, "Old Knowtator Relations");
+        textSource.add(oldKnowtatorGraphSpace);
+
+        annotationToSlotMap.forEach(
+                                    (annotation, slot) -> {
+                                        String propertyID =
+                                            ((Element) slot.getElementsByTagName(OldKnowtatorXmlTags.MENTION_SLOT).item(0))
+                                            .getAttribute(OldKnowtatorXmlAttributes.ID);
+
+                                        AnnotationNode source =
+                                            oldKnowtatorGraphSpace.getAnnotationNodeForConceptAnnotation(annotation);
+
+                                        for (Node slotMentionValueNode :
+                                                 asList(
+                                                        slot.getElementsByTagName(OldKnowtatorXmlTags.COMPLEX_SLOT_MENTION_VALUE))) {
+                                            Element slotMentionValueElement = (Element) slotMentionValueNode;
+                                            String value = slotMentionValueElement.getAttribute(OldKnowtatorXmlAttributes.VALUE);
+                                            conceptAnnotationCollection
+                                                .get(value)
+                                                .map(oldKnowtatorGraphSpace::getAnnotationNodeForConceptAnnotation)
+                                                .ifPresent(
+                                                           target ->
+                                                           oldKnowtatorGraphSpace.addTriple(
+                                                                                            source,
+                                                                                            target,
+                                                                                            null,
+                                                                                            model.getDefaultProfile(),
+                                                                                            propertyID,
+                                                                                            Quantifier.some,
+                                                                                            "",
+                                                                                            false,
+                                                                                            ""));
+                                        }
+                                    });
+    }
+
+    @Override
+    public void readToConceptAnnotation(ConceptAnnotation conceptAnnotation, Element parent) {
+        for (Node spanNode :
+                 asList(parent.getElementsByTagName(OldKnowtatorXmlTags.SPAN))) {
+            if (spanNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element spanElement = (Element) spanNode;
+                int spanStart =
+                    Integer.parseInt(spanElement.getAttribute(OldKnowtatorXmlAttributes.SPAN_START));
+                int spanEnd =
+                    Integer.parseInt(spanElement.getAttribute(OldKnowtatorXmlAttributes.SPAN_END));
+                try{
+                    Span span = new Span(conceptAnnotation, null, spanStart, spanEnd);
+                    conceptAnnotation.add(span);
+                } catch (IndexOutOfBoundsException e) {
+                    log.warn(e.getMessage());
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void readToGraphSpaceCollection(TextSource textSource, GraphSpaceCollection graphSpaceCollection, Element parent) {
+    }
+
+    @Override
+    public void readToGraphSpace(GraphSpace graphSpace, Element parent) {
+    }
 }

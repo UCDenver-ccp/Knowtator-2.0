@@ -129,7 +129,6 @@ class KnowtatorStandalone extends JFrame {
    * (extension .knowtator) a: Annotations directory (if not in project directory) t: Articles
    * directory (if not in project directory) o: Ontologies directory (if not in project directory)
    * r: Profiles directory (if not in project directory) -- Parameters to specify output locations
-   * uima: Directory to output UIMA XML formatted annotations brat: Directory to output Brat
    * Standoff formatted annotations knowtator: Directory to output Knowtator project -- f: Count
    * fragments Parameters for doing calculations on fragments fragments: Directory containing
    * fragments

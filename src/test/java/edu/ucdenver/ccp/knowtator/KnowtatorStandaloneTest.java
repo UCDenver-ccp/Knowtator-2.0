@@ -33,13 +33,11 @@ class KnowtatorStandaloneTest {
   @Test
   void conversionTest() {
     String brat = null;
-    String uima = null;
     String articles = null;
     String annotations = null;
     String knowtator = null;
     try {
       brat = Files.createTempDirectory("brat_output_test").toFile().getAbsolutePath();
-      uima = Files.createTempDirectory("uima_output_test").toFile().getAbsolutePath();
       knowtator = Files.createTempDirectory("knowtator_output_test").toFile().getAbsolutePath();
       articles = getClass().getResource("/test_project/Articles").getFile();
       annotations = getClass().getResource("/test_project/Annotations").getFile();
@@ -51,7 +49,6 @@ class KnowtatorStandaloneTest {
           "--articles", articles,
           "--annotations", annotations,
           "--brat", brat,
-          "--uima", uima,
           "--knowtator", knowtator
         };
 
