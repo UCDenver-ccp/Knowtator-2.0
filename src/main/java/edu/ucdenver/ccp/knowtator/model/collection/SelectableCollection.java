@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * The type Selectable collection.
@@ -114,9 +115,9 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
   @Override
   public void remove(K item) {
     super.remove(item);
-    getOnlySelected()
-        .filter(selection -> selection.equals(item))
-        .ifPresent(selection -> clearSelection());
+    setSelection(getSelection()
+        .stream().filter(selectedItem -> !selectedItem.equals(item))
+        .collect(Collectors.toList()));
   }
 
   public ArrayList<K> getSelection() {

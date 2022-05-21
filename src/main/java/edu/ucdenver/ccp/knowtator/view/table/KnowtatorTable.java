@@ -66,7 +66,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
                 reactToClick();
               }
               if (SwingUtilities.isRightMouseButton(e)) {
-                reactToRightClick();
+                reactToRightClick(e);
               }
             }
           }
@@ -75,7 +75,7 @@ public abstract class KnowtatorTable<M extends ModelObject> extends JTable
     getSelectionModel().addListSelectionListener(listSelectionEvent -> reactToSelection());
   }
 
-  public abstract void reactToRightClick();
+  public abstract void reactToRightClick(MouseEvent e);
 
   public abstract void reactToSelection();
 

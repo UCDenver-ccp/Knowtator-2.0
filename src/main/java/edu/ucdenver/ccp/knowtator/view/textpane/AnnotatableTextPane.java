@@ -284,11 +284,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
                           span1 -> {
                             try {
                               scrollRectToVisible(modelToView(span1.getStart()));
-                            } catch (BadLocationException e) {
-                              e.printStackTrace();
                             } catch (NullPointerException
-                                     | ArrayIndexOutOfBoundsException ignored) {
-                              // It's fine if either of these are thrown
+                                     | ArrayIndexOutOfBoundsException
+                                     | BadLocationException ignored) {
+                              // It's fine if any of these are thrown
                             }
                           });
                     }

@@ -24,16 +24,24 @@
 
 package edu.ucdenver.ccp.knowtator.view.table;
 
+import static edu.ucdenver.ccp.knowtator.view.actions.collection.CollectionActionType.REMOVE;
+
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
 import edu.ucdenver.ccp.knowtator.model.collection.ConceptAnnotationCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import edu.ucdenver.ccp.knowtator.view.actions.ActionUnperformable;
+import edu.ucdenver.ccp.knowtator.view.actions.modelactions.ConceptAnnotationAction;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -57,8 +65,8 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   }
 
   @Override
-  public void reactToRightClick() {
-
+  public void reactToRightClick(MouseEvent e) {
+    new SelectionPopupMenu(e).showPopUpMenu();
   }
 
   @Override
@@ -73,9 +81,7 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
     }
     selected.stream()
         .collect(Collectors.groupingBy(ConceptAnnotation::getTextSource))
-        .forEach((textSource, conceptAnnotations) -> {
-          textSource.getConceptAnnotations().setSelection(conceptAnnotations);
-        });
+        .forEach((textSource, conceptAnnotations) -> textSource.getConceptAnnotations().setSelection(conceptAnnotations));
   }
 
   @Override
@@ -130,11 +136,68 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
   @Override
   public void addElementsFromModel() {
     view.getModel()
+        .map(BaseModel::getTextSources)
+        .map(TextSourceCollection::stream)
         .ifPresent(
-            model ->
-                model
-                    .getTextSources()
-                    .forEach(
-                        textSource -> textSource.getConceptAnnotations().forEach(this::addValue)));
+            textSources ->
+                textSources
+                    .map(TextSource::getConceptAnnotations)
+                    .flatMap(ConceptAnnotationCollection::stream)
+                    .forEach(this::addValue));
+  }
+
+  /**
+   * The type Annotation popup menu.
+   */
+  class SelectionPopupMenu extends JPopupMenu {
+    private final MouseEvent mouseEvent;
+
+    /**
+     * Instantiates a new Annotation popup menu.
+     *
+     * @param mouseEvent the mouse event
+     */
+    SelectionPopupMenu(MouseEvent mouseEvent) {
+      this.mouseEvent = mouseEvent;
+    }
+
+    private JMenuItem removeAnnotationsCommand() {
+      JMenuItem removeAnnotationMenuItem =
+          new JMenuItem("Delete selected annotations");
+      removeAnnotationMenuItem.addActionListener(actionEvent -> view.getModel()
+          .ifPresent(model -> {
+            Iterator<ConceptAnnotation> selected = getSelectedValues().iterator();
+            if (selected.hasNext()) {
+              ConceptAnnotation first = selected.next();
+              ConceptAnnotationAction action = new ConceptAnnotationAction(model, REMOVE, first.getTextSource());
+              action.setObject(first);
+              while (selected.hasNext()) {
+                ConceptAnnotation conceptAnnotation = selected.next();
+                ConceptAnnotationAction subAction = new ConceptAnnotationAction(model, REMOVE,
+                    conceptAnnotation.getTextSource());
+                subAction.setObject(conceptAnnotation);
+                try {
+                  model.registerAction(subAction);
+                } catch (ActionUnperformable e) {
+                  e.printStackTrace();
+                }
+//                action.addEdit(subAction);
+              }
+              try {
+                model.registerAction(action);
+              } catch (ActionUnperformable e) {
+                throw new RuntimeException(e);
+              }
+            }
+          }));
+
+      return removeAnnotationMenuItem;
+    }
+
+    void showPopUpMenu() {
+      add(removeAnnotationsCommand());
+      show(mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY());
+
+    }
   }
 }

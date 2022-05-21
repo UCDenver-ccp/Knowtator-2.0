@@ -29,6 +29,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
 import edu.ucdenver.ccp.knowtator.model.object.Span;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +56,7 @@ public class SpanTable extends KnowtatorTable<Span> {
   }
 
   @Override
-  public void reactToRightClick() {
+  public void reactToRightClick(MouseEvent e) {
 
   }
 

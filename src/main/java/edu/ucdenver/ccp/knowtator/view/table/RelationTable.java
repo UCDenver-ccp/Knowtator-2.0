@@ -30,6 +30,7 @@ import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.object.AnnotationNode;
 import edu.ucdenver.ccp.knowtator.model.object.RelationAnnotation;
 import edu.ucdenver.ccp.knowtator.view.KnowtatorView;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -142,7 +143,7 @@ public class RelationTable extends KnowtatorTable<RelationAnnotation> {
   }
 
   @Override
-  public void reactToRightClick() {
+  public void reactToRightClick(MouseEvent e) {
 
   }
 

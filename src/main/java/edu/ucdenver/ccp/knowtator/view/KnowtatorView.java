@@ -961,7 +961,7 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
         .ifPresent(model1 -> {
           event.getNew().forEach(modelObject -> {
             if (modelObject instanceof GraphSpace && isVisible()) {
-              graphViewDialog.setVisible(true);
+//              graphViewDialog.setVisible(true);
             }
           });
         });
