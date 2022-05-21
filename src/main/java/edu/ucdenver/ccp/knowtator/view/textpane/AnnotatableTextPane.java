@@ -359,12 +359,10 @@ public abstract class AnnotatableTextPane extends SearchableTextPane
         .flatMap(TextSourceCollection::getOnlySelected)
         .map(TextSource::getConceptAnnotations)
         .map(ConceptAnnotationCollection::getSelection)
-        .ifPresent(conceptAnnotations -> {
-          conceptAnnotations
-              .forEach(conceptAnnotation -> conceptAnnotation
-                  .forEach(span -> highlightRegion(
-                      span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK))));
-        });
+        .ifPresent(conceptAnnotations -> conceptAnnotations
+            .forEach(conceptAnnotation -> conceptAnnotation
+                .forEach(span -> highlightRegion(
+                    span.getStart(), span.getEnd(), new RectanglePainter(Color.BLACK)))));
   }
 
   /**

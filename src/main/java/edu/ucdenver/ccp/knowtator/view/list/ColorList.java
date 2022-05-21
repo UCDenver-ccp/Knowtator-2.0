@@ -98,8 +98,11 @@ public class ColorList extends JList<String[]> implements KnowtatorComponent, Mo
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     event
         .getNew()
-        .filter(modelObject -> modelObject instanceof Profile)
-        .ifPresent(modelObject -> setCollection());
+        .forEach(modelObject -> {
+          if (modelObject instanceof Profile) {
+            setCollection();
+          }
+        });
   }
 
   @Override

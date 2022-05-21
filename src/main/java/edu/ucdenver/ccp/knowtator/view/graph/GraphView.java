@@ -485,63 +485,59 @@ public class GraphView extends JPanel
                       });
               event
                   .getNew()
-                  .filter(modelObject -> modelObject instanceof GraphSpace)
-                  .map(modelObject -> (GraphSpace) modelObject)
-                  .filter(graphSpace -> graphSpace != graphComponent.getGraph())
-                  .ifPresent(GraphView.this::showGraph);
-              event
-                  .getNew()
-                  .filter(modelObject -> modelObject instanceof TextSource)
-                  .map(modelObject -> (TextSource) modelObject).flatMap(textSource -> textSource
-                      .getKnowtatorModel()
-                      .getTextSources().getOnlySelected())
-                  .map(TextSource::getGraphSpaces)
-                  .flatMap(GraphSpaceCollection::getOnlySelected)
-                  .ifPresent(GraphView.this::showGraph);
-              event
-                  .getNew()
-                  .filter(modelObject -> modelObject instanceof AnnotationNode)
-                  .map(modelObject -> (AnnotationNode) modelObject)
-                  .ifPresent(annotationNode -> this.showGraph(annotationNode.getGraphSpace()));
-              event
-                  .getNew()
-                  .filter(modelObject -> modelObject instanceof RelationAnnotation)
-                  .map(modelObject -> (RelationAnnotation) modelObject)
-                  .ifPresent(
-                      relationAnnotation -> this.showGraph(relationAnnotation.getGraphSpace()));
+                  .forEach(modelObject -> {
+                    if (modelObject instanceof GraphSpace) {
+                      GraphSpace graphSpace = (GraphSpace) modelObject;
+                      if (graphSpace != graphComponent.getGraph()) {
+                        showGraph(graphSpace);
+                      }
+                    }
+                    if (modelObject instanceof TextSource) {
+                      modelObject.getKnowtatorModel().getTextSources().getOnlySelected()
+                          .map(TextSource::getGraphSpaces)
+                          .flatMap(GraphSpaceCollection::getOnlySelected)
+                          .ifPresent(GraphView.this::showGraph);
+                    }
+                    if (modelObject instanceof AnnotationNode) {
+                      showGraph(((AnnotationNode) modelObject).getGraphSpace());
+                    }
+                    if (modelObject instanceof RelationAnnotation) {
+                      showGraph(((RelationAnnotation) modelObject).getGraphSpace());
+                    }
+                  });
             });
     if (view.getIsOneClickGraphs()) {
       event
           .getNew()
-          .filter(modelObject -> modelObject instanceof ConceptAnnotation)
-          .map(modelObject -> (ConceptAnnotation) modelObject)
-          .ifPresent(
-              conceptAnnotation -> {
-                if (conceptAnnotation
+          .forEach(modelObject -> {
+            if (modelObject instanceof ConceptAnnotation) {
+              ConceptAnnotation conceptAnnotation = (ConceptAnnotation) modelObject;
+              if (conceptAnnotation
+                  .getTextSource()
+                  .getGraphSpaces()
+                  .getOnlySelected()
+                  .map(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+                  .orElse(false)) {
+                conceptAnnotation
                     .getTextSource()
                     .getGraphSpaces()
                     .getOnlySelected()
-                    .map(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
-                    .orElse(false)) {
-                  conceptAnnotation
-                      .getTextSource()
-                      .getGraphSpaces()
-                      .getOnlySelected()
-                      .ifPresent(
-                          graphSpace -> {
-                            dialog.setVisible(true);
-                            showGraph(graphSpace);
-                          });
-                } else {
-                  conceptAnnotation.getTextSource().getGraphSpaces().getOnlySelected()
-                      .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
-                      .ifPresent(
-                          graphSpace -> {
-                            dialog.setVisible(true);
-                            conceptAnnotation.getTextSource().getGraphSpaces().selectOnly(graphSpace);
-                          });
-                }
-              });
+                    .ifPresent(
+                        graphSpace -> {
+                          dialog.setVisible(true);
+                          showGraph(graphSpace);
+                        });
+              } else {
+                conceptAnnotation.getTextSource().getGraphSpaces().getOnlySelected()
+                    .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+                    .ifPresent(
+                        graphSpace -> {
+                          dialog.setVisible(true);
+                          conceptAnnotation.getTextSource().getGraphSpaces().selectOnly(graphSpace);
+                        });
+              }
+            }
+          });
     }
   }
 
@@ -1029,9 +1025,6 @@ public class GraphView extends JPanel
   static class RequestFocusListener implements AncestorListener {
     private final boolean removeListener;
 
-    /**
-     * Instantiates a new Request focus listener.
-     */
     /*
      *  Convenience constructor. The listener is only used once and then it is
      *  removed from the component.

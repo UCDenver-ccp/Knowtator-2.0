@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.collection.event;
 
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
+import java.util.List;
 
 /**
  * The type Selection event.
@@ -37,6 +38,10 @@ public class SelectionEvent<K extends ModelObject> extends ChangeEvent<K> {
    *
    * @param newObject the new object
    */
+  public SelectionEvent(List<K> newObject) {
+    super(newObject);
+  }
+
   public SelectionEvent(K newObject) {
     super(newObject);
   }

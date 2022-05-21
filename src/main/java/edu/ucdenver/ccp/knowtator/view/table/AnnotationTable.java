@@ -63,16 +63,19 @@ public class AnnotationTable extends KnowtatorTable<ConceptAnnotation> {
 
   @Override
   public void reactToSelection() {
-    view.getModel()
-        .map(BaseModel::getTextSources)
-        .flatMap(TextSourceCollection::getOnlySelected)
-        .ifPresent(textSource -> {
-          List<ConceptAnnotation> currentTextSourceSelected = getSelectedValues().stream()
-              .filter(conceptAnnotation -> conceptAnnotation.getTextSource().equals(textSource))
-              .collect(Collectors.toList());
-          textSource.getConceptAnnotations().setSelection(currentTextSourceSelected);
+    List<ConceptAnnotation> selected = getSelectedValues();
+    if (selected.size() > 1) {
+      view.getModel()
+          .map(BaseModel::getTextSources)
+          .ifPresent(textSources -> textSources.stream()
+              .map(TextSource::getConceptAnnotations)
+              .forEach(ConceptAnnotationCollection::clearSelection));
+    }
+    selected.stream()
+        .collect(Collectors.groupingBy(ConceptAnnotation::getTextSource))
+        .forEach((textSource, conceptAnnotations) -> {
+          textSource.getConceptAnnotations().setSelection(conceptAnnotations);
         });
-
   }
 
   @Override

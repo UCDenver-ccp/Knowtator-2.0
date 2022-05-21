@@ -42,7 +42,9 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
-/** The type Loader. */
+/**
+ * The type Loader.
+ */
 public class Loader extends SwingWorker implements ModelListener {
 
   private final KnowtatorView view;
@@ -54,11 +56,11 @@ public class Loader extends SwingWorker implements ModelListener {
   /**
    * Instantiates a new Loader.
    *
-   * @param view the view
-   * @param file the file
+   * @param view         the view
+   * @param file         the file
    * @param progressBar1 the progress bar 1
-   * @param tabbedPane1 the tabbed pane 1
-   * @param panel1 the panel 1
+   * @param tabbedPane1  the tabbed pane 1
+   * @param panel1       the panel 1
    */
   Loader(
       KnowtatorView view,
@@ -129,21 +131,28 @@ public class Loader extends SwingWorker implements ModelListener {
   }
 
   @Override
-  public void filterChangedEvent() {}
+  public void filterChangedEvent() {
+  }
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     event
         .getNew()
-        .filter(modelObject -> modelObject instanceof TextSource || modelObject instanceof Profile).flatMap(textSource -> view.getModel()).ifPresent(model -> {
-      float x =
-          (model.getNumberOfTextSources() + model.getNumberOfProfiles())
-              / maxVal
-              * 100;
-      setProgress(Math.min(100, (int) x));
-    });
+        .forEach(modelObject -> {
+          if (modelObject instanceof TextSource || modelObject instanceof Profile) {
+            view.getModel().ifPresent(model -> {
+              float x =
+                  (model.getNumberOfTextSources() + model.getNumberOfProfiles())
+                      / maxVal
+                      * 100;
+              setProgress(Math.min(100, (int) x));
+
+            });
+          }
+        });
   }
 
   @Override
-  public void colorChangedEvent(Profile profile) {}
+  public void colorChangedEvent(Profile profile) {
+  }
 }

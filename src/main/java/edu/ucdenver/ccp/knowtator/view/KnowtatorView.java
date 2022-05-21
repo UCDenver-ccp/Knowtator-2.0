@@ -957,12 +957,14 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    getModel().flatMap(model1 -> event
-        .getNew()).ifPresent(o -> {
-      if (o instanceof GraphSpace && isVisible()) {
-        graphViewDialog.setVisible(true);
-      }
-    });
+    getModel()
+        .ifPresent(model1 -> {
+          event.getNew().forEach(modelObject -> {
+            if (modelObject instanceof GraphSpace && isVisible()) {
+              graphViewDialog.setVisible(true);
+            }
+          });
+        });
 
     getModel()
         .ifPresent(

@@ -24,7 +24,8 @@
 
 package edu.ucdenver.ccp.knowtator.model.collection.event;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Change event.
@@ -33,25 +34,33 @@ import java.util.Optional;
  */
 public class ChangeEvent<O> {
 
-  private final O newObject;
+  private final List<O> newObject;
+
+  private ChangeEvent() {
+    this.newObject = new ArrayList<>();
+  }
 
   /**
    * Instantiates a new Change event.
    *
    * @param newObject the new object
    */
-  public ChangeEvent(O newObject) {
-
-    this.newObject = newObject;
+  public ChangeEvent(List<O> newObject) {
+    this();
+    this.newObject.addAll(newObject);
   }
 
+  public ChangeEvent(O newObject) {
+    this();
+    this.newObject.add(newObject);
+  }
 
   /**
    * Gets new.
    *
    * @return the new
    */
-  public Optional<O> getNew() {
-    return Optional.ofNullable(newObject);
+  public List<O> getNew() {
+    return newObject;
   }
 }

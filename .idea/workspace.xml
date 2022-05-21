@@ -34,9 +34,19 @@
   <component name="ChangeListManager">
     <list default="true" id="b5586eae-97ae-4be5-aa9b-4eaaef9d25b4" name="Default Changelist" comment="Simplified adding of text sources to be just about the file chosen (txt vs. xml).">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/ConceptAnnotationCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/ConceptAnnotationCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/SelectableCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/KnowtatorTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/KnowtatorTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/TextSourceCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/TextSourceCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/event/ChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/event/ChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/event/SelectionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/collection/event/SelectionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/KnowtatorView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/Loader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/graph/GraphView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/list/ColorList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/AnnotatableTextPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/AnnotatableTextPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/SearchableTextPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/textpane/SearchableTextPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java" afterDir="false" />
     </list>
     <list id="9e563f0c-91e9-4ed0-b3db-d36bc1e81506" name="Made test for adding an annotation layer" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -686,41 +696,18 @@
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/ProjectManagerTest.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="150" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/TestingHelpers.java</url>
-          <line>111</line>
-          <option name="timeStamp" value="152" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/model/KnowtatorModel.java</url>
-          <line>135</line>
-          <properties>
-            <option name="lambda-ordinal" value="0" />
-          </properties>
-          <option name="timeStamp" value="159" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java</url>
-          <line>121</line>
-          <option name="timeStamp" value="164" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/io/knowtator/KnowtatorXmlUtil.java</url>
-          <line>135</line>
-          <option name="timeStamp" value="165" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/actions/collection/AbstractKnowtatorCollectionAction.java</url>
           <line>276</line>
           <option name="timeStamp" value="166" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/edu/ucdenver/ccp/knowtator/model/OwlModelTest.java</url>
+          <line>109</line>
+          <option name="timeStamp" value="169" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/edu/ucdenver/ccp/knowtator/view/table/AnnotationTable.java</url>
-          <line>105</line>
+          <line>108</line>
           <properties class="edu.ucdenver.ccp.knowtator.view.table.AnnotationTable">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />

@@ -198,7 +198,7 @@ public abstract class SearchableTextPane extends JTextPane
         .ifPresent(span -> searchTextField.setText(span.getSpannedText()));
     event
         .getNew()
-        .ifPresent(
+        .forEach(
             modelObject -> {
               if (modelObject instanceof TextSource) {
                 matcher = pattern.matcher(((TextSource) modelObject).getContent());

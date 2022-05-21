@@ -174,10 +174,10 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
         .flatMap(SelectableCollection::getOnlySelected)
         .flatMap(span -> getSpans(null).getPrevious(span))
         .ifPresent(span -> {
-      ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
-      selectOnly(conceptAnnotation);
-      conceptAnnotation.selectOnly(span);
-    });
+          ConceptAnnotation conceptAnnotation = span.getConceptAnnotation();
+          selectOnly(conceptAnnotation);
+          conceptAnnotation.selectOnly(span);
+        });
   }
 
   /*
@@ -189,6 +189,29 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
     super.selectOnly(selection);
 
     getOnlySelected().ifPresent(conceptAnnotation -> {
+      GraphSpaceCollection graphSpaces = textSource.getGraphSpaces();
+      if (!graphSpaces.getOnlySelected().isPresent()) {
+        graphSpaces.getCollection()
+            .stream()
+            .filter(graphSpace -> graphSpace.containsAnnotation(conceptAnnotation))
+            .findFirst()
+            .ifPresent(graphSpaces::selectOnly);
+      }
+      graphSpaces
+          .getOnlySelected()
+          .ifPresent(
+              graphSpace ->
+                  graphSpace.setSelectionCells(
+                      graphSpace.getAnnotationNodes(conceptAnnotation).toArray()));
+      model.setSelectedOwlClass(conceptAnnotation.getOwlClass());
+    });
+  }
+
+  @Override
+  public void setSelection(List<ConceptAnnotation> selection) {
+    super.setSelection(selection);
+
+    getSelection().forEach(conceptAnnotation -> {
       GraphSpaceCollection graphSpaces = textSource.getGraphSpaces();
       if (!graphSpaces.getOnlySelected().isPresent()) {
         graphSpaces.getCollection()
@@ -288,15 +311,19 @@ public class ConceptAnnotationCollection extends KnowtatorCollection<ConceptAnno
   }
 
   @Override
-  public void colorChangedEvent(Profile profile) {}
+  public void colorChangedEvent(Profile profile) {
+  }
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    event
-        .getNew()
-        .filter(modelObject -> modelObject instanceof Span)
-        .map(modelObject -> (Span) modelObject)
-        .filter(span -> span.getTextSource().equals(textSource))
-        .ifPresent(span -> selectOnly(span.getConceptAnnotation()));
+    event.getNew()
+        .forEach(modelObject -> {
+          if (modelObject instanceof Span) {
+            Span span = ((Span) modelObject);
+            if (span.getTextSource().equals(textSource)) {
+              selectOnly(span.getConceptAnnotation());
+            }
+          }
+        });
   }
 }

@@ -33,7 +33,9 @@ import edu.ucdenver.ccp.knowtator.model.object.TextBoundModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
 import org.apache.log4j.Logger;
 
-/** The type Text source collection. */
+/**
+ * The type Text source collection.
+ */
 public class TextSourceCollection extends KnowtatorCollection<TextSource> implements ModelListener {
   @SuppressWarnings("unused")
   private final Logger log = Logger.getLogger(TextSourceCollection.class);
@@ -71,17 +73,21 @@ public class TextSourceCollection extends KnowtatorCollection<TextSource> implem
   }
 
   @Override
-  public void filterChangedEvent() {}
+  public void filterChangedEvent() {
+  }
 
   @Override
-  public void colorChangedEvent(Profile profile) {}
+  public void colorChangedEvent(Profile profile) {
+  }
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
     event
         .getNew()
-        .filter(modelObject -> modelObject instanceof TextBoundModelObject)
-        .ifPresent(
-            modelObject -> selectOnly(((TextBoundModelObject) modelObject).getTextSource()));
+        .forEach(modelObject -> {
+          if (modelObject instanceof TextBoundModelObject) {
+            selectOnly(((TextBoundModelObject) modelObject).getTextSource());
+          }
+        });
   }
 }

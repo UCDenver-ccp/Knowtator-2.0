@@ -25,6 +25,7 @@
 package edu.ucdenver.ccp.knowtator.model.collection;
 
 import edu.ucdenver.ccp.knowtator.model.BaseModel;
+import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.collection.event.SelectionEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import java.util.ArrayList;
@@ -83,17 +84,25 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
   }
 
   public void selectOnly(K item) {
-    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(item);
+    if (item == null) {
+      clearSelection();
+    } else {
+      SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(item);
 
-    clearSelection();
-    selection.add(item);
-    if (model != null) {
-      model.fireModelEvent(selectionEvent);
+      selection.clear();
+      selection.add(item);
+      if (model != null) {
+        model.fireModelEvent(selectionEvent);
+      }
     }
   }
 
   public void clearSelection() {
+    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(new ArrayList<>());
     selection.clear();
+    if (model != null) {
+      model.fireModelEvent(selectionEvent);
+    }
   }
 
   @Override
@@ -115,12 +124,15 @@ public abstract class SelectableCollection<K extends ModelObject> extends Cyclab
   }
 
   public void setSelection(List<K> conceptAnnotations) {
-    SelectionEvent<ModelObject> selectionEvent = new SelectionEvent<>(conceptAnnotations.stream().findFirst().orElse(null));
-
-    clearSelection();
-    selection.addAll(conceptAnnotations);
-    if (model != null) {
-      model.fireModelEvent(selectionEvent);
+    if (conceptAnnotations.isEmpty()) {
+      clearSelection();
+    } else {
+      selection.clear();
+      selection.addAll(conceptAnnotations);
+      SelectionEvent<K> selectionEvent = new SelectionEvent<>(selection);
+      if (model != null) {
+        model.fireModelEvent((ChangeEvent<ModelObject>) selectionEvent);
+      }
     }
   }
 }

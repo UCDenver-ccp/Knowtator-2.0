@@ -106,6 +106,7 @@ class OwlModelTest {
 
     TestingHelpers.testOwlAction(model, renamer.changeIRI(entityToIriMap), TestingHelpers.defaultCounts);
 
+    model.getTextSources().getOnlySelected().get().getConceptAnnotations().selectOnly(model.getTextSources().getOnlySelected().get().getConceptAnnotations().first().get());
     ConceptAnnotation conceptAnnotation =
         model.getTextSources().getOnlySelected().get().getConceptAnnotations().getOnlySelected().get();
 
