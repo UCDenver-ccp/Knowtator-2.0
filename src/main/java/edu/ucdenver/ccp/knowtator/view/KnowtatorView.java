@@ -41,7 +41,6 @@ import edu.ucdenver.ccp.knowtator.model.collection.SelectableCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.TextSourceCollection;
 import edu.ucdenver.ccp.knowtator.model.collection.event.ChangeEvent;
 import edu.ucdenver.ccp.knowtator.model.object.ConceptAnnotation;
-import edu.ucdenver.ccp.knowtator.model.object.GraphSpace;
 import edu.ucdenver.ccp.knowtator.model.object.ModelObject;
 import edu.ucdenver.ccp.knowtator.model.object.Profile;
 import edu.ucdenver.ccp.knowtator.model.object.TextSource;
@@ -451,27 +450,25 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     reassignButton.addActionListener(e -> getModel()
         .ifPresent(
-            model -> {
-              model.getSelectedOwlClass()
-                  .ifPresent(
-                  owlClass ->
-                      model
-                          .getTextSources()
-                          .getOnlySelected()
-                          .flatMap(textSource -> textSource.getConceptAnnotations().getOnlySelected())
-                          .ifPresent(conceptAnnotation -> {
-                            try {
-                              model.registerAction(
-                                  new ReassignOwlClassAction(
-                                      model,
-                                      conceptAnnotation,
-                                      owlClass));
-                            } catch (ActionUnperformable e1) {
-                              JOptionPane.showMessageDialog(
-                                  this, e1.getMessage());
-                            }
-                          }));
-            }));
+            model -> model.getSelectedOwlClass()
+                .ifPresent(
+                owlClass ->
+                    model
+                        .getTextSources()
+                        .getOnlySelected()
+                        .flatMap(textSource -> textSource.getConceptAnnotations().getOnlySelected())
+                        .ifPresent(conceptAnnotation -> {
+                          try {
+                            model.registerAction(
+                                new ReassignOwlClassAction(
+                                    model,
+                                    conceptAnnotation,
+                                    owlClass));
+                          } catch (ActionUnperformable e1) {
+                            JOptionPane.showMessageDialog(
+                                this, e1.getMessage());
+                          }
+                        }))));
 
     makeSpanButtons();
 
@@ -947,15 +944,6 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
   @Override
   public void modelChangeEvent(ChangeEvent<ModelObject> event) {
-    getModel()
-        .ifPresent(model1 -> {
-          event.getNew().forEach(modelObject -> {
-            if (modelObject instanceof GraphSpace && isVisible()) {
-//              graphViewDialog.setVisible(true);
-            }
-          });
-        });
-
     getModel()
         .ifPresent(
             model1 -> {
