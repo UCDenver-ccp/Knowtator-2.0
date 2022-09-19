@@ -70,6 +70,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -102,7 +103,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.BadLocationException;
@@ -587,13 +587,13 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
 
     fileList.addListSelectionListener(
         e -> {
-          JFileChooser fileChooser = new JFileChooser();
+          FileDialog fileChooser = new FileDialog((JFrame) SwingUtilities.getWindowAncestor(getView()));
           Optional.ofNullable(KnowtatorView.PREFERENCES.get("Last Project", null))
               .map(File::new)
               .filter(File::exists)
               .map(
                   file -> {
-                    fileChooser.setCurrentDirectory(file);
+                    fileChooser.setDirectory(file.getAbsolutePath());
                     return file;
                   })
               .map(File::listFiles)
@@ -601,64 +601,54 @@ public class KnowtatorView extends AbstractOWLClassViewComponent
                   files ->
                       Arrays.stream(files)
                           .filter(file1 -> file1.getName().endsWith(".knowtator"))
-                          .findAny())
-              .ifPresent(fileChooser::setSelectedFile);
-          fileChooser.addActionListener(
-              e1 ->
-                  Optional.ofNullable(e1)
-                      .filter(
-                          event -> event.getActionCommand().equals(JFileChooser.APPROVE_SELECTION))
-                      .ifPresent(event -> KnowtatorView.this.open(fileChooser)));
+                          .findAny());
+
+          fileChooser.setMode(FileDialog.LOAD);
 
           switch (fileList.getSelectedValue()) {
             case "Open":
-              FileFilter fileFilter = new FileNameExtensionFilter("Knowtator", "knowtator");
-              fileChooser.setFileFilter(fileFilter);
-              fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+              fileChooser.setFilenameFilter((d, s) -> Arrays.stream(new String[] {"knowtator", "Knowtator"}).anyMatch(s::endsWith));
               break;
             case "New":
-              fileChooser.setFileFilter(null);
-              fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
               break;
             case "Import":
-              fileFilter =
-                  new FileNameExtensionFilter(
-                      "ConceptAnnotation File (XML, ann, a1)", "xml", "ann", "a1");
-              fileChooser.setFileFilter(fileFilter);
-              fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+              fileChooser.setFilenameFilter((d, s) -> Arrays.stream(new String[] {"xml", "ann", "a1"}).anyMatch(s::endsWith));
               break;
             case "Export":
-              fileChooser.setFileFilter(null);
-              fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
               break;
-            default:
+          default:
               break;
           }
 
-          fileChooser.showOpenDialog(KnowtatorView.this);
+          fileChooser.setVisible(true);
+          String filename = fileChooser.getFile();
+          String directory = fileChooser.getDirectory();
+          if (filename != null) {
+            this.open(new File(directory, filename));
+          }
         });
 
 
   }
 
-  private void open(JFileChooser fileChooser) {
+  private void open(File file) {
     switch (fileList.getSelectedValue()) {
       case "Open":
-        new Loader(this, fileChooser.getSelectedFile(), progressBar, header, cardPanel).execute();
+        new Loader(this, file, progressBar, header, cardPanel).execute();
         break;
       case "New":
         Optional.ofNullable(JOptionPane.showInputDialog(this, "Enter a name for the project"))
             .filter(projectName -> !projectName.equals(""))
             .ifPresent(
                 projectName -> {
-                  File projectDirectory = new File(fileChooser.getSelectedFile(), projectName);
+                  File projectDirectory = new File(file, projectName);
 
                   new Loader(this, projectDirectory, progressBar, header, cardPanel).execute();
                 });
         break;
       case "Import":
         getModel()
-            .ifPresent(model -> model.loadWithAppropriateFormat(fileChooser.getSelectedFile()));
+            .ifPresent(model -> model.loadWithAppropriateFormat(file));
         break;
       case "Export":
         // TODO
