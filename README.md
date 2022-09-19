@@ -34,7 +34,7 @@ Plugin for Protege
 7. Restart Protege
 
 
-(See [this comment thread][mac osx plugin installation comment thread] for more help) 
+(See [this comment thread][mac osx plugin installation comment thread] for more help)
 
 
 ### Source
@@ -59,8 +59,8 @@ $ mvn clean install
 ## Setup
 1. Launch Protege
 2. Click the "Entities" tab
-3. Add a Knowtator view (Window -> Miscellaneous views -> Knowtator). Position your cursor in the Protege window so that the blue outline fills the right side of the window. Click to place the view.
-4. Make a new project (Knowtator Project -> New Project. Note: The Knowtator menu is inside the Knowtator view). Enter a name for the project. Select parent directory. Knowtator will make
+3. Add a Knowtator view (Window -> Views -> Miscellaneous views -> Knowtator). Position your cursor in the Protege window so that the blue outline fills the right side of the window. Click to place the view.
+4. Make a new project (In the Knowtator view, navigate to File -> New . Note: The Knowtator menu is inside the Knowtator view). Enter a name for the project. Select parent directory. Knowtator will make
 a directory tree that looks like this:
 Project
 -Annotations
@@ -77,7 +77,7 @@ Add as a View to a Protege tab by going to Window -> Views -> Miscellaneous View
 ## Concept Annotation
 
 
-Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL entities. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button and select "Add new concept". 
+Protege is first and foremost, an ontology editor. This plugin is intended to make use of Protege's built-in OWL-API to annotate text with OWL entities. To do so, simply select a term from the Class Hierarchy (Window -> Views -> Class views -> Class hierarchy), highlight a span of text in a document, and click the ![][plus] button and select "Add new concept".
 
 To remove the selected icon, click the ![][remove] button.
 
@@ -99,7 +99,7 @@ To view only annotation made by the active profile, in the tool bar above the te
 
 ## Search
 
-For large documents or large ontologies, it can be a challenge to find similar spans of text or to find the right concept. Knowtator provides some search tools to make the annotation process faster and easter. At the top of the text pane, there is a search box. Typing text in here and clicking "Next" or "Previous" will search the current document forward or backward respectively from the current cursor location. Alternatively, clicking "Find in ontology" will open Protege's ontology search tool. This allows you to find text in the document and then find the right concept for that text. 
+For large documents or large ontologies, it can be a challenge to find similar spans of text or to find the right concept. Knowtator provides some search tools to make the annotation process faster and easter. At the top of the text pane, there is a search box. Typing text in here and clicking "Next" or "Previous" will search the current document forward or backward respectively from the current cursor location. Alternatively, clicking "Find in ontology" will open Protege's ontology search tool. This allows you to find text in the document and then find the right concept for that text.
 
 Instead of typing text directly, you can also simply select text in the document. You will see this text appear automatically in the search bar.
 
@@ -107,7 +107,7 @@ Searches can be filtered to only search text that has been associated with an an
 
 ## Inter-Annotator Agreement
 
-IAA between the annotators in the same project can be run. 
+IAA between the annotators in the same project can be run.
 
 To calculate IAA, click ![][menu] the "IAA". Select the types of IAA you wish to run, then click "Run IAA" and choose a folder for the results to be written to.
 
@@ -127,7 +127,7 @@ Thank you to Philip Ogren, the author of the original Knowtator.
 
 [knowtator link]:https://github.com/UCDenver-ccp/Knowtator-2.0/releases/latest
 [protege link]:http://protege.stanford.edu/products.php#desktop-protege
-[installation image]:doc/installation_image.PNG
+[installation image]:doc/installation_image.jpg
 [ontology example]:http://purl.obolibrary.org/obo/go/go-basic.obo
 [mac osx plugin installation comment thread]:http://protege-project.136.n4.nabble.com/Installing-Plugins-on-Protege-5-MacOSX-td4665874.html
 [sample files location]:https://github.com/tuh8888/Knowtator-2.0/tree/master/src/test/resources
